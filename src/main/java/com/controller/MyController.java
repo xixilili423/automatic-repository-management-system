@@ -1,14 +1,9 @@
 package com.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.config.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import jakarta.servlet.http.HttpSession;
-import com.mapper.Usermapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import com.pojo.user;
 import com.service.UserService;
 
 
@@ -19,19 +14,39 @@ UserService userService=(UserService) ApplicationContextHelperUtil.getBean( User
     @PostMapping("/api/login")
     @CrossOrigin
     @ResponseBody
-    public Result<?> login(  String email,String password )
+    public void login(int length ,int width)
     {
-        user user1=new user();
-        user1.setEmail(email);
-        user1.setPassword(password);
-        boolean re=userService.Login(user1);
-        System.out.println("action");
-        if(re)
-        {
-          return Result.success();
+//        user user1=new user();
+//        user1.setEmail(email);
+//        user1.setPassword(password);
+//        boolean re=userService.Login(user1);
+//        System.out.println("action");
+//        if(re)
+//        {
+//          return Result.success();
+//        }
+//      else{
+//          return  Result.error("40","failed");
+//      }
+        int[][][] warehouse = new int[length][width][3];
+
+        // 生成货架
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < width; j++) {
+                if (i % 2 == 0 && j % 2 == 0) {
+                    warehouse[i][j][0] = 1;
+                } else {
+                    warehouse[i][j][0] = 0;
+                }
+            }
         }
-      else{
-          return  Result.error("404","failed");
-      }
+
+        // 输出仓库
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < width; j++) {
+                System.out.print(warehouse[i][j][0] + " ");
+            }
+            System.out.println();
+        }
     }
 }
