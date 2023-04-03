@@ -1,9 +1,10 @@
 package com.service;
 
+import org.springframework.stereotype.Service;
 import com.vo.R;
 import com.vo.param.LoginParam;
-import org.springframework.stereotype.Service;
-
+import com.vo.param.RegisterParam;
+import com.vo.param.InitStockParm;
 
 @Service
 //public class UserService {
@@ -19,8 +20,23 @@ import org.springframework.stereotype.Service;
 
 public interface UserService {
     /**
-     * 登陆
-     * @param loginParam（用户名，密码）
+     * 1.登陆
+     * @param loginParam（用户名,密码）
+     * @return
      */
     R login(LoginParam loginParam);
+
+    /**
+     * 2.注册
+     * @param registerParam(用户名,密码,确认密码）,返回码)
+     * @return
+     */
+    R register(RegisterParam registerParam);
+
+    /**
+     * 3.仓库初始化 initStock(x,y,小车数,闸机数，用户名)
+     * @return
+     */
+    R initStock(InitStockParm initStockParm);
+
 }
