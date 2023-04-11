@@ -36,4 +36,5 @@ public class UserController {
     public R initStock(@RequestBody InitStockParm initStockParm){ return userService.initStock(initStockParm); }
 
 
+
 }

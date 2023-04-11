@@ -4,7 +4,7 @@ import lombok.Getter;
 /**
  * FileName: InitStockParm
  * Date: 2023/04/03
- * Description: 该类用于封装初始化仓库表单提交的数据
+ * Description: 该类用于封装 初始化仓库 表单提交的数据
  */
 @Getter
 public class InitStockParm {

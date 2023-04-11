@@ -1,5 +1,7 @@
 package com.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
+import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 import com.vo.R;
 import com.vo.param.LoginParam;
@@ -18,7 +20,7 @@ import com.vo.param.InitStockParm;
 //    }
 //}
 
-public interface UserService {
+public interface UserService extends IService<User> {
     /**
      * 1.登陆
      * @param loginParam（用户名,密码）

@@ -2,7 +2,7 @@ package com.vo.param;
 import lombok.Getter;
 
 /**
- * FileName: registerParm
+ * FileName: registerParam
  * Date: 2023/04/03
  * Description: 该类用于封装注册表单提交的数据
  */
