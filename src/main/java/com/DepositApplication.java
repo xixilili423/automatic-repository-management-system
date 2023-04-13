@@ -9,9 +9,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@SpringBootApplication
-// @ComponentScan(basePackages = {"com"})
-@MapperScan("com.mapper")
+@SpringBootApplication(scanBasePackages = "com" )
+@Configuration
+@ComponentScan({"com.service"})
+@MapperScan({"com.mapper"})
 public class DepositApplication {
 
     public static void main(String[] args) {
