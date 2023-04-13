@@ -2,13 +2,11 @@ package com.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.catalina.User;
-import org.springframework.stereotype.Service;
 import com.vo.R;
 import com.vo.param.LoginParam;
 import com.vo.param.RegisterParam;
 import com.vo.param.InitStockParm;
-
-@Service
+//@Service
 //public class UserService {
 //
 //    @Autowired
@@ -19,7 +17,6 @@ import com.vo.param.InitStockParm;
 //        return usermapper.equals(userQueryWrapper);
 //    }
 //}
-
 public interface UserService extends IService<User> {
     /**
      * 1.登陆

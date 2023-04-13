@@ -2,8 +2,10 @@ package com.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.vo.R;
-import com.vo.param.*;
 import org.apache.catalina.User;
+import com.vo.param.EnterParam;
+import com.vo.param.OutParam;
+import com.vo.param.CheckParcelParam;
 
 
 public interface OtherService extends IService<User> {

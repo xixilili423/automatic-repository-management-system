@@ -22,17 +22,4 @@ public class LoginParam {
         // 判断初始化仓库与否，从数据库获取
 
     }
-//    public LoginParam(String username,String email,String password,String passwordConfirm,String code){
-//        this.username=username;
-//        this.email=email;
-//        this.password=password;
-//        this.passwordConfirm=passwordConfirm;
-//        this.code=code;
-//    }
-//
-//    public LoginParam(String email,String password,String code){
-//        this.email=email;
-//        this.password=password;
-//        this.code=code;
-//    }
 }
