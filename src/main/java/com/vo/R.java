@@ -17,12 +17,11 @@ public class R {
     private Boolean success;
     //返回消息
     private String message;
-
     //返回数据
-    private Map<String, Object> data = new HashMap<>();
+    public Map<String, Object> data = new HashMap<>();
 
     // 把构造方法私有化
-    private R() {}
+    public R() {}
 
     // 成功静态方法
     public static R ok() {
@@ -56,9 +55,4 @@ public class R {
         this.setData(map);
         return this;
     }
-
-
-
-
-
 }

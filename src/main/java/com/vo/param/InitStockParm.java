@@ -13,13 +13,13 @@ public class InitStockParm {
     private int capacity_y; // 仓库y
     private int avg; // 仓库小车数
     private int gateMachine; // 仓库门数量
-    private String username; //用户名
+    private String token; //鉴权
 
     public InitStockParm(int capacity_x, int capacity_y, int avg, int gateMachine, String username){
         this.capacity_x = capacity_x;
         this.capacity_y = capacity_y;
         this.avg = avg;
         this.gateMachine = gateMachine;
-        this.username = username;
+        this.token = token;
     }
 }

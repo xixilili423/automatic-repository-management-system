@@ -6,7 +6,6 @@ import com.vo.R;
 import com.vo.param.LoginParam;
 import com.vo.param.RegisterParam;
 import com.vo.param.InitStockParm;
-import org.springframework.stereotype.Service;
 
 //@Service
 //public class UserService {
@@ -23,6 +22,7 @@ import org.springframework.stereotype.Service;
 public interface UserService extends IService<User> {
     /**
      * 1.登陆
+     *
      * @param loginParam（用户名,密码）
      * @return
      */

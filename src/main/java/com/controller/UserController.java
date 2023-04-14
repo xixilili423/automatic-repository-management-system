@@ -24,7 +24,8 @@ public class UserController {
     // 1.登陆--post保存
     @PostMapping("login")
     public R login(@RequestBody LoginParam loginParam) {
-        return userService.login(loginParam);
+
+        return   userService.login(loginParam);
     }
 
     // 2.注册--post保存
