@@ -3,6 +3,7 @@ package com.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.entity.User;
 import com.vo.R;
+import com.vo.param.InformationParam;
 import com.vo.param.LoginParam;
 import com.vo.param.RegisterParam;
 import com.vo.param.InitStockParm;
@@ -23,22 +24,28 @@ public interface UserService extends IService<User> {
     /**
      * 1.登陆
      *
-     * @param loginParam（用户名,密码）
+     * @param loginParam（token,用户名,密码）
      * @return
      */
     R login(LoginParam loginParam);
 
     /**
      * 2.注册
-     * @param registerParam(用户名,密码,确认密码）,返回码)
+     * @param registerParam(用户名,密码）
      * @return
      */
     R register(RegisterParam registerParam);
 
     /**
-     * 3.仓库初始化 initStock(x,y,小车数,闸机数，用户名)
+     * 3.仓库初始化 initStock(x,y,闸机数，小车数)
      * @return
      */
     R initStock(InitStockParm initStockParm);
+
+    /**
+     * 4.主页信息获取 information(token)
+     * @return
+     */
+    R information(InformationParam informationParam);
 
 }

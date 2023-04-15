@@ -9,6 +9,7 @@ import com.controller.ApplicationContextHelperUtil;
 import com.mapper.UserMapper;
 import com.service.UserService;
 import com.vo.R;
+import com.vo.param.InformationParam;
 import com.vo.param.InitStockParm;
 import com.vo.param.LoginParam;
 import com.vo.param.RegisterParam;
@@ -67,7 +68,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
             r.data("status_code","false");
         }
 
-        return r.ok();
+        return R.ok();
     }
 
     // 仓库初始化
@@ -75,5 +76,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
     public R initStock(InitStockParm initStockParm) {
         return R.ok();
     }
+
+    // 主页信息获取
+    @Override
+    public R information(InformationParam informationParam){ return R.ok(); }
 
 }

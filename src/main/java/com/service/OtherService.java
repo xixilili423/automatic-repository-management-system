@@ -33,16 +33,16 @@ public interface OtherService extends IService<Other> {
 
     /**
      * 4.获取入库记录表格
-     * @param dbrecordInParam()
+     * @param getInTable()
      * @return
      */
-    // R getInTable(DBrecordInParam dbrecordInParam);
+    R getInTable(String token);
 
     /**
      * 5.获取出库记录表格
-     * @param dbrecordOutParam()
+     * @param getOutTable()
      * @return
      */
-    // R getOutTable(DBrecordOutParam dbrecordOutParam);
+    R getOutTable(String token);
 
 }

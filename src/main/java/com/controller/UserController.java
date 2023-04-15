@@ -2,6 +2,7 @@ package com.controller;
 
 import com.service.UserService;
 import com.vo.R;
+import com.vo.param.InformationParam;
 import com.vo.param.InitStockParm;
 import com.vo.param.LoginParam;
 import com.vo.param.RegisterParam;
@@ -24,8 +25,7 @@ public class UserController {
     // 1.登陆--post保存
     @PostMapping("login")
     public R login(@RequestBody LoginParam loginParam) {
-
-        return   userService.login(loginParam);
+        return userService.login(loginParam);
     }
 
     // 2.注册--post保存
@@ -36,5 +36,8 @@ public class UserController {
     @PostMapping("initStock")
     public R initStock(@RequestBody InitStockParm initStockParm){ return userService.initStock(initStockParm); }
 
+    // 4. 主页信息获取
+    @PostMapping("information")
+    public R information(@RequestBody InformationParam informationParam){ return userService.information(informationParam); }
 
 }

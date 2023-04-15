@@ -10,11 +10,11 @@ import lombok.Getter;
 @Getter
 public class CheckParcelParam {
     // 数据传递顺序
+    private String token; // token
     private String id; // 包裹ID
-    private String[][][] inTableData; // 入库表记录数据(未确定）
-    private String[][][] outTableData; // 出库表（未确定）
 
-    public CheckParcelParam(String id){
+    public CheckParcelParam(String token,String id){
+        this.token = token;
         this.id = id;
     }
 
