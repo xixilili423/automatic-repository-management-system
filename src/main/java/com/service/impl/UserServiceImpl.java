@@ -6,6 +6,7 @@ import com.entity.User;
 import com.mapper.UserMapper;
 import com.service.UserService;
 import com.vo.R;
+import com.vo.param.InformationParam;
 import com.vo.param.InitStockParam;
 import com.vo.param.LoginParam;
 import com.vo.param.RegisterParam;
@@ -105,6 +106,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
         }
 
         return R.ok();
+    }
+
+    @Override
+    public R information(InformationParam informationParam) {
+        return null;
     }
 
 }
