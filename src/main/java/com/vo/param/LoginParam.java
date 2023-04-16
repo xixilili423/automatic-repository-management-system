@@ -3,7 +3,7 @@ import lombok.Getter;
 /**
  * FileName: LoginParam
  * Date: 2023/04/02
- * Description: 该类用于封装 登陆 表单提交的数据
+ * Description: 该类用于封装 登陆 请求提交的数据
  */
 @Getter
 public class LoginParam {
@@ -11,7 +11,7 @@ public class LoginParam {
     private String username; //用户名
     private String password; //密码
 
-    private Boolean initStockOrNot; //初始化仓库与否，0表示未初始化，1表示已经初始化
+    // private Boolean initStockOrNot; //初始化仓库与否，0表示未初始化，1表示已经初始化
 
     // 仓库目前长相
 

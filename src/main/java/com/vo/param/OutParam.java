@@ -2,6 +2,8 @@ package com.vo.param;
 
 import lombok.Getter;
 
+import java.lang.reflect.Array;
+
 /**
  * FileName: OutParam
  * Date: 2023/04/11
@@ -10,14 +12,11 @@ import lombok.Getter;
 @Getter
 public class OutParam {
     // 数据传递顺序
-    private String id; // 包裹ID
-    private String address; // 包裹目的地
+    private Array[] parcelOutList; // 包裹id，目的地
     private String userName; // 用户名（还是说用token？)
 
-    public OutParam(String id,String address,String userName){
-        this.id = id;
-        this.address = address;
+    public OutParam(Array[] parcelOutList, String userName){
+        this.parcelOutList = parcelOutList;
         this.userName = userName;
     }
-
 }

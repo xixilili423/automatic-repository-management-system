@@ -37,8 +37,16 @@ public class OtherServiceImpl extends ServiceImpl<OtherMapper, Other> implements
         return R.ok();
     }
 
+    // 获取入库记录表格
+    @Override
+    public R getInTable(String token){
+        return R.ok();
+    }
 
-
-
+    // 获取出库记录表格
+    @Override
+    public R getOutTable(String token){
+        return R.ok();
+    }
 
 }

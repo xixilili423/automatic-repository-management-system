@@ -2,6 +2,8 @@ package com.vo.param;
 
 import lombok.Getter;
 
+import java.lang.reflect.Array;
+
 /**
  * FileName: EnterParam
  * Date: 2023/04/11
@@ -10,13 +12,13 @@ import lombok.Getter;
 @Getter
 public class EnterParam {
     // 数据传递顺序
-    private String id; // 包裹ID
-    private String address; // 包裹目的地
-    private String userName; // 用户名（还是说用token？）
+    // 需要测试下parcelInList怎么接收
+    private Array[] parcelInList; // 包裹id，目的地
+    private String token; // token
 
-    public EnterParam(String id,String address){
-        this.id = id;
-        this.address = address;
+    public EnterParam(Array[] parcelInList,String token){
+        this.parcelInList = parcelInList;
+        this.token = token;
     }
 
 }

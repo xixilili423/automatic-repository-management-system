@@ -11,12 +11,10 @@ public class RegisterParam {
     // 注册
     private String username; // 用户名
     private String password; // 密码
-    private String passwordConfirm; // 确认密码
 
     public RegisterParam(String username, String password, String passwordConfirm){
         this.username = username;
         this.password = password;
-        this.passwordConfirm = passwordConfirm;
     }
 
 }
