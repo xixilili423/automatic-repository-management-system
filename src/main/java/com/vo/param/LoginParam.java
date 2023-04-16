@@ -22,4 +22,5 @@ public class LoginParam {
         // 判断初始化仓库与否，从数据库获取
 
     }
+
 }

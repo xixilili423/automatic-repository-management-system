@@ -18,4 +18,5 @@ public class RegisterParam {
         this.password = password;
         this.passwordConfirm = passwordConfirm;
     }
+
 }

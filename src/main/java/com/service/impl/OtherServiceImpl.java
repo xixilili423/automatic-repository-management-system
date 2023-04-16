@@ -9,7 +9,6 @@ import com.vo.param.CheckParcelParam;
 import com.vo.param.EnterParam;
 import com.vo.param.OutParam;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * FileName:  OtherServiceImpl
@@ -17,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 
 @Service
-@Transactional
+//@Transactional
 public class OtherServiceImpl extends ServiceImpl<OtherMapper, Other> implements OtherService {
 
     // 入库

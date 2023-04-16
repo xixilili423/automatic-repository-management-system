@@ -5,7 +5,7 @@ import com.entity.User;
 import com.vo.R;
 import com.vo.param.LoginParam;
 import com.vo.param.RegisterParam;
-import com.vo.param.InitStockParm;
+import com.vo.param.InitStockParam;
 
 //@Service
 //public class UserService {
@@ -39,6 +39,6 @@ public interface UserService extends IService<User> {
      * 3.仓库初始化 initStock(x,y,小车数,闸机数，用户名)
      * @return
      */
-    R initStock(InitStockParm initStockParm);
+    R initStock(InitStockParam initStockParam);
 
 }

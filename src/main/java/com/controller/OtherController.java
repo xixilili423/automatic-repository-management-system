@@ -1,11 +1,5 @@
 package com.controller;
 
-import com.service.OtherService;
-import com.vo.R;
-import com.vo.param.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 /**
  * FileName:  OtherController
  * Date: 2023/04/11
