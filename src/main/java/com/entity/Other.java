@@ -13,5 +13,4 @@ import lombok.Data;
 @TableName("other")
 public class Other {
 
-
 }
