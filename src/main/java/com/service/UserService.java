@@ -37,15 +37,10 @@ public interface UserService extends IService<User> {
     R register(RegisterParam registerParam);
 
     /**
-     * 3.仓库初始化 initStock(x,y,闸机数，小车数)
+     * 4.主页信息获取
+     * @get getInformation(token)
      * @return
      */
-    R initStock(InitStockParam initStockParam);
-
-    /**
-     * 4.主页信息获取 information(token)
-     * @return
-     */
-    R information(InformationParam informationParam);
+    R getInformation(String token);
 
 }

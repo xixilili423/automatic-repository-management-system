@@ -20,7 +20,6 @@ public class LoginParam {
         this.username = username;
         this.password = password;
         // 判断初始化仓库与否，从数据库获取
-
     }
 
 }

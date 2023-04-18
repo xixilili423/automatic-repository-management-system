@@ -1,67 +1,30 @@
 package com.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+import lombok.Setter;
+import org.springframework.stereotype.Service;
 
+/**
+ * FileName: Warehouse
+ * Date: 2023/4/18
+ * Description: Warehouse实体
+ */
+@Data
+@Setter
+@TableName("warehouse")
 public class Warehouse {
 
-  private long id;
-  private long capacityX;
-  private long capacityY;
-  private long gateMachine;
-  private long avg;
-  private String username;
+    private int id;
 
+    private int capacity_x;
 
-  public long getId() {
-    return id;
-  }
+    private int capacity_y;
 
-  public void setId(long id) {
-    this.id = id;
-  }
+    private int gateMachine;
 
+    private int avg;
 
-  public long getCapacityX() {
-    return capacityX;
-  }
-
-  public void setCapacityX(long capacityX) {
-    this.capacityX = capacityX;
-  }
-
-
-  public long getCapacityY() {
-    return capacityY;
-  }
-
-  public void setCapacityY(long capacityY) {
-    this.capacityY = capacityY;
-  }
-
-
-  public long getGateMachine() {
-    return gateMachine;
-  }
-
-  public void setGateMachine(long gateMachine) {
-    this.gateMachine = gateMachine;
-  }
-
-
-  public long getAvg() {
-    return avg;
-  }
-
-  public void setAvg(long avg) {
-    this.avg = avg;
-  }
-
-
-  public String getUsername() {
-    return username;
-  }
-
-  public void setUsername(String username) {
-    this.username = username;
-  }
+    private String username;
 
 }
