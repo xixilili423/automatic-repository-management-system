@@ -13,10 +13,12 @@ import java.lang.reflect.Array;
 public class EnterParam {
     // 数据传递顺序
     // 需要测试下parcelInList怎么接收
-    private Array[] parcelInList; // 包裹id，目的地
+//    private Array[] parcelInList; // 包裹id，目的地
+
+    private parcel parcelInList[]; // 包裹id，目的地
     private String token; // token
 
-    public EnterParam(Array[] parcelInList,String token){
+    public EnterParam(parcel parcelInList[],String token){
         this.parcelInList = parcelInList;
         this.token = token;
     }

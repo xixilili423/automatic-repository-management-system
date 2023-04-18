@@ -12,10 +12,10 @@ import java.lang.reflect.Array;
 @Getter
 public class OutParam {
     // 数据传递顺序
-    private Array[] parcelOutList; // 包裹id，目的地
+    private parcel parcelOutList[]; // 包裹id，目的地
     private String userName; // 用户名（还是说用token？)
 
-    public OutParam(Array[] parcelOutList, String userName){
+    public OutParam(parcel parcelInList[], String userName){
         this.parcelOutList = parcelOutList;
         this.userName = userName;
     }
