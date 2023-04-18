@@ -90,7 +90,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
             int length = initStockParam.getCapacity_x();
             int width = initStockParam.getCapacity_y();
             int[][][] warehouse = new int[length][width][3];
-            int num = length / 2 * width / 2 / 34;
+            int num = length / 2 * width / 2 / 32;
             int count = 0, code = 1;
             int record = 0;
 
@@ -98,7 +98,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
             for (int i = 0; i < length; i++) {
                 for (int j = 0; j < width; j++) {
                     if (i % 2 == 0 && j % 2 == 0) {
-                        warehouse[i][j][0] = code;//初始化将货架均匀的分为34个区域
+                        warehouse[i][j][0] = code;//初始化将货架均匀的分为32个区域
                         count++;
                         if (count - record > num) {
                             record = count;
@@ -128,16 +128,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
 
             wareMapper.insert(ware);
         }else{//查询到用户以创建过仓库
-            r.data("status_code","user have initialized");
+            r.data("status_code",true);
         }
-
         return r;
-
     }
 
     @Override
     public R information(InformationParam informationParam) {
         return null;
     }
-
 }
