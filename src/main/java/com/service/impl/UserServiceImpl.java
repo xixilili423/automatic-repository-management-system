@@ -35,18 +35,29 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
     @Override
     public R login(LoginParam loginParam){
 
+        // 生成一个介于 0 和 100 之间的不重复的随机数序列
+
         QueryWrapper<User> queryWrapper=new QueryWrapper<>();
             queryWrapper.eq("username",loginParam.getUsername()).eq("password",loginParam.getPassword());
             User user = userMapper.selectOne(queryWrapper);
             R r= new R();
             if (user != null && user.getPassword().equals(loginParam.getPassword())) {
+                QueryWrapper<Warehouse> queryWrapper1=new QueryWrapper<>();
+                queryWrapper.eq("username",user.getUsername());
+                Warehouse Ware = wareMapper.selectOne(queryWrapper1);//查询用户是否创建过仓库
                String token= user.getToken(user);
-               r.data("status_code","true");
                r.data("user_id","0");
                r.data("token",token);
+                r.data("status_code",true);
+                if(Ware!=null) {
+                    r.data("warehouse",true);
+                } else {
+                    r.data("warehouse",false);
+                }
                 return r;
             } else {
-                r.data("status_code","false");
+                r.data("warehouse",false);
+                r.data("status_code",false);
                 r.data("user_id","0");
                 r.data("token","");
                 return r;
@@ -56,9 +67,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
     // 注册
     @Override
     public R register(RegisterParam registerParam) {
-
         R r= new R();
-
         QueryWrapper<User> queryWrapper=new QueryWrapper<>();
         queryWrapper.eq("username",registerParam.getUsername()).eq("password",registerParam.getPassword());
         User u = userMapper.selectOne(queryWrapper);
