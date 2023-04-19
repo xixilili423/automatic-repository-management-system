@@ -3,7 +3,6 @@ package com.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.entity.StockOut;
 import com.mapper.OutMapper;
-import com.service.OtherService;
 import com.service.OutService;
 import com.vo.R;
 import com.vo.param.OutParam;

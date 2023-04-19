@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.auth0.jwt.JWT;
 
+import java.util.List;
+
 
 /**
  * FileName:  UserServiceImpl
@@ -38,18 +40,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
         // 生成一个介于 0 和 100 之间的不重复的随机数序列
 
         QueryWrapper<User> queryWrapper=new QueryWrapper<>();
+
             queryWrapper.eq("username",loginParam.getUsername()).eq("password",loginParam.getPassword());
             User user = userMapper.selectOne(queryWrapper);
             R r= new R();
             if (user != null && user.getPassword().equals(loginParam.getPassword())) {
                 QueryWrapper<Warehouse> queryWrapper1=new QueryWrapper<>();
                 queryWrapper.eq("username",user.getUsername());
-                Warehouse Ware = wareMapper.selectOne(queryWrapper1);//查询用户是否创建过仓库
+                List<Warehouse> Ware = wareMapper.selectList(queryWrapper1);//查询用户是否创建过仓库
                String token= user.getToken(user);
                r.data("user_id","0");
                r.data("token",token);
                 r.data("status_code",true);
-                if(Ware!=null) {
+                if(!Ware.isEmpty()) {
                     r.data("warehouse",true);
                 } else {
                     r.data("warehouse",false);

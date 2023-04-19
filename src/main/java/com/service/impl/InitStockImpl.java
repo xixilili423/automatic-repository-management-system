@@ -35,7 +35,6 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
         R r= new R();
         QueryWrapper<Warehouse> queryWrapper=new QueryWrapper<>();
         String username = JWT.decode(initStockParam.getToken()).getAudience().get(0);
-
         queryWrapper.eq("username",username);
         Warehouse user = wareMapper.selectOne(queryWrapper);//查询用户是否创建过仓库
         if(user==null) {
@@ -45,7 +44,6 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
             int num = length / 2 * width / 2 / 32;
             int count = 0, code = 1;
             int record = 0;
-
             // 生成货架
             for (int i = 0; i < length; i++) {
                 for (int j = 0; j < width; j++) {
@@ -69,8 +67,6 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
                 }
                 System.out.println();
             }
-
-
             Warehouse ware = new Warehouse();//将创建的仓库数据插入数据库
             ware.setAvg(initStockParam.getAvg());
             ware.setCapacity_x(initStockParam.getCapacity_x());

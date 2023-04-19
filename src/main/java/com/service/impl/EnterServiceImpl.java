@@ -20,6 +20,7 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
     // 获取入库记录表格
     @Override
     public R getInTable(String token){
+
         return R.ok();
     }
 
