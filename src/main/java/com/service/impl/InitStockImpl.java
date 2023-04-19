@@ -40,25 +40,7 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
         if(user==null) {
             int length = initStockParam.getCapacity_x();
             int width = initStockParam.getCapacity_y();
-            int[][][] warehouse = new int[length][width][3];
-            int num = length / 2 * width / 2 / 32;
-            int count = 0, code = 1;
-            int record = 0;
-            // 生成货架
-            for (int i = 0; i < length; i++) {
-                for (int j = 0; j < width; j++) {
-                    if (i % 2 == 0 && j % 2 == 0) {
-                        warehouse[i][j][0] = code;//初始化将货架均匀的分为32个区域
-                        count++;
-                        if (count - record > num) {
-                            record = count;
-                            code++;
-                        }
-                    } else {
-                        warehouse[i][j][0] = 0;
-                    }
-                }
-            }
+            int[][][] warehouse = this.Generate_shelvesx(length,width);
 
             // 输出仓库
             for (int i = 0; i < length; i++) {
@@ -81,6 +63,7 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
         return r;
     }
 
+
     // 获取旧用户仓库数据
     @Override
     public R getOldInitStock(String token) {
@@ -95,28 +78,39 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
         else {
             int length = user.getCapacity_x();
             int width = user.getCapacity_y();
-            int[][][] warehouse = new int[length][width][3];
-            int num = length / 2 * width / 2 / 32;
-            int count = 0, code = 1;
-            int record = 0;
-            // 生成货架
-            for (int i = 0; i < length; i++) {
-                for (int j = 0; j < width; j++) {
-                    if (i % 2 == 0 && j % 2 == 0) {
-                        warehouse[i][j][0] = code;//初始化将货架均匀的分为32个区域
-                        count++;
-                        if (count - record > num) {
-                            record = count;
-                            code++;
-                        }
-                    } else {
-                        warehouse[i][j][0] = 0;
-                    }
-                }
-            }
+            int[][][] warehouse = Generate_shelvesx(length,width);
             r.data("status", "true");
             r.data("depository",warehouse);
         }
-        return R.ok(); }
+        return R.ok();
+    }
+
+    private int[][][] Generate_shelvesx(int x, int y) {
+        int[][][] warehouse = new int[x][y][3];
+        int num = x / 10 * y / 10 / 32 - 1;
+        int count = 0, code = 1;
+        int record = 0;
+        // 生成货架
+        for (int i = 0; i < x; i++) {
+            for (int j = 0; j < y; j++) {
+                if (i % 10 == 0 && j % 10 == 0) {
+                    if (code < 32) {
+                        warehouse[i][j][0] = code;//初始化将货架均匀的分为32个区域
+                        count++;
+                    } else {
+                        warehouse[i][j][0] = 32;//剩下的区域作为备用区域
+                    }
+
+                    if (count - record > num) {
+                        record = count;
+                        code++;
+                    }
+                } else {
+                    warehouse[i][j][0] = 0;//生成道路
+                }
+            }
+        }
+        return warehouse;
+    }
 
 }
