@@ -3,6 +3,7 @@ package com.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.entity.User;
+import com.entity.Warehouse;
 import com.mapper.UserMapper;
 import com.mapper.WareMapper;
 import com.service.UserService;
@@ -12,6 +13,7 @@ import com.vo.param.InitStockParam;
 import com.vo.param.LoginParam;
 import com.vo.param.RegisterParam;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.auth0.jwt.JWT;
 
@@ -25,6 +27,8 @@ import com.auth0.jwt.JWT;
 @AllArgsConstructor
 public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements UserService {
     private final UserMapper userMapper;
+    @Autowired
+    private final WareMapper wareMapper;
 
     // 登陆
 

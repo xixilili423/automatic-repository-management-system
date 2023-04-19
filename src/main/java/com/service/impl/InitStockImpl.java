@@ -10,7 +10,10 @@ import com.service.InitStockService;
 import com.vo.R;
 import com.vo.param.InitStockParam;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.filter.ApplicationContextHeaderFilter;
 import org.springframework.stereotype.Service;
+import com.controller.ApplicationContextHelperUtil;
 import com.auth0.jwt.JWT;
 
 /**
@@ -23,6 +26,7 @@ import com.auth0.jwt.JWT;
 @AllArgsConstructor
 public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> implements InitStockService {
 
+    @Autowired
      private final WareMapper wareMapper;
 
     // 仓库初始化
@@ -33,7 +37,7 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
         String username = JWT.decode(initStockParam.getToken()).getAudience().get(0);
 
         queryWrapper.eq("username",username);
-        Warehouse user = WareMapper.selectOne(queryWrapper);//查询用户是否创建过仓库
+        Warehouse user = wareMapper.selectOne(queryWrapper);//查询用户是否创建过仓库
         if(user==null) {
             int length = initStockParam.getCapacity_x();
             int width = initStockParam.getCapacity_y();
@@ -73,8 +77,7 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
             ware.setCapacity_y(initStockParam.getCapacity_x());
             ware.setGateMachine(initStockParam.getGateMachine());
             ware.setUsername(username);
-
-            WareMapper.insert(ware);
+            wareMapper.insert(ware);
 
         }else{//查询到用户以创建过仓库
             r.data("status_code",true);
@@ -84,6 +87,40 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
 
     // 获取旧用户仓库数据
     @Override
-    public R getOldInitStock(String token) { return R.ok(); }
+    public R getOldInitStock(String token) {
+        R r= new R();
+        QueryWrapper<Warehouse> queryWrapper=new QueryWrapper<>();
+        String username = JWT.decode(token).getAudience().get(0);
+        queryWrapper.eq("username",username);
+        Warehouse user = wareMapper.selectOne(queryWrapper);//查询用户创建过仓库
+        if(user==null) {
+            r.data("status", "false");
+        }
+        else {
+            int length = user.getCapacity_x();
+            int width = user.getCapacity_y();
+            int[][][] warehouse = new int[length][width][3];
+            int num = length / 2 * width / 2 / 32;
+            int count = 0, code = 1;
+            int record = 0;
+            // 生成货架
+            for (int i = 0; i < length; i++) {
+                for (int j = 0; j < width; j++) {
+                    if (i % 2 == 0 && j % 2 == 0) {
+                        warehouse[i][j][0] = code;//初始化将货架均匀的分为32个区域
+                        count++;
+                        if (count - record > num) {
+                            record = count;
+                            code++;
+                        }
+                    } else {
+                        warehouse[i][j][0] = 0;
+                    }
+                }
+            }
+            r.data("status", "true");
+            r.data("depository",warehouse);
+        }
+        return R.ok(); }
 
 }
