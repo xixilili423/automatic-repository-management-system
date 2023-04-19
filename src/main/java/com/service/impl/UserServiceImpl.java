@@ -71,10 +71,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
     @Override
     public R register(RegisterParam registerParam) {
         R r= new R();
-        QueryWrapper<User> queryWrapper=new QueryWrapper<>();
-        queryWrapper.eq("username",registerParam.getUsername()).eq("password",registerParam.getPassword());
-        User u = userMapper.selectOne(queryWrapper);
-        if(u==null)
+        User user1 = new User();
+        user1.setPassword(registerParam.getUsername());
+        user1.setUsername(registerParam.getPassword());
+        boolean u = userMapper.equals(user1);
+        if(!u)
         {
             User user=new User();
             user.setUsername(registerParam.getUsername());
