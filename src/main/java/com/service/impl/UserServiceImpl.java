@@ -36,11 +36,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
 
     @Override
     public R login(LoginParam loginParam){
-
-        // 生成一个介于 0 和 100 之间的不重复的随机数序列
-
         QueryWrapper<User> queryWrapper=new QueryWrapper<>();
-
             queryWrapper.eq("username",loginParam.getUsername()).eq("password",loginParam.getPassword());
             User user = userMapper.selectOne(queryWrapper);
             R r= new R();
@@ -71,10 +67,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
     @Override
     public R register(RegisterParam registerParam) {
         R r= new R();
-        User user1 = new User();
-        user1.setPassword(registerParam.getUsername());
-        user1.setUsername(registerParam.getPassword());
-        boolean u = userMapper.equals(user1);
+        QueryWrapper<User> queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq("username",registerParam.getUsername());
+        boolean u = userMapper.exists(queryWrapper);
         if(!u)
         {
             User user=new User();
@@ -82,12 +77,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
             user.setPassword(registerParam.getPassword());
             userMapper.insert(user);
             r.data("status_code","true");
+            return r;
         }
         else {
             r.data("status_code","false");
+            return r;
         }
 
-        return R.ok();
     }
 
     // 主页请求用户信息
