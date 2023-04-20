@@ -57,6 +57,7 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
             ware.setUsername(username);
             wareMapper.insert(ware);
 
+            r.data("depository",warehouse);
         }else{//查询到用户以创建过仓库
             r.data("status_code",true);
         }
@@ -82,7 +83,7 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
             r.data("status", "true");
             r.data("depository",warehouse);
         }
-        return R.ok();
+        return r;
     }
 
     private int[][][] Generate_shelvesx(int x, int y) {
