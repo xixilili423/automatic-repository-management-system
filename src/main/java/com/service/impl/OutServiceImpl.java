@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements OutService {
 
+    // 出库请求
     @Override
     public R outStock(OutParam outParam){
         return R.ok();

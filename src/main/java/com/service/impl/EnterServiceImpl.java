@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implements EnterService {
 
-    // 入库
+    // 入库请求
     @Override
     public R enterStock(EnterParam enterParam){
         return R.ok();
@@ -20,7 +20,6 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
     // 获取入库记录表格
     @Override
     public R getInTable(String token){
-
         return R.ok();
     }
 
