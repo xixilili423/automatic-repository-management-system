@@ -6,7 +6,7 @@ import lombok.Setter;
 /**
  * FileName: EnterParam
  * Date: 2023/04/11
- * Description: 该类用作出 入库请求的数据对象 提交的数据
+ * Description: 该类用作出 入库请求传递参数 的类
  */
 
 @Getter

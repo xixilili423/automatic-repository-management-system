@@ -56,9 +56,11 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
             ware.setGateMachine(initStockParam.getGateMachine());
             ware.setUsername(username);
             wareMapper.insert(ware);
+            r.data("depository",warehouse); // 传回r
 
         }else{//查询到用户以创建过仓库
-            r.data("status_code",true);
+//            r.data("status_code",true); // 该项status_code 应该表示初始化请求的成功
+            r.data("status_code",false);
         }
         return r;
     }
@@ -85,6 +87,7 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
         return R.ok();
     }
 
+    // 生成货架
     private int[][][] Generate_shelvesx(int x, int y) {
         int[][][] warehouse = new int[x][y][3];
         int num = x / 10 * y / 10 / 32 - 1;
@@ -100,7 +103,6 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
                     } else {
                         warehouse[i][j][0] = 32;//剩下的区域作为备用区域
                     }
-
                     if (count - record > num) {
                         record = count;
                         code++;
