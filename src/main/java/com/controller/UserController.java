@@ -37,6 +37,6 @@ public class UserController {
     }
 
     // 获取主页信息--get
-    @GetMapping("information/{token}")
-    public R getInformation(@PathVariable("token") String token) { return userService.getInformation(token); }
+    @GetMapping("information")
+    public R getInformation(@RequestParam(value="token") String token) { return userService.getInformation(token); }
 }

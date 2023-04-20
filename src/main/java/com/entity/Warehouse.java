@@ -21,7 +21,7 @@ public class Warehouse {
 
     private int capacity_y;
 
-    private int gateMachine;
+    private int gate_machine;
 
     private int avg;
 

@@ -3,6 +3,7 @@ package com.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.entity.StockIn;
 import com.vo.R;
+import com.vo.param.CheckParcelParam;
 import com.vo.param.EnterParam;
 
 public interface EnterService extends IService<StockIn> {
@@ -20,4 +21,11 @@ public interface EnterService extends IService<StockIn> {
      * @return
      */
     R getInTable(String token);
+
+    /**
+     * 根据用户id查询包裹请求
+     * @param checkParcel(enterParam)
+     * @return
+     */
+    R checkParcel(CheckParcelParam checkParcelParam);
 }

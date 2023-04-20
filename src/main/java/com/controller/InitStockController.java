@@ -27,7 +27,7 @@ public class InitStockController {
     }
 
     // 获取旧用户仓库数据
-    @GetMapping("getOldInitStock/{token}")
-    public R getOldInitStock(@PathVariable("token") String token) { return initStockService.getOldInitStock(token); }
+    @GetMapping("getOldInitStock")
+    public R getOldInitStock(@RequestParam(value="token") String token) { return initStockService.getOldInitStock(token); }
 
 }
