@@ -77,8 +77,8 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
             r.data("status", "false");
         }
         else {
-            int length = user.getCapacity_x();
-            int width = user.getCapacity_y();
+            int length = user.getCapacity_x() / 10;
+            int width = user.getCapacity_y() / 10;
             int[][][] warehouse = Generate_shelvesx(length,width);
             r.data("status", "true");
             r.data("depository",warehouse);
@@ -92,6 +92,9 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
         int count = 0, code = 1;
         int record = 0;
 
+        int start_x = x / 2, start_y = y / 2;
+        int end_x = x / 2, end_y = y / 2;
+
         // 生成货架
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
@@ -99,7 +102,6 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
                     warehouse[i][j][0] = 0;
                     continue;
                 }
-
                 if (j % 2 == 0 ) {
                     warehouse[i][j][0] = 0;//生成道路
                     count++;
@@ -113,6 +115,13 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
                     if (count - record > num) {
                         record = count;
                         code++;
+                    }
+
+                    // 标记起点和终点
+                    if (i == start_x && j == start_y) {
+                        warehouse[i][j][0] = -1;
+                    } else if (i == end_x && j == end_y) {
+                        warehouse[i][j][0] = -2;
                     }
                 }
             }
