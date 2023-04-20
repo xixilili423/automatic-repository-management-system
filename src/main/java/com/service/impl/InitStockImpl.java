@@ -27,7 +27,7 @@ import com.auth0.jwt.JWT;
 public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> implements InitStockService {
 
     @Autowired
-     private final WareMapper wareMapper;
+    private final WareMapper wareMapper;
 
     // 仓库初始化
     @Override
@@ -40,11 +40,11 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
         if(user==null) {
             int length = initStockParam.getCapacity_x();
             int width = initStockParam.getCapacity_y();
-            int[][][] warehouse = this.Generate_shelvesx(length,width);
+            int[][][] warehouse = this.Generate_shelvesx(length ,width);
 
             // 输出仓库
-            for (int i = 0; i < length; i++) {
-                for (int j = 0; j < width; j++) {
+            for (int i = 0; i < warehouse.length; i++) {
+                for (int j = 0; j < warehouse[0].length; j++) {
                     System.out.print(warehouse[i][j][0] + " ");
                 }
                 System.out.println();
@@ -56,11 +56,10 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
             ware.setGateMachine(initStockParam.getGateMachine());
             ware.setUsername(username);
             wareMapper.insert(ware);
-            r.data("depository",warehouse); // 传回r
 
+            r.data("depository",warehouse);
         }else{//查询到用户以创建过仓库
-//            r.data("status_code",true); // 该项status_code 应该表示初始化请求的成功
-            r.data("status_code",false);
+            r.data("status_code",true);
         }
         return r;
     }
@@ -84,36 +83,53 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
             r.data("status", "true");
             r.data("depository",warehouse);
         }
-//        return R.ok();
         return r;
     }
 
-    // 生成货架
     private int[][][] Generate_shelvesx(int x, int y) {
+        x = x / 10;
+        y = y / 10;
+
         int[][][] warehouse = new int[x][y][3];
-        int num = x / 10 * y / 10 / 32 - 1;
+        int num = x / 2 * y / 2 / 32 - 1;
         int count = 0, code = 1;
         int record = 0;
+
+        int start_x = x / 2;
+        int end_y = y / 2;
+
         // 生成货架
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
-                if (i % 10 == 0 && j % 10 == 0) {
+                if(i % 2 == 0){
+                    warehouse[i][j][0] = 0;
+                    continue;
+                }
+
+                if (j % 2 == 0 ) {
+                    warehouse[i][j][0] = 0;//生成道路
+                    count++;
+                } else {
                     if (code < 32) {
                         warehouse[i][j][0] = code;//初始化将货架均匀的分为32个区域
-                        count++;
-                    } else {
+                    }else {
                         warehouse[i][j][0] = 32;//剩下的区域作为备用区域
                     }
+
                     if (count - record > num) {
                         record = count;
                         code++;
                     }
-                } else {
-                    warehouse[i][j][0] = 0;//生成道路
                 }
             }
         }
+
+        // 标记起点和终点
+        warehouse[start_x][0][0] = -1;
+        warehouse[0][end_y][0] = -2;
+
         return warehouse;
     }
 
 }
+
