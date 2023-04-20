@@ -33,7 +33,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
     private final WareMapper wareMapper;
 
     // 登陆
-
     @Override
     public R login(LoginParam loginParam){
         QueryWrapper<User> queryWrapper=new QueryWrapper<>();
@@ -83,7 +82,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
             r.data("status_code","false");
             return r;
         }
-
     }
 
     // 主页请求用户信息
