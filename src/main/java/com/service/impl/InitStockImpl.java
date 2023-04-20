@@ -38,8 +38,8 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
         queryWrapper.eq("username",username);
         Warehouse user = wareMapper.selectOne(queryWrapper);//查询用户是否创建过仓库
         if(user==null) {
-            int length = initStockParam.getCapacity_x();
-            int width = initStockParam.getCapacity_y();
+            int length = initStockParam.getCapacity_x() / 10;
+            int width = initStockParam.getCapacity_y() / 10;
             int[][][] warehouse = this.Generate_shelvesx(length,width);
 
             // 输出仓库
@@ -88,17 +88,25 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
 
     private int[][][] Generate_shelvesx(int x, int y) {
         int[][][] warehouse = new int[x][y][3];
-        int num = x / 10 * y / 10 / 32 - 1;
+        int num = x / 2 * y / 2 / 32 - 1;
         int count = 0, code = 1;
         int record = 0;
+
         // 生成货架
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
-                if (i % 10 == 0 && j % 10 == 0) {
+                if(i % 2 == 0){
+                    warehouse[i][j][0] = 0;
+                    continue;
+                }
+
+                if (j % 2 == 0 ) {
+                    warehouse[i][j][0] = 0;//生成道路
+                    count++;
+                } else {
                     if (code < 32) {
                         warehouse[i][j][0] = code;//初始化将货架均匀的分为32个区域
-                        count++;
-                    } else {
+                    }else {
                         warehouse[i][j][0] = 32;//剩下的区域作为备用区域
                     }
 
@@ -106,11 +114,11 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
                         record = count;
                         code++;
                     }
-                } else {
-                    warehouse[i][j][0] = 0;//生成道路
                 }
             }
+
         }
+
         return warehouse;
     }
 
