@@ -84,7 +84,8 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
             r.data("status", "true");
             r.data("depository",warehouse);
         }
-        return R.ok();
+//        return R.ok();
+        return r;
     }
 
     // 生成货架
