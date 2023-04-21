@@ -38,11 +38,11 @@ public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements 
             QueryWrapper<StockOut> queryWrapper = new QueryWrapper<>();
             List<StockOut> stock_out=outMapper.selectList(queryWrapper);
             r.data("stock_out",stock_out);
-            return r.ok();
+            return R.ok();
         }
         else
         {
-            return r.ok();
+            return R.ok();
         }
 
     }
