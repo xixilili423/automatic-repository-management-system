@@ -31,7 +31,14 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
     // 入库请求
     @Override
     public R enterStock(EnterParam enterParam){
-        return R.ok();
+        // 给多个包裹信息,token
+        // 返回小车列表,包裹列表，是否正常响应
+        R r = new R();
+
+        //
+
+
+        return r;
     }
 
     // 获取入库记录表格 get
@@ -51,10 +58,13 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
                 queryWrapper.eq("username",username);
                 Warehouse warehouse = wareMapper.selectOne(queryWrapper);
                 int warehouse_id = warehouse.getId();
+                System.out.println("1.warehouse_id: " + warehouse_id);
                 // 根据warehouse_id获取对应StockIn,获取package_id
                 QueryWrapper<StockIn> queryWrapper1 = new QueryWrapper<>();
-                queryWrapper1.eq("warehouse_id",warehouse_id);
+//                queryWrapper1.eq("warehouse_id",warehouse_id);
+                queryWrapper1.eq("1",warehouse_id); // 测试用
                 StockIn stockIn = enterMapper.selectOne(queryWrapper1);
+                System.out.println("2.warehouse_id: "+ stockIn.getWarehouse_id());
                 String package_id = String.valueOf(stockIn.getPackage_id()); // 包裹id
                 System.out.println("package_id: "+ package_id);
                 // 获取StockIn数据，写入r中，返回

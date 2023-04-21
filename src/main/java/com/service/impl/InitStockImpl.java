@@ -8,6 +8,7 @@ import com.mapper.InitStockMapper;
 import com.mapper.WareMapper;
 import com.service.InitStockService;
 import com.vo.R;
+import com.vo.param.InitData;
 import com.vo.param.InitStockParam;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,16 +72,20 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
         QueryWrapper<Warehouse> queryWrapper=new QueryWrapper<>();
         String username = JWT.decode(token).getAudience().get(0);
         queryWrapper.eq("username",username);
-        Warehouse user = wareMapper.selectOne(queryWrapper);//查询用户创建过仓库
+        Warehouse user = wareMapper.selectOne(queryWrapper);// 查询用户创建过仓库
         if(user==null) {
             r.data("status", "false");
         }
         else {
             int length = user.getCapacity_x();
             int width = user.getCapacity_y();
+            int gate_machine = user.getGate_machine();
+            int avg = user.getAvg();
             int[][][] warehouse = Generate_shelvesx(length,width);
             r.data("status", "true");
             r.data("depository",warehouse);
+            InitData initData = new InitData(length,width,gate_machine,avg);
+            r.data("initData",initData);
         }
         return r;
     }
