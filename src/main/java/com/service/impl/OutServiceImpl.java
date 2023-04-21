@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.entity.StockOut;
 import com.entity.User;
+import com.entity.Warehouse;
 import com.mapper.OutMapper;
 import com.mapper.UserMapper;
+import com.mapper.WareMapper;
 import com.service.OutService;
 import com.vo.R;
 import com.vo.param.OutParam;
@@ -23,6 +25,8 @@ public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements 
 
     UserMapper userMapper;
     OutMapper outMapper;
+
+    WareMapper wareMapper;
     List<StockOut> stock_out;
     // 出库请求
     @Override
@@ -39,17 +43,25 @@ public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements 
         queryWrapper1.eq("username",username);
         boolean user = userMapper.exists(queryWrapper1);
         if(user) {
-            QueryWrapper<StockOut> queryWrapper = new QueryWrapper<>();
-            List<StockOut> stock_out=outMapper.selectList(queryWrapper);
-            r.data("stock_out",stock_out);
-            return r;
+            try {
+                QueryWrapper<Warehouse> queryWrapper2 = new QueryWrapper<>();
+                queryWrapper2.eq("username", username);
+                Warehouse warehouse = wareMapper.selectOne(queryWrapper2);
+                QueryWrapper<StockOut> queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("warehouse_id", warehouse.getId());
+                List<StockOut> stock_out = outMapper.selectList(queryWrapper);
+                r.data("stock_out", stock_out);
+                return r.ok();
+            } catch (Exception E) {
+                System.out.println(E);
+                return r.error();
+            }
         }
         else{
-            return R.error();
+            return r.error();
         }
     }
 
-    // 路径规划
     public static List<int[]> findPath(int[][][] warehouse, int targetX, int targetY) {
         int startX = warehouse.length / 2;  // 起点为第一列的中点
         int startY = 0;
