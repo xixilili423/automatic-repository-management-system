@@ -64,6 +64,10 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
                 int location_x = stockIn.getLocation_x();
                 int location_y = stockIn.getLocation_y();
                 System.out.println("x,y: " + location_x + "," + location_y);
+
+                String a = stockIn.toString();
+                System.out.println(a);
+
                 String location_xy = location_x + "," + location_y; // 存放货架
                 String address = String.valueOf(stockIn.getAddress()); // 目的地所属地区
                 InTableData inTableData = new InTableData(package_id,in_time,location_xy,address);
@@ -75,7 +79,7 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
                 return R.error();
             }
             // 测试结果里面 package_id，in_time，location_x和location_y都获取不到值，但address能获取
-            // 需要再进行改动（也许是数据的问题？）
+            // 就是数据的问题
         }
         return R.error();
     }
