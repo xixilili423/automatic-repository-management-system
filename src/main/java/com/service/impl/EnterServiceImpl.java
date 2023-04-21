@@ -55,14 +55,15 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
                 QueryWrapper<StockIn> queryWrapper1 = new QueryWrapper<>();
                 queryWrapper1.eq("warehouse_id",warehouse_id);
                 StockIn stockIn = enterMapper.selectOne(queryWrapper1);
-                String package_id = stockIn.getPackage_id(); // 包裹id
+                String package_id = String.valueOf(stockIn.getPackage_id()); // 包裹id
                 System.out.println("package_id: "+ package_id);
                 // 获取StockIn数据，写入r中，返回
                 // 包裹id在上面已经获取
-                String in_time = String.valueOf(stockIn.getCreate_time()); //
+                String in_time = String.valueOf(stockIn.getCreate_time());
                 System.out.println("in_time: " + in_time);
                 int location_x = stockIn.getLocation_x();
                 int location_y = stockIn.getLocation_y();
+                System.out.println("x,y: " + location_x + "," + location_y);
                 String location_xy = location_x + "," + location_y; // 存放货架
                 String address = String.valueOf(stockIn.getAddress()); // 目的地所属地区
                 InTableData inTableData = new InTableData(package_id,in_time,location_xy,address);
@@ -73,8 +74,8 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
                 System.out.println(E);
                 return R.error();
             }
-
-            // 测试结果里面 id 和 in_time 是null，需要再看看改动（也许是数据的问题？）
+            // 测试结果里面 package_id，in_time，location_x和location_y都获取不到值，但address能获取
+            // 需要再进行改动（也许是数据的问题？）
         }
         return R.error();
     }
