@@ -43,17 +43,22 @@ public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements 
         queryWrapper1.eq("username",username);
         boolean user = userMapper.exists(queryWrapper1);
         if(user) {
-            QueryWrapper<Warehouse> queryWrapper2=new QueryWrapper<>();
-            queryWrapper2.eq("username",username);
-            Warehouse warehouse=wareMapper.selectOne(queryWrapper2);
-            QueryWrapper<StockOut> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("warehouse_id",warehouse.getId());
-            List<StockOut> stock_out=outMapper.selectList(queryWrapper);
-            r.data("stock_out",stock_out);
-            return R.ok();
+            try {
+                QueryWrapper<Warehouse> queryWrapper2 = new QueryWrapper<>();
+                queryWrapper2.eq("username", username);
+                Warehouse warehouse = wareMapper.selectOne(queryWrapper2);
+                QueryWrapper<StockOut> queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("warehouse_id", warehouse.getId());
+                List<StockOut> stock_out = outMapper.selectList(queryWrapper);
+                r.data("stock_out", stock_out);
+                return r.ok();
+            } catch (Exception E) {
+                System.out.println(E);
+                return r.error();
+            }
         }
         else{
-            return R.ok();
+            return r.error();
         }
     }
 
