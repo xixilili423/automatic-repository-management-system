@@ -11,13 +11,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class parcel {
+public class Parcel {
 
     private String id;
 
     private String place;
 
-    private parcel(String id,String place){
+    private Parcel(String id, String place){
         this.id = id;
         this.place = place;
     }

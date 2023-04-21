@@ -2,6 +2,7 @@ package com.controller;
 
 import com.service.EnterService;
 import com.vo.R;
+import com.vo.param.CheckParcelParam;
 import com.vo.param.EnterParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,12 @@ public class EnterController {
     public R enterStock(@RequestBody EnterParam enterParam) { return enterService.enterStock(enterParam); }
 
     // 获取入库记录表格 get
-    @GetMapping("DBrecordIn/{token}")
-    public R getInTable(@PathVariable("token") String token) { return enterService.getInTable(token); }
+    @GetMapping("DBrecordIn")
+    public R getInTable(@RequestParam(value="token") String token) { return enterService.getInTable(token); }
+
+    // 根据id查询包裹请求
+    @PostMapping("checkParcel")
+    public R checkParcel(@RequestBody CheckParcelParam checkParcelParam) { return enterService.checkParcel(checkParcelParam); }
+//
 
 }

@@ -53,7 +53,7 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
             ware.setAvg(initStockParam.getAvg());
             ware.setCapacity_x(initStockParam.getCapacity_x());
             ware.setCapacity_y(initStockParam.getCapacity_x());
-            ware.setGateMachine(initStockParam.getGateMachine());
+            ware.setGate_machine(initStockParam.getGateMachine());
             ware.setUsername(username);
             wareMapper.insert(ware);
 
@@ -63,7 +63,6 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
         }
         return r;
     }
-
 
     // 获取旧用户仓库数据
     @Override

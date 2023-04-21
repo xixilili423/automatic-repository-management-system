@@ -6,6 +6,6 @@ import com.entity.Warehouse;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface WareMapper  extends BaseMapper<Warehouse> {
+public interface WareMapper extends BaseMapper<Warehouse> {
 
 }

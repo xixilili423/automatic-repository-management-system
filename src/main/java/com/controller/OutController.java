@@ -25,7 +25,7 @@ public class OutController {
     public R outStock(@RequestBody OutParam outParam) { return outService.outStock(outParam); }
 
     // 5.获取出库记录表格 get
-    @GetMapping("DBrecordOut/{token}")
-    public R  getOutTable(@PathVariable("token") String token) { return outService.getOutTable(token); }
+    @GetMapping("DBrecordOut")
+    public R  getOutTable(@RequestParam(value="token") String token) { return outService.getOutTable(token); }
 
 }

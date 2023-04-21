@@ -16,13 +16,15 @@ public class StockOut {
 
     private int id;
 
-    private char package_id;
+    private String package_id;
 
     private int warehouse_id;
 
     private int location_x;
 
     private int location_y;
+
+    private String address; // 目的地所属地区
 
     private String create_time;// 数据库里面是datatime类型，精确到秒，需要进行转换
 }
