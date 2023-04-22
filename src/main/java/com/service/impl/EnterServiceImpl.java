@@ -3,13 +3,11 @@ package com.service.impl;
 import com.auth0.jwt.JWT;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.entity.Place;
 import com.entity.StockIn;
 import com.entity.StockOut;
 import com.entity.Warehouse;
-import com.mapper.EnterMapper;
-import com.mapper.OutMapper;
-import com.mapper.UserMapper;
-import com.mapper.WareMapper;
+import com.mapper.*;
 import com.service.EnterService;
 import com.vo.R;
 import com.vo.param.*;
@@ -28,6 +26,8 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
     private final EnterMapper enterMapper;
 
     private final OutMapper outMapper;
+    private final PlaceMapper placeMapper;
+
 
 
     // 待改正
@@ -76,15 +76,39 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
          * 将parcelList按place分类
          */
 
+
         return afterParcel;
     }
+
     //给一个系列的包裹分配货架
     private parcelReturn[] distributeLocation(Parcel[] parcel, int[][][] warehouse, String token){
         /**
          * 返回parcelList【{id,status,location_x,location_y}】
          */
-        return null;
+        parcelReturn[] result = new parcelReturn[parcel.length];
+
+        for(int i = 0; i < parcel.length; i++){
+            QueryWrapper<Place> qw = new QueryWrapper<>();
+            qw.eq("place_Name", parcel[i].getPlace());
+            Place place = placeMapper.selectOne(qw);
+
+            for (int k = 1; k < warehouse.length; k++) {
+                for (int j = 0; j < warehouse[0].length; j++) {
+                    if(warehouse[i][j][0] == place.getId()){//找到编号对得上的货架就分给它,可加入更多判断
+                        int num = Integer.parseInt(parcel[i].getId());
+
+                        result[i].setId(num);
+                        result[i].setLocation_x(k);
+                        result[i].setLocation_y(j);
+                        result[i].setStatus(true);
+                    }
+                }
+            }
+        }
+
+        return result;
     }
+
     // 入库请求
     @Override
     public R enterStock(EnterParam enterParam){
@@ -115,9 +139,14 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
             //将返回结果赋给该小车的parcelReturn[]
             distributeLocation(parcels, warehouse_structure, enterParam.getToken());
         }
+
         //给每辆车路径规划
         for (int i=0; i<divideParcel.size();i++){
             //将路径规划结果返回赋给该车的route[][]
+//            avgList[i].setRoute(FindPath.findPath(initStock, new int[]{0, 0}, );
+
+
+
         }
         // 返回小车列表,包裹列表，是否正常响应
         r.data("avgList",avgList);

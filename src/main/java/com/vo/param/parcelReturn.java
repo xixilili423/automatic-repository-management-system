@@ -22,4 +22,7 @@ public class parcelReturn {
         this.status = status;
     }
 
+    public parcelReturn() {
+
+    }
 }

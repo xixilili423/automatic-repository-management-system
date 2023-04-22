@@ -12,59 +12,71 @@ import java.util.*;
 @Service
 public class FindPath {
 
-    FindPath(){
+    public static List<int[]> findPath(int[][][] warehouse, int[] start, int[][] goals) {
+        List<int[]> path = new ArrayList<>();
+        int currX = start[0];
+        int currY = start[1];
+        int[][] visited = new int[warehouse.length][warehouse[0].length];
+        visited[currX][currY] = 1;
 
-    }
+        // 计算所有目标点
+        List<int[]> targetPoints = new ArrayList<>();
 
-    public static List<List<int[]>> findPaths(int[][][] warehouse, int[] start, List<int[]> targets) {
-        List<List<int[]>> allPaths = new ArrayList<>();
-        boolean[][] visited = new boolean[warehouse.length][warehouse[0].length];
+        for (int[] goal : goals) {
+            targetPoints.add(goal); // 移动到目标点
+        }
+        targetPoints.add(start); // 回到起点
 
-        for (int[] target : targets) {
-            int endX = target[0];
-            int endY = target[1];
+        // 依次寻路经过所有目标点
+        for (int[] targetPoint : targetPoints) {
+            int targetX = targetPoint[0];
+            int targetY = targetPoint[1];
+            List<int[]> neighbors = getNeighbors(currX, currY);
 
-            List<int[]> path = new ArrayList<>();
-            Queue<int[]> queue = new LinkedList<>();
+            while (!neighbors.contains(new int[]{targetX, targetY})) {//未到达目标点周围就进行寻路
 
-            queue.add(start);
-            visited[start[0]][start[1]] = true;
+                int minCost = Integer.MAX_VALUE;
+                int[] next = null;
 
-            while (!queue.isEmpty()) {
-                int[] curr = queue.poll();
-                int currX = curr[0];
-                int currY = curr[1];
+                for (int[] neighbor : neighbors) {
+                    int neighborX = neighbor[0];
+                    int neighborY = neighbor[1];
+                    if (neighborX < 0 || neighborY < 0 || neighborX >= warehouse.length || neighborY >= warehouse[0].length || warehouse[neighborX][neighborY][0] > 0) {
+                        continue; // 越界了，不能作为邻居考虑
+                    }
+                    int cost = visited[currX][currY] + warehouse[neighborX][neighborY][0];
+                    if (Math.abs(neighborX - targetX) + Math.abs(neighborY - targetY) < minCost && visited[neighborX][neighborY] == 0) {
+                        next = neighbor;
+                        minCost = Math.abs(neighborX - targetX) + Math.abs(neighborY - targetY);
+                    }
+                }
 
-                if (currX == endX && currY == endY) {
-                    path.add(new int[]{currX, currY});
+                if(next == null){//回到起点附近
                     break;
                 }
 
-                for (int i = -1; i <= 1; i++) {
-                    for (int j = -1; j <= 1; j++) {
-                        if (Math.abs(i) == Math.abs(j) || currX + i < 0 || currX + i >= warehouse.length || currY + j < 0 || currY + j >= warehouse[0].length || visited[currX + i][currY + j] || warehouse[currX + i][currY + j][0] == 0) {
-                            continue;
-                        }
+                //节点移动
+                path.add(next);
+                currX = next[0];
+                currY = next[1];
+                visited[currX][currY] = 1;
 
-                        if (warehouse[currX + i][currY + j][0] == -1 || warehouse[currX + i][currY + j][0] == -2) {
-                            path.add(new int[]{currX, currY});
-                            path.add(new int[]{currX + i, currY + j});
-                            allPaths.add(path);
-                            break;
-                        }
+                System.out.println("["+ currX + "," + currY + "] ");
 
-                        queue.add(new int[]{currX + i, currY + j});
-                        visited[currX + i][currY + j] = true;
-                    }
-                }
-            }
-
-            for (boolean[] row : visited) {
-                Arrays.fill(row, false);
+                neighbors = getNeighbors(currX, currY);
             }
         }
 
-        return allPaths;
+        return path;
+    }
+
+    private static List<int[]> getNeighbors(int currX, int currY) {
+        List<int[]> neighbors = new ArrayList<>();
+        neighbors.add(new int[]{currX + 1, currY}); // 右侧邻居
+        neighbors.add(new int[]{currX - 1, currY}); // 左侧邻居
+        neighbors.add(new int[]{currX, currY + 1}); // 下方邻居
+        neighbors.add(new int[]{currX, currY - 1}); // 上方邻居
+        return neighbors;
     }
 
 }
