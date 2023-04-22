@@ -39,8 +39,9 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
         queryWrapper.eq("username",username);
         Warehouse user = wareMapper.selectOne(queryWrapper);//查询用户是否创建过仓库
         if(user==null) {
-            int length = initStockParam.getCapacity_x();
-            int width = initStockParam.getCapacity_y();
+
+            int length = initStockParam.getCapacity_y();//改完
+            int width = initStockParam.getCapacity_x();
             int[][][] warehouse = this.Generate_shelvesx(length ,width);
 
             // 输出仓库
@@ -53,7 +54,7 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
             Warehouse ware = new Warehouse();//将创建的仓库数据插入数据库
             ware.setAvg(initStockParam.getAvg());
             ware.setCapacity_x(initStockParam.getCapacity_x());
-            ware.setCapacity_y(initStockParam.getCapacity_x());
+            ware.setCapacity_y(initStockParam.getCapacity_y());
             ware.setGate_machine(initStockParam.getGateMachine());
             ware.setUsername(username);
             wareMapper.insert(ware);
@@ -77,8 +78,8 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
             r.data("status", "false");
         }
         else {
-            int length = user.getCapacity_x();
-            int width = user.getCapacity_y();
+            int length = user.getCapacity_y();
+            int width = user.getCapacity_x();//改完
             int gate_machine = user.getGate_machine();
             int avg = user.getAvg();
             int[][][] warehouse = Generate_shelvesx(length,width);

@@ -14,9 +14,15 @@ import com.vo.R;
 import com.vo.param.CheckParcelParam;
 import com.vo.param.EnterParam;
 import com.vo.param.InTableData;
+import com.vo.param.Parcel;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.vo.param.Avg;
+import com.vo.param.parcelReturn;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -24,18 +30,69 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
 
     private final UserMapper userMapper;
     private final EnterMapper enterMapper;
+
+
     // 待改正
     @Autowired
     private final WareMapper wareMapper;
 
+    //筛选包裹（出入口不太一样）
+    private Parcel[] select(Parcel[] parcel , String token){
+        /**
+         * 读数据库，剔除不可入库包裹，并将parcelList的id、status填写
+         */
+
+
+        return parcel;
+    }
+    //创建小车列表
+    private Avg[] createAvg(int avgNumber){
+        Avg[] avgList = new Avg[avgNumber];
+        /**
+         * 生成小车列表（id、status）
+         */
+        return avgList;
+    }
+    //包裹分类
+    private List<Parcel[]> divide(Parcel[] parcel){
+        List<Parcel[]> afterParcel =  new ArrayList<>();
+        /**
+         * 将parcelList按place分类
+         */
+
+        return afterParcel;
+    }
+    //给一个系列的包裹分配货架
+    private parcelReturn[] distributeLocation(Parcel[] parcel, int[][][] warehouse, String token){
+        /**
+         * 返回parcelList【{id,status,location_x,location_y}】
+         */
+        return null;
+    }
     // 入库请求
     @Override
     public R enterStock(EnterParam enterParam){
-        // 给多个包裹信息,token
-        // 返回小车列表,包裹列表，是否正常响应
         R r = new R();
+        //读取数据库，获取avg数量
+        int avg = 0 ;
+        Avg[] avgList = createAvg(avg);//创建小车列表，应该放在初始化仓库部分
+        int[][][] warehouse = null;//获得仓库结构
 
-        //
+        Parcel[] p = select(enterParam.getParcelInList() , enterParam.getToken());//得到可入库的包裹序列
+        List<Parcel[]> divideParcel = divide(p);//得到分类后的多个包裹序列
+        for (Parcel[] parcels : divideParcel) {//分配小车，即avgList中的parcelList、status
+            //分配一辆车后（改变小车状态），马上对其所载包裹分配货架
+            distributeLocation(parcels, warehouse, enterParam.getToken()); //将返回结果赋给该小车的parcelReturn[]
+        }
+        for (int i=0; i<divideParcel.size();i++){//给每辆车路径规划
+            //将路径规划结果返回赋给该车的route[][]
+
+
+        }
+        //返回总值
+
+
+
 
 
         return r;
