@@ -11,10 +11,10 @@ import lombok.Getter;
 public class OutParam {
     // 数据传递顺序
     private Parcel parcelOutList[]; // 包裹id，目的地
-    private String userName; // 用户名（还是说用token？)
+    private String token; // 用户名（还是说用token？)
 
-    public OutParam(Parcel parcelOutList[], String userName){
+    public OutParam(Parcel parcelOutList[], String token){
         this.parcelOutList = parcelOutList;
-        this.userName = userName;
+        this.token = token;
     }
 }
