@@ -12,6 +12,8 @@ import com.service.OutService;
 import com.vo.R;
 import com.vo.param.OutParam;
 import com.vo.param.Parcel;
+import lombok.AllArgsConstructor;
+import com.vo.param.InTableData;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,9 +23,10 @@ import java.util.Queue;
 
 
 @Service
+@AllArgsConstructor
 public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements OutService {
 
-    UserMapper userMapper;
+    private final UserMapper userMapper;
     OutMapper outMapper;
 
     WareMapper wareMapper;
@@ -41,25 +44,28 @@ public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements 
         QueryWrapper<User> queryWrapper1=new QueryWrapper<>();
         String username = JWT.decode(token).getAudience().get(0);
         queryWrapper1.eq("username",username);
-        boolean user = userMapper.exists(queryWrapper1);
-        if(user) {
+         System.out.println(userMapper.exists(queryWrapper1));
+        if(userMapper.exists(queryWrapper1)) {
             try {
                 QueryWrapper<Warehouse> queryWrapper2 = new QueryWrapper<>();
                 queryWrapper2.eq("username", username);
                 Warehouse warehouse = wareMapper.selectOne(queryWrapper2);
                 QueryWrapper<StockOut> queryWrapper = new QueryWrapper<>();
-                queryWrapper.eq("warehouse_id", warehouse.getId());
+                queryWrapper.eq("warehouse", warehouse.getId());
                 List<StockOut> stock_out = outMapper.selectList(queryWrapper);
+
                 r.data("stock_out", stock_out);
-                return r.ok();
+                r.data("status_code",true);
             } catch (Exception E) {
                 System.out.println(E);
-                return r.error();
+                r.data("status_code",false);
             }
         }
         else{
-            return r.error();
+            r.data("status_code",false);
+
         }
+        return r;
     }
     //路径规划
     public static List<int[]> findPath(int[][][] warehouse, int targetX, int targetY) {

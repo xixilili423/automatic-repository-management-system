@@ -13,17 +13,17 @@ public class StockIn {
 
     private int id; // 记录的id
 
-    private String package_id;
+    private String parcel;
 
-    private int warehouse_id;
+    private int warehouse;
 
-    private int location_x;
+    private int x;
 
-    private int location_y;
+    private int y;
 
     private String address; // 目的地所属地区
 
-    private String create_time; // 数据库里面是datatime类型，精确到秒，需要进行转换
+    private String time; // 数据库里面是datatime类型，精确到秒，需要进行转换
 
     // private String status;
 }

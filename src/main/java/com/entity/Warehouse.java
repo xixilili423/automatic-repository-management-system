@@ -17,11 +17,11 @@ public class Warehouse {
 
     private int id;
 
-    private int capacity_x;
+    private int x;
 
-    private int capacity_y;
+    private int y;
 
-    private int gate_machine;
+    private int gate;
 
     private int avg;
 
