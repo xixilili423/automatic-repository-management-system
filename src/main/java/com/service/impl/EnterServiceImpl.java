@@ -1,12 +1,14 @@
 package com.service.impl;
 
 import com.auth0.jwt.JWT;
+import com.baomidou.mybatisplus.core.assist.ISqlRunner;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.entity.Place;
 import com.entity.StockIn;
-import com.entity.User;
 import com.entity.Warehouse;
 import com.mapper.EnterMapper;
+import com.mapper.PlaceMapper;
 import com.mapper.UserMapper;
 import com.mapper.WareMapper;
 import com.service.EnterService;
@@ -14,9 +16,14 @@ import com.vo.R;
 import com.vo.param.CheckParcelParam;
 import com.vo.param.EnterParam;
 import com.vo.param.InTableData;
+import com.vo.param.Parcel;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -27,16 +34,70 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
     // 待改正
     @Autowired
     private final WareMapper wareMapper;
+    private final PlaceMapper placeMapper;
+
 
     // 入库请求
     @Override
     public R enterStock(EnterParam enterParam){
         // 给多个包裹信息,token
         // 返回小车列表,包裹列表，是否正常响应
+        Parcel[] parcelList = enterParam.getParcelInList();
+        String username = JWT.decode(enterParam.getToken()).getAudience().get(0);
+
         R r = new R();
 
-        //
+        //临时用于获取仓库结构
+        QueryWrapper<Warehouse> queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq("username",username);
+        Warehouse w = wareMapper.selectOne(queryWrapper);
+        int[][][] warehouse = this.Generate_shelvesx(w.getCapacity_x(),w.getCapacity_y());
 
+        // 输出仓库，测试用
+        for (int i = 0; i < warehouse.length; i++) {
+            for (int j = 0; j < warehouse[0].length; j++) {
+                System.out.print(warehouse[i][j][0] + " ");
+            }
+            System.out.println();
+        }
+
+        //设置起点,初始化
+        FindPath find = new FindPath();
+        int[] start = {1, 0};
+        List<int[]> targets = new ArrayList<>();
+        QueryWrapper<Place> qw = new QueryWrapper<>();
+        List<int[]> targetList = new ArrayList<>();
+
+
+        //循环查询得到传入的包裹地址对应的货架类型编号，未考率备用货架
+        for (Parcel parcel : parcelList) {
+            qw.eq("placeName", parcel.getPlace());
+            Place place = placeMapper.selectOne(qw);
+
+            int temp = (int)place.getId();
+            int[] target = new int[]{};
+
+            for (int i = 0; i < warehouse.length; i++) {
+                for (int j = 0; j < warehouse[0].length; j++) {
+
+                    //未加入货架阈值判定
+
+                    if (!targetList.isEmpty()) {
+                        int[] lastTarget = targetList.get(targetList.size() - 1);
+                        if (Arrays.equals(lastTarget, new int[]{i, j})) {
+                            continue; // 跳过重复的目标点
+                        }else{
+                            targetList.add(new int[]{i, j});
+                        }
+                    }
+                }
+            }
+        }
+
+        List<List<int[]>> allPaths = find.findPaths(warehouse, start, targets);
+        System.out.println(allPaths);
+
+        //将包裹信息插入数据库表中，没写呢
 
         return r;
     }
@@ -96,5 +157,50 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
 
     @Override
     public R checkParcel(CheckParcelParam checkParcelParam) { return R.ok(); }
+
+    private int[][][] Generate_shelvesx(int x, int y) {
+        x = x / 10;
+        y = y / 10;
+
+        int[][][] warehouse = new int[x][y][3];
+        int num = x / 2 * y / 2 / 32 - 1;
+        int count = 0, code = 1;
+        int record = 0;
+
+        int start_x = x / 2;
+        int end_y = y / 2;
+
+        // 生成货架
+        for (int i = 0; i < x; i++) {
+            for (int j = 0; j < y; j++) {
+                if(i % 2 == 0){
+                    warehouse[i][j][0] = 0;
+                    continue;
+                }
+
+                if (j % 2 == 0 ) {
+                    warehouse[i][j][0] = 0;//生成道路
+                    count++;
+                } else {
+                    if (code < 32) {
+                        warehouse[i][j][0] = code;//初始化将货架均匀的分为32个区域
+                    }else {
+                        warehouse[i][j][0] = 32;//剩下的区域作为备用区域
+                    }
+
+                    if (count - record > num) {
+                        record = count;
+                        code++;
+                    }
+                }
+            }
+        }
+
+        // 标记起点和终点
+        warehouse[start_x][0][0] = -1;
+        warehouse[0][end_y][0] = -2;
+
+        return warehouse;
+    }
 
 }
