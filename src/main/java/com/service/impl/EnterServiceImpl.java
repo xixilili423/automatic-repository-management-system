@@ -1,14 +1,12 @@
 package com.service.impl;
 
 import com.auth0.jwt.JWT;
-import com.baomidou.mybatisplus.core.assist.ISqlRunner;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.entity.Place;
 import com.entity.StockIn;
+import com.entity.User;
 import com.entity.Warehouse;
 import com.mapper.EnterMapper;
-import com.mapper.PlaceMapper;
 import com.mapper.UserMapper;
 import com.mapper.WareMapper;
 import com.service.EnterService;
@@ -20,9 +18,10 @@ import com.vo.param.Parcel;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.vo.param.Avg;
+import com.vo.param.parcelReturn;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -31,92 +30,83 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
 
     private final UserMapper userMapper;
     private final EnterMapper enterMapper;
+
+
     // 待改正
     @Autowired
     private final WareMapper wareMapper;
-    private final PlaceMapper placeMapper;
+
+    //筛选包裹（出入库不太一样）
+    private Parcel[] select(Parcel[] parcel , String token){
+        /**
+         * 读数据库，剔除不可入库包裹，并将parcelList的id、status填写
+         */
 
 
+        return parcel;
+    }
+    //创建小车列表
+    private Avg[] createAvg(int avgNumber){
+        Avg[] avgList = new Avg[avgNumber];
+        /**
+         * 生成小车列表（id、status）
+         */
+        return avgList;
+    }
+    //包裹分类
+    private List<Parcel[]> divide(Parcel[] parcel){
+        List<Parcel[]> afterParcel =  new ArrayList<>();
+        /**
+         * 将parcelList按place分类
+         */
+
+        return afterParcel;
+    }
+    //给一个系列的包裹分配货架
+    private parcelReturn[] distributeLocation(Parcel[] parcel, int[][][] warehouse, String token){
+        /**
+         * 返回parcelList【{id,status,location_x,location_y}】
+         */
+        return null;
+    }
     // 入库请求
     @Override
     public R enterStock(EnterParam enterParam){
-        // 给多个包裹信息,token
-        // 返回小车列表,包裹列表，是否正常响应
-        Parcel[] parcelList = enterParam.getParcelInList();
-        String username = JWT.decode(enterParam.getToken()).getAudience().get(0);
-
+        System.out.print(enterParam.getParcelInList()[0].getId());
+        System.out.print(enterParam.getParcelInList()[0].getPlace());
         R r = new R();
+        //读取数据库，获取avg数量
+        int avg = 0 ;
+        Avg[] avgList = createAvg(avg);//创建小车列表，应该放在初始化仓库部分
+        int[][][] warehouse = null;//获得仓库结构
 
-        //临时用于获取仓库结构
-        QueryWrapper<Warehouse> queryWrapper=new QueryWrapper<>();
-        queryWrapper.eq("username",username);
-        Warehouse w = wareMapper.selectOne(queryWrapper);
-
-        int[][][] warehouse = this.Generate_shelvesx(w.getCapacity_x(),w.getCapacity_y());
-
-        // 输出仓库，测试用
-        for (int i = 0; i < warehouse.length; i++) {
-            for (int j = 0; j < warehouse[0].length; j++) {
-                System.out.print(warehouse[i][j][0] + " ");
-            }
-            System.out.println();
+        Parcel[] p = select(enterParam.getParcelInList() , enterParam.getToken());//得到可入库的包裹序列
+        List<Parcel[]> divideParcel = divide(p);//得到分类后的多个包裹序列
+        for (Parcel[] parcels : divideParcel) {//分配小车，即avgList中的parcelList、status
+            //分配一辆车后（改变小车状态），马上对其所载包裹分配货架
+            distributeLocation(parcels, warehouse, enterParam.getToken()); //将返回结果赋给该小车的parcelReturn[]
         }
+        for (int i=0; i<divideParcel.size();i++){//给每辆车路径规划
+            //将路径规划结果返回赋给该车的route[][]
 
-        //设置起点,初始化
-        FindPath find = new FindPath();
-        int[] start = {1, 0};
-        List<int[]> targets = new ArrayList<>();
-        QueryWrapper<Place> qw = new QueryWrapper<>();
-        List<int[]> targetList = new ArrayList<>();
 
-        //循环查询得到传入的包裹地址对应的货架类型编号，未考率备用货架
-        for (Parcel parcel : parcelList) {
-            qw.eq("place_Name", parcel.getPlace());
-            Place place = placeMapper.selectOne(qw);
-
-            for (int i = 0; i < warehouse.length; i++) {
-                for (int j = 0; j < warehouse[0].length; j++) {
-
-                    //跳过非目标类型的货架
-                    if(place.getId() != warehouse[i][j][0]){
-                        continue;
-                    }
-
-                    //未加入货架阈值判定
-
-                    if (!targetList.isEmpty()) {
-                        int[] lastTarget = targetList.get(targetList.size() - 1);
-                        if (Arrays.equals(lastTarget, new int[]{i, j})) {
-                            continue; // 跳过重复的目标点
-                        }else{
-                            targetList.add(new int[]{i, j});
-                        }
-                    }else{
-                        //货架未空时直接加入货架
-                        targetList.add(new int[]{i, j});
-                    }
-                }
-            }
         }
-
-        System.out.println("*" + targets + "*");
-        List<List<int[]>> allPaths = find.findPaths(warehouse, start, targets);
-        System.out.println(allPaths);
-
-        //将包裹信息插入数据库表中，没写呢
-
+        //返回总值
         return r;
     }
 
     // 获取入库记录表格 get
     @Override
     public R getInTable(String token){
+        System.out.println("*************"+token);
         R r = new R();
-        if(token == ""){
+        if(token.equals("")){
             return R.error();
         }
+
         // 鉴权，获取username
         String username = JWT.decode(token).getAudience().get(0);
+        System.out.println(username);
         // 判断该username是否存在
         if(username != null){
             // 根据username获取对应Warehouse，获取warehouse_id
@@ -128,18 +118,18 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
                 System.out.println("1.warehouse_id: " + warehouse_id);
                 // 根据warehouse_id获取对应StockIn,获取package_id
                 QueryWrapper<StockIn> queryWrapper1 = new QueryWrapper<>();
-//                queryWrapper1.eq("warehouse_id",warehouse_id);
-                queryWrapper1.eq("1",warehouse_id); // 测试用
+                queryWrapper1.eq("warehouse",warehouse_id);
+//                queryWrapper1.eq("1",warehouse_id); // 测试用
                 StockIn stockIn = enterMapper.selectOne(queryWrapper1);
-                System.out.println("2.warehouse_id: "+ stockIn.getWarehouse_id());
-                String package_id = String.valueOf(stockIn.getPackage_id()); // 包裹id
+                System.out.println("2.warehouse_id: "+ stockIn.getWarehouse());
+                String package_id = String.valueOf(stockIn.getParcel()); // 包裹id
                 System.out.println("package_id: "+ package_id);
                 // 获取StockIn数据，写入r中，返回
                 // 包裹id在上面已经获取
-                String in_time = String.valueOf(stockIn.getCreate_time());
+                String in_time = String.valueOf(stockIn.getTime());
                 System.out.println("in_time: " + in_time);
-                int location_x = stockIn.getLocation_x();
-                int location_y = stockIn.getLocation_y();
+                int location_x = stockIn.getX();
+                int location_y = stockIn.getY();
                 System.out.println("x,y: " + location_x + "," + location_y);
 
                 String a = stockIn.toString();
@@ -163,46 +153,5 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
 
     @Override
     public R checkParcel(CheckParcelParam checkParcelParam) { return R.ok(); }
-
-    private int[][][] Generate_shelvesx(int x, int y) {
-        x = x / 10;
-        y = y / 10;
-
-        int[][][] warehouse = new int[x][y][3];
-        int num = x / 2 * y / 2 / 32 - 1;
-        int count = 0, code = 1;
-        int record = 0;
-
-        int start_x = x / 2;
-        int end_y = y / 2;
-
-        // 生成货架
-        for (int i = 0; i < x; i++) {
-            for (int j = 0; j < y; j++) {
-                if(i % 2 == 0){
-                    warehouse[i][j][0] = 0;
-                    continue;
-                }
-
-                if (j % 2 == 0 ) {
-                    warehouse[i][j][0] = 0;//生成道路
-                    count++;
-                } else {
-                    if (code < 32) {
-                        warehouse[i][j][0] = code;//初始化将货架均匀的分为32个区域
-                    }else {
-                        warehouse[i][j][0] = 32;//剩下的区域作为备用区域
-                    }
-
-                    if (count - record > num) {
-                        record = count;
-                        code++;
-                    }
-                }
-            }
-        }
-
-        return warehouse;
-    }
 
 }

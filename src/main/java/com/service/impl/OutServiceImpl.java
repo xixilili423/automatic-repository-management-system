@@ -61,7 +61,7 @@ public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements 
             return r.error();
         }
     }
-
+    //路径规划
     public static List<int[]> findPath(int[][][] warehouse, int targetX, int targetY) {
         int startX = warehouse.length / 2;  // 起点为第一列的中点
         int startY = 0;
