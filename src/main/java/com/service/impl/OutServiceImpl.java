@@ -14,7 +14,6 @@ import com.vo.param.OutParam;
 import com.vo.param.Parcel;
 import com.vo.param.TableData;
 import lombok.AllArgsConstructor;
-import com.vo.param.InTableData;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -60,11 +59,11 @@ public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements 
                 List<StockOut> stock_out = outMapper.selectList(queryWrapper);
                 TableData[] tableData = new TableData[stock_out.size()];
                 for (int i=0;i<stock_out.size();i++){
-                    String package_id = stock_out.get(i).getPackage_id();
-                    String time = stock_out.get(i).getCreate_time();
-                    int x = stock_out.get(i).getLocation_x();
-                    int y = stock_out.get(i).getLocation_y();
-                    String location_xy = x + "," + y;
+                    String package_id = stock_out.get(i).getParcel();
+                    String time = stock_out.get(i).getTime();
+                    int x = stock_out.get(i).getX();
+                    int y = stock_out.get(i).getY();
+                    String location_xy = "("+x + "," + y+")";
                     String address = stock_out.get(i).getAddress();
                     tableData[i] = new TableData(package_id,time,location_xy,address);
                 }

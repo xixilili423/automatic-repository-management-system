@@ -120,11 +120,11 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
                 List<StockIn> stockIns= enterMapper.selectList(queryWrapper1);
                 TableData[] tableData = new TableData[stockIns.size()];
                 for (int i=0;i<stockIns.size();i++){
-                    String package_id = stockIns.get(i).getPackage_id();
-                    String time = stockIns.get(i).getCreate_time();
-                    int x = stockIns.get(i).getLocation_x();
-                    int y = stockIns.get(i).getLocation_y();
-                    String location_xy = x + "," + y;
+                    String package_id = stockIns.get(i).getParcel();
+                    String time = stockIns.get(i).getTime();
+                    int x = stockIns.get(i).getX();
+                    int y = stockIns.get(i).getY();
+                    String location_xy = "("+ x + "," + y +")";
                     String address = stockIns.get(i).getAddress();
                     tableData[i] = new TableData(package_id,time,location_xy,address);
                 }
