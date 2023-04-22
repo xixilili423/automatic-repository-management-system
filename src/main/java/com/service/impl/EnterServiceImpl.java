@@ -65,6 +65,7 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
                 for (int j=0;j<max;j++){
                     parcelLists[j].setParcel_id(parcel[i].getId());
                     parcelLists[j].setStatus(true);
+                    parcelLists[j].setPlace(parcel[i].getPlace());
                 }
             }
         }
@@ -103,13 +104,23 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
         return avgList;
     }
 
-    //包裹分类
-    private List<Parcel[]> divide(Parcel[] parcel){
+    // 包裹分类
+    private List<Parcel[]> divide(ParcelList[] parcelLists){
         List<Parcel[]> afterParcel =  new ArrayList<>();
         /**
          * 将parcelList按place分类
+         * place 是数字
+         * 循环分类
          */
-
+        for(int i = 1;i < 32; i++){
+            if(parcelLists[i].getParcel_id() == String.valueOf(i)){
+                for (int j = 0;j < parcelLists.length; j++){
+                    Parcel[] parcels = new Parcel[parcelLists.length];
+                    parcels[j] = new Parcel(parcelLists[i].getParcel_id(),parcelLists[i].getPlace());
+                    afterParcel.add(parcels); // 不确定
+                }
+            }
+        }
         return afterParcel;
     }
 
@@ -140,7 +151,7 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
         // 得到可入库的包裹序列
         ParcelList[] parcelList = select(enterParam.getParcelInList(), enterParam.getToken());
         // 得到分类后的多个包裹序列
-        List<Parcel[]> divideParcel = divide(enterParam.getParcelInList());
+        List<Parcel[]> divideParcel = divide(parcelList);
         //分配小车，即avgList中的parcelList、status
         for (Parcel[] parcels : divideParcel) {
             //分配一辆车后（改变小车状态），马上对其所载包裹分配货架

@@ -14,7 +14,9 @@ import lombok.Setter;
 public class parcelReturn {
     private int id;
     private boolean status;
+
     private int location_x;
+
     private int location_y;
 
     public parcelReturn(int id , boolean status){
