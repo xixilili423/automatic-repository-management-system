@@ -101,9 +101,9 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
         System.out.println("*************"+token);
         R r = new R();
         if(token.equals("")){
-            return R.error();
+            r.data("status_code",false);
+            return r;
         }
-
         // 鉴权，获取username
         String username = JWT.decode(token).getAudience().get(0);
         System.out.println(username);
@@ -120,35 +120,28 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
                 QueryWrapper<StockIn> queryWrapper1 = new QueryWrapper<>();
                 queryWrapper1.eq("warehouse",warehouse_id);
 //                queryWrapper1.eq("1",warehouse_id); // 测试用
-                StockIn stockIn = enterMapper.selectOne(queryWrapper1);
-                System.out.println("2.warehouse_id: "+ stockIn.getWarehouse());
-                String package_id = String.valueOf(stockIn.getParcel()); // 包裹id
-                System.out.println("package_id: "+ package_id);
-                // 获取StockIn数据，写入r中，返回
-                // 包裹id在上面已经获取
-                String in_time = String.valueOf(stockIn.getTime());
-                System.out.println("in_time: " + in_time);
-                int location_x = stockIn.getX();
-                int location_y = stockIn.getY();
-                System.out.println("x,y: " + location_x + "," + location_y);
-
-                String a = stockIn.toString();
-                System.out.println(a);
-
-                String location_xy = location_x + "," + location_y; // 存放货架
-                String address = String.valueOf(stockIn.getAddress()); // 目的地所属地区
-                InTableData inTableData = new InTableData(package_id,in_time,location_xy,address);
+                List<StockIn> stockIns= enterMapper.selectList(queryWrapper1);
+                InTableData[] inTableData = new InTableData[stockIns.size()];
+                for (int i=0;i<stockIns.size();i++){
+                    String package_id = stockIns.get(i).getPackage_id();
+                    String in_time = stockIns.get(i).getCreate_time();
+                    int x = stockIns.get(i).getLocation_x();
+                    int y = stockIns.get(i).getLocation_y();
+                    String location_xy = x + "," + y;
+                    String address = stockIns.get(i).getAddress();
+                    inTableData[i] = new InTableData(package_id,in_time,location_xy,address);
+                }
                 r.data("status_code",true);
                 r.data("inTableData",inTableData);
                 return r;
             }catch (Exception E){
                 System.out.println(E);
-                return R.error();
+                r.data("status_code",false);
             }
             // 测试结果里面 package_id，in_time，location_x和location_y都获取不到值，但address能获取
             // 就是数据的问题
         }
-        return R.error();
+        return r;
     }
 
     @Override
