@@ -51,6 +51,7 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
         QueryWrapper<Warehouse> queryWrapper=new QueryWrapper<>();
         queryWrapper.eq("username",username);
         Warehouse w = wareMapper.selectOne(queryWrapper);
+
         int[][][] warehouse = this.Generate_shelvesx(w.getCapacity_x(),w.getCapacity_y());
 
         // 输出仓库，测试用
@@ -68,17 +69,18 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
         QueryWrapper<Place> qw = new QueryWrapper<>();
         List<int[]> targetList = new ArrayList<>();
 
-
         //循环查询得到传入的包裹地址对应的货架类型编号，未考率备用货架
         for (Parcel parcel : parcelList) {
-            qw.eq("placeName", parcel.getPlace());
+            qw.eq("place_Name", parcel.getPlace());
             Place place = placeMapper.selectOne(qw);
-
-            int temp = (int)place.getId();
-            int[] target = new int[]{};
 
             for (int i = 0; i < warehouse.length; i++) {
                 for (int j = 0; j < warehouse[0].length; j++) {
+
+                    //跳过非目标类型的货架
+                    if(place.getId() != warehouse[i][j][0]){
+                        continue;
+                    }
 
                     //未加入货架阈值判定
 
@@ -89,11 +91,15 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
                         }else{
                             targetList.add(new int[]{i, j});
                         }
+                    }else{
+                        //货架未空时直接加入货架
+                        targetList.add(new int[]{i, j});
                     }
                 }
             }
         }
 
+        System.out.println("*" + targets + "*");
         List<List<int[]>> allPaths = find.findPaths(warehouse, start, targets);
         System.out.println(allPaths);
 
@@ -195,10 +201,6 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
                 }
             }
         }
-
-        // 标记起点和终点
-        warehouse[start_x][0][0] = -1;
-        warehouse[0][end_y][0] = -2;
 
         return warehouse;
     }
