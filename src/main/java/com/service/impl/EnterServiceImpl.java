@@ -36,7 +36,7 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
     @Autowired
     private final WareMapper wareMapper;
 
-    //筛选包裹（出入口不太一样）
+    //筛选包裹（出入库不太一样）
     private Parcel[] select(Parcel[] parcel , String token){
         /**
          * 读数据库，剔除不可入库包裹，并将parcelList的id、status填写
@@ -72,6 +72,8 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
     // 入库请求
     @Override
     public R enterStock(EnterParam enterParam){
+        System.out.print(enterParam.getParcelInList()[0].getId());
+        System.out.print(enterParam.getParcelInList()[0].getPlace());
         R r = new R();
         //读取数据库，获取avg数量
         int avg = 0 ;
@@ -90,23 +92,21 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
 
         }
         //返回总值
-
-
-
-
-
         return r;
     }
 
     // 获取入库记录表格 get
     @Override
     public R getInTable(String token){
+        System.out.println("*************"+token);
         R r = new R();
-        if(token == ""){
+        if(token.equals("")){
             return R.error();
         }
+
         // 鉴权，获取username
         String username = JWT.decode(token).getAudience().get(0);
+        System.out.println(username);
         // 判断该username是否存在
         if(username != null){
             // 根据username获取对应Warehouse，获取warehouse_id
@@ -118,18 +118,18 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
                 System.out.println("1.warehouse_id: " + warehouse_id);
                 // 根据warehouse_id获取对应StockIn,获取package_id
                 QueryWrapper<StockIn> queryWrapper1 = new QueryWrapper<>();
-//                queryWrapper1.eq("warehouse_id",warehouse_id);
-                queryWrapper1.eq("1",warehouse_id); // 测试用
+                queryWrapper1.eq("warehouse",warehouse_id);
+//                queryWrapper1.eq("1",warehouse_id); // 测试用
                 StockIn stockIn = enterMapper.selectOne(queryWrapper1);
-                System.out.println("2.warehouse_id: "+ stockIn.getWarehouse_id());
-                String package_id = String.valueOf(stockIn.getPackage_id()); // 包裹id
+                System.out.println("2.warehouse_id: "+ stockIn.getWarehouse());
+                String package_id = String.valueOf(stockIn.getParcel()); // 包裹id
                 System.out.println("package_id: "+ package_id);
                 // 获取StockIn数据，写入r中，返回
                 // 包裹id在上面已经获取
-                String in_time = String.valueOf(stockIn.getCreate_time());
+                String in_time = String.valueOf(stockIn.getTime());
                 System.out.println("in_time: " + in_time);
-                int location_x = stockIn.getLocation_x();
-                int location_y = stockIn.getLocation_y();
+                int location_x = stockIn.getX();
+                int location_y = stockIn.getY();
                 System.out.println("x,y: " + location_x + "," + location_y);
 
                 String a = stockIn.toString();
