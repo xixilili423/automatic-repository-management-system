@@ -100,7 +100,7 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
         Avg[] avgList = createAvg(avg);
         // 获取仓库结构
         InitStockImpl initStock = new InitStockImpl(wareMapper);
-        int[][][] warehouse_structure = initStock.Generate_shelvesx(warehouse.getCapacity_x(),warehouse.getCapacity_y());
+        int[][][] warehouse_structure = initStock.Generate_shelvesx(warehouse.getX(),warehouse.getY());
         // 得到可入库的包裹序列
 
         PacelList[] pacelList = new PacelList[enterParam.getParcelInList().length];
@@ -121,7 +121,7 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
         }
         // 返回小车列表,包裹列表，是否正常响应
         r.data("avgList",avgList);
-        r.data("pacelList",parcelList);
+        r.data("pacelList",pacelList);
         r.data("status_code",true);
         return r;
     }
@@ -154,10 +154,10 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
                 List<StockIn> stockIns= enterMapper.selectList(queryWrapper1);
                 TableData[] tableData = new TableData[stockIns.size()];
                 for (int i=0;i<stockIns.size();i++){
-                    String package_id = stockIns.get(i).getPackage_id();
-                    String time = stockIns.get(i).getCreate_time();
-                    int x = stockIns.get(i).getLocation_x();
-                    int y = stockIns.get(i).getLocation_y();
+                    String package_id = stockIns.get(i).getParcel();
+                    String time = stockIns.get(i).getTime();
+                    int x = stockIns.get(i).getX();
+                    int y = stockIns.get(i).getY();
                     String location_xy = x + "," + y;
                     String address = stockIns.get(i).getAddress();
                     tableData[i] = new TableData(package_id,time,location_xy,address);

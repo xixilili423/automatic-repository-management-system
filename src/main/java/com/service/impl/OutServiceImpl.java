@@ -11,7 +11,7 @@ import com.mapper.WareMapper;
 import com.service.OutService;
 import com.vo.R;
 import com.vo.param.OutParam;
-import com.vo.param.Parcel;
+import lombok.AllArgsConstructor;
 import com.vo.param.TableData;
 import org.springframework.stereotype.Service;
 
@@ -22,9 +22,10 @@ import java.util.Queue;
 
 
 @Service
+@AllArgsConstructor
 public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements OutService {
 
-    UserMapper userMapper;
+    private final UserMapper userMapper;
     OutMapper outMapper;
 
     WareMapper wareMapper;
@@ -46,21 +47,21 @@ public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements 
         QueryWrapper<User> queryWrapper1=new QueryWrapper<>();
         String username = JWT.decode(token).getAudience().get(0);
         queryWrapper1.eq("username",username);
-        boolean user = userMapper.exists(queryWrapper1);
-        if(user) {
+         System.out.println(userMapper.exists(queryWrapper1));
+        if(userMapper.exists(queryWrapper1)) {
             try {
                 QueryWrapper<Warehouse> queryWrapper2 = new QueryWrapper<>();
                 queryWrapper2.eq("username", username);
                 Warehouse warehouse = wareMapper.selectOne(queryWrapper2);
                 QueryWrapper<StockOut> queryWrapper = new QueryWrapper<>();
-                queryWrapper.eq("warehouse_id", warehouse.getId());
+                queryWrapper.eq("warehouse", warehouse.getId());
                 List<StockOut> stock_out = outMapper.selectList(queryWrapper);
                 TableData[] tableData = new TableData[stock_out.size()];
                 for (int i=0;i<stock_out.size();i++){
-                    String package_id = stock_out.get(i).getPackage_id();
-                    String time = stock_out.get(i).getCreate_time();
-                    int x = stock_out.get(i).getLocation_x();
-                    int y = stock_out.get(i).getLocation_y();
+                    String package_id = stock_out.get(i).getParcel();
+                    String time = stock_out.get(i).getTime();
+                    int x = stock_out.get(i).getX();
+                    int y = stock_out.get(i).getY();
                     String location_xy = x + "," + y;
                     String address = stock_out.get(i).getAddress();
                     tableData[i] = new TableData(package_id,time,location_xy,address);
@@ -71,13 +72,12 @@ public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements 
             } catch (Exception E) {
                 System.out.println(E);
                 r.data("status_code",false);
-                return r;
             }
         }
         else{
             r.data("status_code",false);
-            return r;
         }
+        return r;
     }
     //路径规划
     public static List<int[]> findPath(int[][][] warehouse, int targetX, int targetY) {
