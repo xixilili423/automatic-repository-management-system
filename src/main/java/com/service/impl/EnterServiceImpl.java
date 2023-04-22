@@ -4,21 +4,18 @@ import com.auth0.jwt.JWT;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.entity.StockIn;
+import com.entity.StockOut;
 import com.entity.Warehouse;
 import com.mapper.EnterMapper;
+import com.mapper.OutMapper;
 import com.mapper.UserMapper;
 import com.mapper.WareMapper;
 import com.service.EnterService;
 import com.vo.R;
-import com.vo.param.CheckParcelParam;
-import com.vo.param.EnterParam;
-import com.vo.param.TableData;
-import com.vo.param.Parcel;
+import com.vo.param.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.vo.param.Avg;
-import com.vo.param.parcelReturn;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,18 +27,32 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
     private final UserMapper userMapper;
     private final EnterMapper enterMapper;
 
+    private final OutMapper outMapper;
+
 
     // 待改正
     @Autowired
     private final WareMapper wareMapper;
 
-    //筛选包裹（出入库不太一样）
+    // 筛选包裹（出入库不太一样）
     private Parcel[] select(Parcel[] parcel , String token){
         /**
          * 读数据库，剔除不可入库包裹，并将parcelList的id、status填写
+         * 不可入库包裹：在入库表里且没出库
          */
+        // 获取对应warehouse和warehouse对应的stockIn列表，stockOut列表
+        String username = JWT.decode(token).getAudience().get(0);
+        QueryWrapper<Warehouse> queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq("username",username);
+        Warehouse warehouse = wareMapper.selectOne(queryWrapper);
+        QueryWrapper<StockIn> queryWrapper1 = new QueryWrapper<>();
+        List<StockIn> stockIns = enterMapper.selectList(queryWrapper1);
+        QueryWrapper<StockOut> queryWrapper2 = new QueryWrapper<>();
+        List<StockOut> stockOuts = outMapper.selectList(queryWrapper2);
 
+        // 循环判断，获取可入库包裹
 
+        // 返回可入库包裹
         return parcel;
     }
     //创建小车列表
@@ -49,7 +60,13 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
         Avg[] avgList = new Avg[avgNumber];
         /**
          * 生成小车列表（id、status）
+         * status 表示是否可以用，true表示可以用
          */
+        for(int i=0;i<avgNumber;i++){
+            avgList[i].setId(i);
+            avgList[i].setStatus(true);
+        }
+
         return avgList;
     }
     //包裹分类
@@ -71,24 +88,41 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
     // 入库请求
     @Override
     public R enterStock(EnterParam enterParam){
-        System.out.print(enterParam.getParcelInList()[0].getId());
-        System.out.print(enterParam.getParcelInList()[0].getPlace());
         R r = new R();
-        //读取数据库，获取avg数量
-        int avg = 0 ;
-        Avg[] avgList = createAvg(avg);//创建小车列表，应该放在初始化仓库部分
-        int[][][] warehouse = null;//获得仓库结构
+        // 给多个包裹信息,token,获取对应仓库
+        String username = JWT.decode(enterParam.getToken()).getAudience().get(0);
+        QueryWrapper<Warehouse> queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq("username",username);
+        Warehouse warehouse = wareMapper.selectOne(queryWrapper);
+        // 读取数据库，获取avg数量
+        int avg = warehouse.getAvg() ;
+        // 创建小车列表，应该放在初始化仓库部分
+        Avg[] avgList = createAvg(avg);
+        // 获取仓库结构
+        InitStockImpl initStock = new InitStockImpl(wareMapper);
+        int[][][] warehouse_structure = initStock.Generate_shelvesx(warehouse.getCapacity_x(),warehouse.getCapacity_y());
+        // 得到可入库的包裹序列
 
-        Parcel[] p = select(enterParam.getParcelInList() , enterParam.getToken());//得到可入库的包裹序列
-        List<Parcel[]> divideParcel = divide(p);//得到分类后的多个包裹序列
-        for (Parcel[] parcels : divideParcel) {//分配小车，即avgList中的parcelList、status
+        PacelList[] pacelList = new PacelList[enterParam.getParcelInList().length];
+        Parcel[] p = select(enterParam.getParcelInList() , enterParam.getToken()); // 这行待修改
+        //得到分类后的多个包裹序列
+        List<Parcel[]> divideParcel = divide(p);
+        //分配小车，即avgList中的parcelList、status
+        for (Parcel[] parcels : divideParcel) {
             //分配一辆车后（改变小车状态），马上对其所载包裹分配货架
-            distributeLocation(parcels, warehouse, enterParam.getToken()); //将返回结果赋给该小车的parcelReturn[]
+
+
+            //将返回结果赋给该小车的parcelReturn[]
+            distributeLocation(parcels, warehouse_structure, enterParam.getToken());
         }
-        for (int i=0; i<divideParcel.size();i++){//给每辆车路径规划
+        //给每辆车路径规划
+        for (int i=0; i<divideParcel.size();i++){
             //将路径规划结果返回赋给该车的route[][]
         }
-        //返回总值
+        // 返回小车列表,包裹列表，是否正常响应
+        r.data("avgList",avgList);
+        r.data("pacelList",parcelList);
+        r.data("status_code",true);
         return r;
     }
 
