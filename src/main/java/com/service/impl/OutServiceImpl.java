@@ -12,6 +12,7 @@ import com.service.OutService;
 import com.vo.R;
 import com.vo.param.OutParam;
 import com.vo.param.Parcel;
+import com.vo.param.TableData;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -38,6 +39,10 @@ public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements 
     @Override
     public R getOutTable(String token){
         R r= new R();
+        if(token.equals("")){
+            r.data("status_code",false);
+            return r;
+        }
         QueryWrapper<User> queryWrapper1=new QueryWrapper<>();
         String username = JWT.decode(token).getAudience().get(0);
         queryWrapper1.eq("username",username);
@@ -50,15 +55,28 @@ public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements 
                 QueryWrapper<StockOut> queryWrapper = new QueryWrapper<>();
                 queryWrapper.eq("warehouse_id", warehouse.getId());
                 List<StockOut> stock_out = outMapper.selectList(queryWrapper);
-                r.data("stock_out", stock_out);
-                return r.ok();
+                TableData[] tableData = new TableData[stock_out.size()];
+                for (int i=0;i<stock_out.size();i++){
+                    String package_id = stock_out.get(i).getPackage_id();
+                    String time = stock_out.get(i).getCreate_time();
+                    int x = stock_out.get(i).getLocation_x();
+                    int y = stock_out.get(i).getLocation_y();
+                    String location_xy = x + "," + y;
+                    String address = stock_out.get(i).getAddress();
+                    tableData[i] = new TableData(package_id,time,location_xy,address);
+                }
+                r.data("status_code",true);
+                r.data("outTableData",tableData);
+                return r;
             } catch (Exception E) {
                 System.out.println(E);
-                return r.error();
+                r.data("status_code",false);
+                return r;
             }
         }
         else{
-            return r.error();
+            r.data("status_code",false);
+            return r;
         }
     }
     //路径规划

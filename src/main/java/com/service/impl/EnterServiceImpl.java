@@ -4,7 +4,6 @@ import com.auth0.jwt.JWT;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.entity.StockIn;
-import com.entity.User;
 import com.entity.Warehouse;
 import com.mapper.EnterMapper;
 import com.mapper.UserMapper;
@@ -13,7 +12,7 @@ import com.service.EnterService;
 import com.vo.R;
 import com.vo.param.CheckParcelParam;
 import com.vo.param.EnterParam;
-import com.vo.param.InTableData;
+import com.vo.param.TableData;
 import com.vo.param.Parcel;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,8 +87,6 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
         }
         for (int i=0; i<divideParcel.size();i++){//给每辆车路径规划
             //将路径规划结果返回赋给该车的route[][]
-
-
         }
         //返回总值
         return r;
@@ -121,19 +118,18 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
                 queryWrapper1.eq("warehouse",warehouse_id);
 //                queryWrapper1.eq("1",warehouse_id); // 测试用
                 List<StockIn> stockIns= enterMapper.selectList(queryWrapper1);
-                InTableData[] inTableData = new InTableData[stockIns.size()];
+                TableData[] tableData = new TableData[stockIns.size()];
                 for (int i=0;i<stockIns.size();i++){
                     String package_id = stockIns.get(i).getPackage_id();
-                    String in_time = stockIns.get(i).getCreate_time();
+                    String time = stockIns.get(i).getCreate_time();
                     int x = stockIns.get(i).getLocation_x();
                     int y = stockIns.get(i).getLocation_y();
                     String location_xy = x + "," + y;
                     String address = stockIns.get(i).getAddress();
-                    inTableData[i] = new InTableData(package_id,in_time,location_xy,address);
+                    tableData[i] = new TableData(package_id,time,location_xy,address);
                 }
                 r.data("status_code",true);
-                r.data("inTableData",inTableData);
-                return r;
+                r.data("inTableData", tableData);
             }catch (Exception E){
                 System.out.println(E);
                 r.data("status_code",false);
