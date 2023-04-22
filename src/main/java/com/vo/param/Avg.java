@@ -4,6 +4,8 @@ import com.vo.param.parcelReturn;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 /**
  * @Auther HYT
  * @Date 2023/4/22
@@ -15,7 +17,7 @@ public class Avg {
     private int id;
     private boolean status;//表示是否空闲
     private parcelReturn[] parcelList;
-    private int[][] route;
+    private List<int[]> route;
 
     public Avg(int id){
         this.id = id;

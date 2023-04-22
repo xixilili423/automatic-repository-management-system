@@ -11,12 +11,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PacelList {
+public class ParcelList {
     String parcel_id;
     boolean status;
     String location_xy;
 
-    public PacelList(String parcel_id,boolean status,String location_xy){
+    public ParcelList(String parcel_id, boolean status, String location_xy){
         this.parcel_id = parcel_id;
         this.status = status;
         this.location_xy = location_xy;
