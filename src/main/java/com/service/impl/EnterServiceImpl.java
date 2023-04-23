@@ -88,6 +88,7 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
         // 返回可入库包裹
         return parcelLists;
     }
+
     // 冒泡排序
     private ParcelList[] BubbleSort(ParcelList p[],int length){
         for(int i=0;i<length;i++){
@@ -105,6 +106,7 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
         }
         return p;
     }
+
     // 包裹分类
     private List<List<Parcel>> divide(ParcelList[] parcelLists){
         List<List<Parcel>> afterParcel =  new ArrayList<>();
@@ -143,22 +145,29 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
 //        }
         return afterParcel;
     }
+
     // 给一个系列的包裹分配货架
-    private parcelReturn[] distributeLocation(Parcel[] parcel, int[][][] warehouse, String token){
+//    private parcelReturn[] distributeLocation(Parcel[] parcel, int[][][] warehouse, String token){
+    private parcelReturn[] distributeLocation(List<Parcel> parcels, int[][][] warehouse, String token) {
         /**
          * 返回parcelList【{id,status,location_x,location_y}】
          */
-        parcelReturn[] result = new parcelReturn[parcel.length];
+//        parcelReturn[] result = new parcelReturn[parcel.length];
 
-        for(int i = 0; i < parcel.length; i++){
+        parcelReturn[] result = new parcelReturn[parcels.size()];
+//        for(int i = 0; i < parcel.length; i++){
+        for (int i=0; i<parcels.size();i++){
             QueryWrapper<Place> qw = new QueryWrapper<>();
-            qw.eq("place_Name", parcel[i].getPlace());
+//            qw.eq("place_Name", parcel[i].getPlace());
+            qw.eq("place_Name",parcels.get(i).getPlace());
             Place place = placeMapper.selectOne(qw);
 
             for (int k = 1; k < warehouse.length; k++) {
                 for (int j = 0; j < warehouse[0].length; j++) {
-                    if(warehouse[i][j][0] == place.getId()){//找到编号对得上的货架就分给它,可加入更多判断
-                        int num = Integer.parseInt(parcel[i].getId());
+                    // 找到编号对得上的货架就分给它,可加入更多判断
+                    if(warehouse[i][j][0] == place.getId()){
+//                        int num = Integer.parseInt(parcel[i].getId());
+                        int num = Integer.parseInt(parcels.get(i).getId());
 
                         result[i].setId(num);
                         result[i].setLocation_x(k);
@@ -171,6 +180,7 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
 
         return result;
     }
+
     // 入库请求
     @Override
     public R enterStock(EnterParam enterParam){
@@ -191,12 +201,17 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
         ParcelList[] parcelList = select(enterParam.getParcelInList(), enterParam.getToken());
         // 得到分类后的多个包裹序列
         List<List<Parcel>> divideParcel = divide(parcelList);
-        //分配小车，即avgList中的parcelList、status
-        for (Parcel[] parcels : divideParcel) {
-            //分配一辆车后（改变小车状态），马上对其所载包裹分配货架
-            //将返回结果赋给该小车的parcelReturn[]
-            distributeLocation(parcels, warehouse_structure, enterParam.getToken());
+        // 分配小车，即avgList中的parcelList、status
+        for (List<Parcel> parcels : divideParcel) {
+            // 分配一辆车后（改变小车状态），马上对其所载包裹分配货架
+            // 将返回结果赋给该小车的parcelReturn[]
+            parcelReturn[] parcelReturn = distributeLocation(parcels,warehouse_structure,enterParam.getToken());
         }
+//        for (Parcel[] parcels : divideParcel) {
+//            // 分配一辆车后（改变小车状态），马上对其所载包裹分配货架
+//            // 将返回结果赋给该小车的parcelReturn[]
+//            parcelReturn[] parcelReturn = distributeLocation(parcels, warehouse_structure, enterParam.getToken());
+//        }
         //给每辆车路径规划
         for (int i=0; i<divideParcel.size();i++){
             //将路径规划结果返回赋给该车的route[][]
@@ -205,8 +220,11 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
         r.data("avgList",avgList);
         r.data("parcelList",parcelList);
         r.data("status_code",true);
+
         return r;
     }
+
+
 
     // 获取入库记录表格 get
     @Override
