@@ -17,7 +17,7 @@ public class Parcel {
 
     private String place;
 
-    private Parcel(String id, String place){
+    public Parcel(String id, String place){
         this.id = id;
         this.place = place;
     }
