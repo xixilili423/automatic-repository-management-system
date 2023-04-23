@@ -157,6 +157,8 @@ public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements 
 //            parcelReturn[] parcelReturn = distributeLocation(parcels,warehouse_structure,enterParam.getToken());
 //        }
 
+
+
         //给每辆车路径规划
         for (int i=0; i < divideParcel.size();i++){
             //将路径规划结果返回赋给该车的route[][]
