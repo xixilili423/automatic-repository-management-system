@@ -59,8 +59,9 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
         return avgList;
     }
     // 筛选包裹（出入库不太一样）
+    // 入库版本
     private ParcelList[] select(Parcel[] parcel , String token){
-        // 获取对应warehouse和warehouse对应的stockIn列表，stockOut列表
+        // 获取对应warehouse
         String username = JWT.decode(token).getAudience().get(0);
         QueryWrapper<Warehouse> queryWrapper=new QueryWrapper<>();
         queryWrapper.eq("username",username);
