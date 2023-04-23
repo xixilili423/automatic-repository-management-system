@@ -86,7 +86,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
     // 主页请求用户信息
     @Override
     public R getInformation(String token) {
-
-        return R.ok();
+        R r = new R();
+        if(token.equals("")){
+            r.data("status_code",false);
+            return r;
+        }
+        // 鉴权，获取username
+        String username = JWT.decode(token).getAudience().get(0);
+        System.out.println(username);
+        // 判断该username是否存在
+        if(username != null){
+            QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("username",username);
+            User user = userMapper.selectOne(queryWrapper);
+            String phone = user.getPhone();
+            String address = user.getAddress();
+            String total_cost = user.getTotalcost();
+            r.data("status_code",true);
+            r.data("user_name",username);
+            r.data("phone",phone);
+            r.data("address",address);
+            r.data("total_cost",total_cost);
+        }
+        return r;
     }
 }

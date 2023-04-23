@@ -33,7 +33,9 @@ public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements 
     // 出库请求
     @Override
     public R outStock(OutParam outParam){
-        return R.ok();
+        R r = new R();
+        r.data("status_code",true);
+        return r;
     }
 
     // 获取出库记录表格
@@ -79,6 +81,7 @@ public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements 
         }
         return r;
     }
+
     //路径规划
     public static List<int[]> findPath(int[][][] warehouse, int targetX, int targetY) {
         int startX = warehouse.length / 2;  // 起点为第一列的中点

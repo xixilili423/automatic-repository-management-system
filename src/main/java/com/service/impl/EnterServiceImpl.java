@@ -8,7 +8,6 @@ import com.entity.StockOut;
 import com.entity.Warehouse;
 import com.mapper.EnterMapper;
 import com.mapper.OutMapper;
-import com.mapper.UserMapper;
 import com.mapper.WareMapper;
 import com.service.EnterService;
 import com.vo.R;
@@ -23,14 +22,10 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implements EnterService {
-
-    private final UserMapper userMapper;
     private final EnterMapper enterMapper;
 
     private final OutMapper outMapper;
 
-
-    // 待改正
     @Autowired
     private final WareMapper wareMapper;
 
@@ -47,6 +42,7 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
         QueryWrapper<Warehouse> queryWrapper=new QueryWrapper<>();
         queryWrapper.eq("username",username);
         Warehouse warehouse = wareMapper.selectOne(queryWrapper);
+
         QueryWrapper<StockIn> queryWrapper1 = new QueryWrapper<>();
         List<StockIn> stockIns = enterMapper.selectList(queryWrapper1);
         QueryWrapper<StockOut> queryWrapper2 = new QueryWrapper<>();
@@ -95,6 +91,7 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
         /**
          * 生成小车列表（id、status）
          * status 表示是否可以用，true表示可以用
+         * 小车从0开始编号
          */
         for(int i=0;i<avgNumber;i++){
             avgList[i].setId(i);
@@ -104,22 +101,43 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
         return avgList;
     }
 
+    // 冒泡排序
+    private ParcelList[] BubbleSort(ParcelList p[],int length){
+        for(int i=0;i<length;i++){
+            for (int j=0;j<length - i-1;j++){
+                if(Integer.parseInt(p[j].getPlace()) > Integer.parseInt(p[j+1].getPlace())){
+                    ParcelList temp;
+                    temp = p[j+1];
+                    p[j+1] = p[j];
+                    p[j] = temp;
+                }
+            }
+        }
+        return p;
+    }
+
     // 包裹分类
     private List<Parcel[]> divide(ParcelList[] parcelLists){
         List<Parcel[]> afterParcel =  new ArrayList<>();
         /**
-         * 将parcelList按place分类
+         * 将 parcelList 按 place 分类
          * place 是数字
+         * 先排序：冒泡排序
          * 循环分类
          */
-        for(int i = 1;i < 32; i++){
-            if(parcelLists[i].getParcel_id() == String.valueOf(i)){
-                for (int j = 0;j < parcelLists.length; j++){
-                    Parcel[] parcels = new Parcel[parcelLists.length];
-                    parcels[j] = new Parcel(parcelLists[i].getParcel_id(),parcelLists[i].getPlace());
-                    afterParcel.add(parcels); // 不确定
+        // 冒泡排序,按照place从小到大排序
+        parcelLists = BubbleSort(parcelLists, parcelLists.length);
+        for(int i = 0;i < parcelLists.length; i++){
+            for(int j=1; j< 32; j++){
+                if(parcelLists[i].getPlace() == String.valueOf(j)){
+//                    for (int j = 0;j < parcelLists.length; j++){
+                        Parcel[] parcels = new Parcel[parcelLists.length];
+                        parcels[j] = new Parcel(parcelLists[i].getParcel_id(),parcelLists[i].getPlace());
+                        afterParcel.add(parcels); // 不确定
+//                    }
                 }
             }
+
         }
         return afterParcel;
     }
@@ -142,12 +160,14 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
         queryWrapper.eq("username",username);
         Warehouse warehouse = wareMapper.selectOne(queryWrapper);
         // 读取数据库，获取avg数量
-        int avg = warehouse.getAvg() ;
+        int avg = warehouse.getAvg();
+        System.out.println("avg: "+avg); // 测试
         // 创建小车列表，应该放在初始化仓库部分
         Avg[] avgList = createAvg(avg);
         // 获取仓库结构
         InitStockImpl initStock = new InitStockImpl(wareMapper);
         int[][][] warehouse_structure = initStock.Generate_shelvesx(warehouse.getX(),warehouse.getY());
+        System.out.println("warehouse_structure: " + warehouse_structure);
         // 得到可入库的包裹序列
         ParcelList[] parcelList = select(enterParam.getParcelInList(), enterParam.getToken());
         // 得到分类后的多个包裹序列
@@ -155,6 +175,7 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
         //分配小车，即avgList中的parcelList、status
         for (Parcel[] parcels : divideParcel) {
             //分配一辆车后（改变小车状态），马上对其所载包裹分配货架
+
             //将返回结果赋给该小车的parcelReturn[]
             distributeLocation(parcels, warehouse_structure, enterParam.getToken());
         }
