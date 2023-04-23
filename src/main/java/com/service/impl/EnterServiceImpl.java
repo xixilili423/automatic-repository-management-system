@@ -168,7 +168,6 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
                     if(warehouse[i][j][0] == place.getId()){
 //                        int num = Integer.parseInt(parcel[i].getId());
                         int num = Integer.parseInt(parcels.get(i).getId());
-
                         result[i].setId(num);
                         result[i].setLocation_x(k);
                         result[i].setLocation_y(j);
