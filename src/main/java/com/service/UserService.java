@@ -3,10 +3,7 @@ package com.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.entity.User;
 import com.vo.R;
-import com.vo.param.InformationParam;
-import com.vo.param.LoginParam;
-import com.vo.param.RegisterParam;
-import com.vo.param.InitStockParam;
+import com.vo.param.*;
 
 //@Service
 //public class UserService {
@@ -42,5 +39,12 @@ public interface UserService extends IService<User> {
      * @return
      */
     R getInformation(String token);
+
+    /**
+     * 4.修改密码
+     * @post changePassword(token)
+     * @return
+     */
+    R changePassword(ChangePasswordParam changePasswordParam);
 
 }

@@ -2,10 +2,7 @@ package com.controller;
 
 import com.service.UserService;
 import com.vo.R;
-import com.vo.param.InformationParam;
-import com.vo.param.InitStockParam;
-import com.vo.param.LoginParam;
-import com.vo.param.RegisterParam;
+import com.vo.param.*;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,4 +36,8 @@ public class UserController {
     // 获取主页信息--get
     @GetMapping("information")
     public R getInformation(@RequestParam(value="token") String token) { return userService.getInformation(token); }
+
+    // 修改密码
+    @PostMapping("changePassword")
+    public R changePassword(@RequestBody ChangePasswordParam changePasswordParam) { return  userService.changePassword(changePasswordParam); }
 }

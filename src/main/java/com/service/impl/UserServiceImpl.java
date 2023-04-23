@@ -8,10 +8,7 @@ import com.mapper.UserMapper;
 import com.mapper.WareMapper;
 import com.service.UserService;
 import com.vo.R;
-import com.vo.param.InformationParam;
-import com.vo.param.InitStockParam;
-import com.vo.param.LoginParam;
-import com.vo.param.RegisterParam;
+import com.vo.param.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -112,6 +109,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
             r.data("address",address);
             r.data("total_cost",total_cost);
         }
+        return r;
+    }
+
+    // 修改密码
+    @Override
+    public R changePassword(ChangePasswordParam changePasswordParam){
+        R r = new R();
         return r;
     }
 }
