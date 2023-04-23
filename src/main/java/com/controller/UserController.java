@@ -40,4 +40,8 @@ public class UserController {
     // 修改密码
     @PostMapping("changePassword")
     public R changePassword(@RequestBody ChangePasswordParam changePasswordParam) { return  userService.changePassword(changePasswordParam); }
+
+    // 修改个人信息
+    @PostMapping("changeInfo")
+    public R changeInfo(@RequestBody ChangeInfoParam changeInfoParam) { return userService.changeInfo(changeInfoParam); }
 }

@@ -116,6 +116,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
     @Override
     public R changePassword(ChangePasswordParam changePasswordParam){
         R r = new R();
+
+        // 返回是否修改成功
+        return r;
+    }
+
+    // 修改用户个人信息
+    @Override
+    public R changeInfo(ChangeInfoParam changeInfoParam){
+        R r = new R();
+
+        // 返回是否修改成功
         return r;
     }
 }
