@@ -322,7 +322,13 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
                     r.data("status","已出库");
                     r.data("status_code",true);
                 }
-
+                r.data("in_time",null);
+                r.data("out_time",null);
+                r.data("place",null);
+                r.data("id",checkParcelParam.getId());
+                r.data("location_xy",null);
+                r.data("status","无该包裹");
+                r.data("status_code",false);
             }catch (Exception E){
                 System.out.println(E);
                 r.data("status_code",false);
