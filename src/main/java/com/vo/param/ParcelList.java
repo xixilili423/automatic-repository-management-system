@@ -15,13 +15,11 @@ public class ParcelList {
     String parcel_id;
     boolean status;
     String location_xy;
-
     String place;
 
-    public ParcelList(String parcel_id, boolean status, String location_xy,String place){
+    public ParcelList(String parcel_id, boolean status, String place){
         this.parcel_id = parcel_id;
         this.status = status;
-        this.location_xy = location_xy;
         this.place = place;
     }
 }

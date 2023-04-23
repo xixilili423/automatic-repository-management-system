@@ -95,7 +95,7 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
         return r;
     }
 
-    public int[][][] Generate_shelvesx(int x, int y) {
+    public static int[][][] Generate_shelvesx(int x, int y) {
         x = x / 10;
         y = y / 10;
 

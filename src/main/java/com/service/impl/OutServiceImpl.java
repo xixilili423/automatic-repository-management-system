@@ -64,7 +64,7 @@ public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements 
                     String time = stock_out.get(i).getTime();
                     int x = stock_out.get(i).getX();
                     int y = stock_out.get(i).getY();
-                    String location_xy = x + "," + y;
+                    String location_xy = "("+x + "," + y+")";
                     String address = stock_out.get(i).getAddress();
                     tableData[i] = new TableData(package_id,time,location_xy,address);
                 }
@@ -74,12 +74,13 @@ public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements 
             } catch (Exception E) {
                 System.out.println(E);
                 r.data("status_code",false);
+                return r;
             }
         }
         else{
             r.data("status_code",false);
+            return r;
         }
-        return r;
     }
 
     //路径规划

@@ -40,16 +40,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
             R r= new R();
             if (user != null && user.getPassword().equals(loginParam.getPassword())) {
                 QueryWrapper<Warehouse> queryWrapper1=new QueryWrapper<>();
-                queryWrapper.eq("username",user.getUsername());
+                System.out.println(user.getUsername());
+                queryWrapper1.eq("username",user.getUsername());
                 List<Warehouse> Ware = wareMapper.selectList(queryWrapper1);//查询用户是否创建过仓库
+                System.out.println(wareMapper.exists(queryWrapper1));
                String token= user.getToken(user);
                r.data("user_id","0");
                r.data("token",token);
                 r.data("status_code",true);
+                System.out.println(Ware.size());
                 if(!Ware.isEmpty()) {
-                    r.data("warehouse",true);
+                    r.data("warehouse",true);//旧用户
                 } else {
-                    r.data("warehouse",false);
+                    r.data("warehouse",false);//新用户
                 }
                 return r;
             } else {
@@ -68,6 +71,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
         QueryWrapper<User> queryWrapper=new QueryWrapper<>();
         queryWrapper.eq("username",registerParam.getUsername());
         boolean u = userMapper.exists(queryWrapper);
+        System.out.println(u);
         if(!u)
         {
             User user=new User();

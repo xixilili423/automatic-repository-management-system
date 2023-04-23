@@ -11,7 +11,6 @@ import lombok.Data;
 
 @Data
 @TableName("stock_out")
-
 public class StockOut {
 
     private int id;
