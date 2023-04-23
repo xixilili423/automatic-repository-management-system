@@ -15,6 +15,7 @@ import com.vo.param.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import com.service.impl.FindPath;
 import com.vo.param.CheckParcelParam;
 import com.vo.param.EnterParam;
 import com.vo.param.TableData;
@@ -46,14 +47,14 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
     private final WareMapper wareMapper;
 
     //创建小车列表
-    private Avg[] createAvg(int avgNumber){
-        Avg[] avgList = new Avg[avgNumber];
+    private List<Avg> createAvg(int avgNumber){
+        List<Avg> avgList = new ArrayList<>();
         for(int i=0;i<avgNumber;i++){
             Avg a = new Avg(i);
-            avgList[i] = a;
+            avgList.add(a) ;
         }
-        for (int i = 0;i<avgList.length;i++){
-            System.out.println("id:"+avgList[i].getId());
+        for (int i = 0;i<avgList.size();i++){
+            System.out.println("id:"+avgList.get(i).getId());
         }
 
         return avgList;
@@ -135,44 +136,30 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
             System.out.println("temp"+temp.size());
             afterParcel.add(temp);
         }
-//        System.out.println("after"+afterParcel.size());
-//        for (int i =0;i<afterParcel.size();i++){
-//            System.out.println("ok");
-//            for(int j=0 ; j<afterParcel.get(i).size();j++){
-//                System.out.println(afterParcel.get(i).get(j).getId()+"place"+afterParcel.get(i).get(j).getPlace());
-//            }
-//
-//        }
+
         return afterParcel;
     }
 
     // 给一个系列的包裹分配货架
-//    private parcelReturn[] distributeLocation(Parcel[] parcel, int[][][] warehouse, String token){
-    private parcelReturn[] distributeLocation(List<Parcel> parcels, int[][][] warehouse, String token) {
-        /**
-         * 返回parcelList【{id,status,location_x,location_y}】
-         */
-//        parcelReturn[] result = new parcelReturn[parcel.length];
 
-        parcelReturn[] result = new parcelReturn[parcels.size()];
-//        for(int i = 0; i < parcel.length; i++){
+    private  List<parcelReturn> distributeLocation(List<Parcel> parcels, int[][][] warehouse, String token) {
+        int t = parcels.size();
+        List<parcelReturn> result = new ArrayList<>();
         for (int i=0; i<parcels.size();i++){
-            QueryWrapper<Place> qw = new QueryWrapper<>();
-//            qw.eq("place_Name", parcel[i].getPlace());
-            qw.eq("place_Name",parcels.get(i).getPlace());
-            Place place = placeMapper.selectOne(qw);
+            System.out.println("onrParcel");
 
             for (int k = 1; k < warehouse.length; k++) {
                 for (int j = 0; j < warehouse[0].length; j++) {
                     // 找到编号对得上的货架就分给它,可加入更多判断
-                    if(warehouse[i][j][0] == place.getId()){
-//                        int num = Integer.parseInt(parcel[i].getId());
+                    if(warehouse[k][j][0] == Integer.parseInt(parcels.get(i).getPlace())){
                         int num = Integer.parseInt(parcels.get(i).getId());
-
-                        result[i].setId(num);
-                        result[i].setLocation_x(k);
-                        result[i].setLocation_y(j);
-                        result[i].setStatus(true);
+                        parcelReturn temp = new parcelReturn(num,true);
+                        temp.setLocation_x(k);
+                        temp.setLocation_y(j);
+                        result.add(temp);
+                        //写入数据库
+                        System.out.println("en");
+                        break;
                     }
                 }
             }
@@ -193,29 +180,43 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
         // 读取数据库，获取avg数量
         int avg = warehouse.getAvg() ;
         // 创建小车列表，应该放在初始化仓库部分
-        Avg[] avgList = createAvg(avg);
+        List<Avg> avgList = createAvg(avg);
+
         // 获取仓库结构
-        InitStockImpl initStock = new InitStockImpl(wareMapper);
         int[][][] warehouse_structure = InitStockImpl.Generate_shelvesx(warehouse.getX(),warehouse.getY());
+        // 输出仓库
+        for (int i = 0; i < warehouse_structure.length; i++) {
+            for (int j = 0; j < warehouse_structure[0].length; j++) {
+                System.out.print(warehouse_structure[i][j][0] + " ");
+            }
+            System.out.println();
+        }
         // 得到可入库的包裹序列
         ParcelList[] parcelList = select(enterParam.getParcelInList(), enterParam.getToken());
         // 得到分类后的多个包裹序列
         List<List<Parcel>> divideParcel = divide(parcelList);
         // 分配小车，即avgList中的parcelList、status
         for (List<Parcel> parcels : divideParcel) {
-            // 分配一辆车后（改变小车状态），马上对其所载包裹分配货架
-            // 将返回结果赋给该小车的parcelReturn[]
-            parcelReturn[] parcelReturn = distributeLocation(parcels,warehouse_structure,enterParam.getToken());
+            System.out.println("parcelList");
+            for (int i =0 ;i<avgList.size();i++){
+                if(avgList.get(i).getStatus()){
+                    avgList.get(i).setStatus(false);//什么时候改回来
+                    List<parcelReturn> parcelReturn = distributeLocation(parcels,warehouse_structure,enterParam.getToken());
+                    avgList.get(i).setParcelList(parcelReturn);
+                    int[] start={0,0};
+                    int x = parcelReturn.size();
+                    int[][] goals = new int[x][];
+                    for (int j=0;j<parcelReturn.size();j++){
+                        int[] temp={parcelReturn.get(j).getLocation_x(),parcelReturn.get(j).getLocation_y()};
+                        goals[j]=temp;
+                    }
+                    avgList.get(i).setRoute(FindPath.findPath(warehouse_structure,start,goals));
+                    break;
+                }
+            }
+
         }
-//        for (Parcel[] parcels : divideParcel) {
-//            // 分配一辆车后（改变小车状态），马上对其所载包裹分配货架
-//            // 将返回结果赋给该小车的parcelReturn[]
-//            parcelReturn[] parcelReturn = distributeLocation(parcels, warehouse_structure, enterParam.getToken());
-//        }
-        //给每辆车路径规划
-        for (int i=0; i<divideParcel.size();i++){
-            //将路径规划结果返回赋给该车的route[][]
-        }
+
         // 返回小车列表,包裹列表，是否正常响应
         r.data("avgList",avgList);
         r.data("parcelList",parcelList);

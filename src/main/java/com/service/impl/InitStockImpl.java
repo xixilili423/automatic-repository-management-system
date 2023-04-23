@@ -132,8 +132,8 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
         }
 
         // 标记起点和终点
-        warehouse[start_x][0][0] = -1;
-        warehouse[0][end_y][0] = -2;
+        warehouse[0][0][0] = -1;
+        warehouse[x-1][0][0] = -2;
 
         return warehouse;
     }
