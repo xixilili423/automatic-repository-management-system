@@ -29,6 +29,9 @@ public class FindPath {
 
         // 依次寻路经过所有目标点
         for (int[] targetPoint : targetPoints) {
+
+            visited = new int[warehouse.length][warehouse[0].length];
+
             int targetX = targetPoint[0];
             int targetY = targetPoint[1];
             List<int[]> neighbors = getNeighbors(currX, currY);
@@ -51,7 +54,7 @@ public class FindPath {
                     }
                 }
 
-                if(next == null){//回到起点附近
+                if(next == null){
                     break;
                 }
 
@@ -63,7 +66,15 @@ public class FindPath {
 
                 System.out.println("["+ currX + "," + currY + "] ");
 
+                if(currX == start[0] && currY == start[1]){//回到起点，退出循环
+                    break;
+                }
+
                 neighbors = getNeighbors(currX, currY);
+            }
+
+            if(currX == start[0] && currY == start[1]){//回到起点，退出循环
+                break;
             }
         }
 
