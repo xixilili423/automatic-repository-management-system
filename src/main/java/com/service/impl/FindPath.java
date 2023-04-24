@@ -42,17 +42,14 @@ public class FindPath {
             List<int[]> neighbors = getNeighbors(currX, currY);
 
             while (Math.abs(currX - targetX) + Math.abs(currY - targetY) > 1) {//未到达目标点周围就进行寻路，曼哈顿距离为1时到达目标附近，距离大于1时未到达目标点附近
-
                 int minCost = Integer.MAX_VALUE;
                 int[] next = null;
-
                 for (int[] neighbor : neighbors) {
                     int neighborX = neighbor[0];
                     int neighborY = neighbor[1];
                     if (neighborX < 0 || neighborY < 0 || neighborX >= warehouse.length || neighborY >= warehouse[0].length || warehouse[neighborX][neighborY][0] > 0) {
                         continue; // 越界或目标为货架，不能作为邻居考虑
                     }
-
                     if (Math.abs(neighborX - targetX) + Math.abs(neighborY - targetY) < minCost && visited[neighborX][neighborY] == 0) {
                         next = neighbor;
                         minCost = Math.abs(neighborX - targetX) + Math.abs(neighborY - targetY);

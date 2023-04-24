@@ -86,24 +86,19 @@ public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements 
         int startY = 0;
         int endX = 0;   // 终点为第一行的中点
         int endY = warehouse[0].length / 2;
-
         List<int[]> path = new ArrayList<>();
         Queue<int[]> queue = new LinkedList<>();
         boolean[][] visited = new boolean[warehouse.length][warehouse[0].length];
-
         queue.add(new int[]{startX, startY});
         visited[startX][startY] = true;
-
         while (!queue.isEmpty()) {
             int[] curr = queue.poll();
             int currX = curr[0];
             int currY = curr[1];
-
             if (currX == endX && currY == endY) {  // 找到终点，退出循环
                 path.add(new int[]{currX, currY});
                 break;
             }
-
             for (int i = -1; i <= 1; i++) {
                 for (int j = -1; j <= 1; j++) {
                     if (Math.abs(i) == Math.abs(j) || currX + i < 0 || currX + i >= warehouse.length || currY + j < 0 || currY + j >= warehouse[0].length || visited[currX + i][currY + j] || warehouse[currX + i][currY + j][0] == 0) {
@@ -116,9 +111,6 @@ public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements 
                         path.add(new int[]{currX + i, currY + j});  // 将起点或终点加入路径
                         return path;
                     }
-
-
-
                     queue.add(new int[]{currX + i, currY + j});
                     visited[currX + i][currY + j] = true;
                 }
