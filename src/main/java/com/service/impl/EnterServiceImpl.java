@@ -59,8 +59,9 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
         return avgList;
     }
     // 筛选包裹（出入库不太一样）
+    // 入库版本
     private ParcelList[] select(Parcel[] parcel , String token){
-        // 获取对应warehouse和warehouse对应的stockIn列表，stockOut列表
+        // 获取对应warehouse
         String username = JWT.decode(token).getAudience().get(0);
         QueryWrapper<Warehouse> queryWrapper=new QueryWrapper<>();
         queryWrapper.eq("username",username);
@@ -273,7 +274,66 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
         return r;
     }
 
+    // 根据id查询包裹请求
     @Override
-    public R checkParcel(CheckParcelParam checkParcelParam) { return R.ok(); }
-
+    public R checkParcel(CheckParcelParam checkParcelParam) {
+        R r = new R();
+        if(checkParcelParam.getToken().equals("")){
+            r.data("status_code",false);
+            return r;
+        }
+        // 鉴权，获取username
+        String username = JWT.decode(checkParcelParam.getToken()).getAudience().get(0);
+        System.out.println(username);
+        if(username != null){
+            // 根据username获取对应Warehouse，获取warehouse_id
+            try{
+                QueryWrapper<Warehouse> queryWrapper=new QueryWrapper<>();
+                queryWrapper.eq("username",username);
+                Warehouse warehouse = wareMapper.selectOne(queryWrapper);
+                // 判断在入库表还是在出库表中
+                QueryWrapper<StockIn> queryWrapper1 = new QueryWrapper<>();
+                boolean in = enterMapper.exists(queryWrapper1.eq("warehouse",warehouse.getId()).eq("parcel",checkParcelParam.getId()));
+                QueryWrapper<StockOut> queryWrapper2 = new QueryWrapper<>();
+                boolean out = outMapper.exists(queryWrapper2.eq("warehouse",warehouse.getId()).eq("parcel",checkParcelParam.getId()));
+                if (in) {
+                    StockIn stockIn = enterMapper.selectById(checkParcelParam.getId());
+                    r.data("in_time",stockIn.getTime());
+                    r.data("out_time",null);
+                    r.data("place",stockIn.getAddress());
+                    r.data("id",checkParcelParam.getId());
+                    int x = stockIn.getX();
+                    int y = stockIn.getY();
+                    String location_xy = "("+ x + "," + y +")";
+                    r.data("location_xy",location_xy);
+                    r.data("status","在库中");
+                    r.data("status_code",true);
+                }
+                if(out){
+                    StockOut stockOut = outMapper.selectById(checkParcelParam.getId());
+                    r.data("in_time",null);
+                    r.data("out_time",stockOut.getTime());
+                    r.data("place",stockOut.getAddress());
+                    r.data("id",checkParcelParam.getId());
+                    int x = stockOut.getX();
+                    int y = stockOut.getY();
+                    String location_xy = "("+ x + "," + y +")";
+                    r.data("location_xy",location_xy);
+                    r.data("status","已出库");
+                    r.data("status_code",true);
+                }
+                r.data("in_time",null);
+                r.data("out_time",null);
+                r.data("place",null);
+                r.data("id",checkParcelParam.getId());
+                r.data("location_xy",null);
+                r.data("status","无该包裹");
+                r.data("status_code",false);
+            }catch (Exception E){
+                System.out.println(E);
+                r.data("status_code",false);
+            }
+        }
+        return r;
+    }
 }
