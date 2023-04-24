@@ -146,7 +146,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
         // 判断该username是否存在
         if(user!= null ){
             UpdateWrapper<User> updateWrapper=new UpdateWrapper<>();
-            updateWrapper.eq("username",username).set("phone",changeInfoParam.getPhone()).set("address",changeInfoParam.getAddress());
+            updateWrapper.eq("username",username);
+            if(changeInfoParam.getPhone()!=null)
+            {
+                updateWrapper.set("phone",changeInfoParam.getPhone());
+                System.out.println(changeInfoParam.getPhone());
+           }
+            if ( changeInfoParam.getAddress()!=null) {
+                System.out.println(changeInfoParam.getAddress());
+                updateWrapper.set("address",changeInfoParam.getAddress());
+            }
             userMapper.update(user,updateWrapper);
             r.data("status_code",true);
             return r;
