@@ -1,5 +1,6 @@
 package com.vo.param;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,14 +12,18 @@ import lombok.Setter;
 
 @Getter
 @Setter
+//@AllArgsConstructor
 public class Parcel {
 
     private String id;
 
     private String place;
 
+//    private String result;
+
     public Parcel(String id, String place){
         this.id = id;
         this.place = place;
     }
+
 }

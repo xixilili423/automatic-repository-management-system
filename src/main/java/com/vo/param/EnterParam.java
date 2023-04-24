@@ -16,6 +16,7 @@ public class EnterParam {
     private Parcel parcelInList[]; // 包裹id，目的地
     private String token; // token
 
+
     public EnterParam(Parcel parcelInList[], String token){
         this.parcelInList = parcelInList;
         this.token = token;

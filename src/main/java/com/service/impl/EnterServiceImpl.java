@@ -153,7 +153,7 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
                     // 找到编号对得上的货架就分给它,可加入更多判断
                     if(warehouse[k][j][0] == Integer.parseInt(parcels.get(i).getPlace())){
                         int num = Integer.parseInt(parcels.get(i).getId());
-                        parcelReturn temp = new parcelReturn(num,true);
+                        parcelReturn temp = new parcelReturn(num,true,parcels.get(i).getPlace());
                         temp.setLocation_x(k);
                         temp.setLocation_y(j);
                         result.add(temp);
@@ -196,6 +196,7 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
         // 得到分类后的多个包裹序列
         List<List<Parcel>> divideParcel = divide(parcelList);
         // 分配小车，即avgList中的parcelList、status
+        List<Avg> avgListResult = new ArrayList<>();
         for (List<Parcel> parcels : divideParcel) {
             System.out.println("parcelList");
             for (int i =0 ;i<avgList.size();i++){
@@ -211,6 +212,7 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
                         goals[j]=temp;
                     }
                     avgList.get(i).setRoute(FindPath.findPath(warehouse_structure,start,goals));
+                    avgListResult.add(avgList.get(i));
                     break;
                 }
             }
@@ -218,7 +220,7 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
         }
 
         // 返回小车列表,包裹列表，是否正常响应
-        r.data("avgList",avgList);
+        r.data("avgList",avgListResult);
         r.data("parcelList",parcelList);
         r.data("status_code",true);
 
