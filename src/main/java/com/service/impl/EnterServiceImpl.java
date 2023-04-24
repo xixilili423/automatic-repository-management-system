@@ -224,8 +224,6 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
         return r;
     }
 
-
-
     // 获取入库记录表格 get
     @Override
     public R getInTable(String token){
