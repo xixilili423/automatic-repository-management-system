@@ -226,8 +226,21 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
         r.data("parcelList",parcelList);
         r.data("status_code",true);
 
+        // 将数据写入数据库
+        StockIn[] stockIn = new StockIn[parcelList.length];
+        for (int j=0;j< parcelList.length;j++){
+            stockIn[j].setParcel(parcelList[j].getParcel_id());
+//            stockIn[j].setWarehouse(parcelList[j]);
+//            avgList[j].getRoute();
+//            stockIn[j].setX();
+//            stockIn[j].setY();
+//            stockIn[j].setAddress();
+//            stockIn[j].setTime();
+        }
         return r;
     }
+
+
 
     // 获取入库记录表格 get
     @Override
