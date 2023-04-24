@@ -14,14 +14,14 @@ import lombok.Setter;
 public class parcelReturn {
     private int id;
     private boolean status;
-
     private int location_x;
-
     private int location_y;
+    private String place;
 
-    public parcelReturn(int id , boolean status){
+    public parcelReturn(int id , boolean status, String place){
         this.id = id;
         this.status = status;
+        this.place = place;
     }
 
     public parcelReturn() {

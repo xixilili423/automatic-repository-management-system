@@ -207,15 +207,21 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
             // 将返回结果赋给该小车的parcelReturn[]
             parcelReturn[] parcelReturn = distributeLocation(parcels,warehouse_structure,enterParam.getToken());
         }
+
 //        for (Parcel[] parcels : divideParcel) {
 //            // 分配一辆车后（改变小车状态），马上对其所载包裹分配货架
 //            // 将返回结果赋给该小车的parcelReturn[]
 //            parcelReturn[] parcelReturn = distributeLocation(parcels, warehouse_structure, enterParam.getToken());
 //        }
+
         //给每辆车路径规划
         for (int i=0; i<divideParcel.size();i++){
             //将路径规划结果返回赋给该车的route[][]
+
+
+
         }
+
         // 返回小车列表,包裹列表，是否正常响应
         r.data("avgList",avgList);
         r.data("parcelList",parcelList);
