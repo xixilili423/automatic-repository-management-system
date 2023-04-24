@@ -82,7 +82,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
             return r;
         }
     }
-
+    //修改密码
     @Override
     public R changePassword(ChangeParam changeParam) {
         R r= new R();
@@ -133,7 +133,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
         }
         return r;
     }
-
+    //修改个人信息
     @Override
     public R changeInformation(ChangeInfoParam changeInfoParam) {
         R r= new R();
