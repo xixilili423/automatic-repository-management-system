@@ -1,5 +1,4 @@
 package com.service.impl;
-
 import com.auth0.jwt.JWT;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -95,7 +94,7 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
         return r;
     }
 
-    public int[][][] Generate_shelvesx(int x, int y) {
+    public static int[][][] Generate_shelvesx(int x, int y) {
         x = x / 10;
         y = y / 10;
 

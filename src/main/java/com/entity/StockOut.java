@@ -11,14 +11,13 @@ import lombok.Data;
 
 @Data
 @TableName("stock_out")
-
 public class StockOut {
 
     private int id;
 
-    private String parcel;
+    private String parcel; // parcel_id
 
-    private int warehouse;
+    private int warehouse; // warehouse_id
 
     private int x;
 

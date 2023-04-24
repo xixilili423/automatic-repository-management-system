@@ -33,7 +33,8 @@ public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements 
     // 出库请求
     @Override
     public R outStock(OutParam outParam){
-        return R.ok();
+        R r = new R();
+        return r.ok();
     }
 
     // 获取出库记录表格
@@ -115,6 +116,8 @@ public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements 
                         path.add(new int[]{currX + i, currY + j});  // 将起点或终点加入路径
                         return path;
                     }
+
+
 
                     queue.add(new int[]{currX + i, currY + j});
                     visited[currX + i][currY + j] = true;

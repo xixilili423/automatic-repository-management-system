@@ -21,4 +21,10 @@ public class User {
 
     private String password; // 密码
 
+    private String address; // 所属中转站
+
+    private String phone; // 电话
+
+    private String totalcost; // 费用
+
 }

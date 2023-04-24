@@ -13,9 +13,9 @@ public class StockIn {
 
     private int id; // 记录的id
 
-    private String parcel;
+    private String parcel; // parcel_id
 
-    private int warehouse;
+    private int warehouse; // warehouse_id
 
     private int x;
 
