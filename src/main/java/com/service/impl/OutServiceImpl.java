@@ -34,8 +34,7 @@ public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements 
     @Override
     public R outStock(OutParam outParam){
         R r = new R();
-        r.data("status_code",true);
-        return r;
+        return r.ok();
     }
 
     // 获取出库记录表格
@@ -64,7 +63,7 @@ public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements 
                     String time = stock_out.get(i).getTime();
                     int x = stock_out.get(i).getX();
                     int y = stock_out.get(i).getY();
-                    String location_xy = "("+x + "," + y+")";
+                    String location_xy = x + "," + y;
                     String address = stock_out.get(i).getAddress();
                     tableData[i] = new TableData(package_id,time,location_xy,address);
                 }
@@ -74,15 +73,13 @@ public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements 
             } catch (Exception E) {
                 System.out.println(E);
                 r.data("status_code",false);
-                return r;
             }
         }
         else{
             r.data("status_code",false);
-            return r;
         }
+        return r;
     }
-
     //路径规划
     public static List<int[]> findPath(int[][][] warehouse, int targetX, int targetY) {
         int startX = warehouse.length / 2;  // 起点为第一列的中点
@@ -119,6 +116,8 @@ public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements 
                         path.add(new int[]{currX + i, currY + j});  // 将起点或终点加入路径
                         return path;
                     }
+
+
 
                     queue.add(new int[]{currX + i, currY + j});
                     visited[currX + i][currY + j] = true;
