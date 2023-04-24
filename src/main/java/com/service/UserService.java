@@ -53,18 +53,6 @@ public interface UserService extends IService<User> {
     R changeInformation(ChangeInfoParam changeInfoParam);
 
 
-    /**
-     * 4.修改密码
-     * @post changePassword()
-     * @return
-     */
-    R changePassword(ChangePasswordParam changePasswordParam);
 
-    /**
-     * 4.修改个人信息
-     * @post changeInfo()
-     * @return
-     */
-    R changeInfo(ChangeInfoParam changeInfoParam);
 
 }
