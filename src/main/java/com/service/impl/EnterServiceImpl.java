@@ -210,7 +210,7 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
                     int x = parcelReturn.size();
                     int[][] goals = new int[x][];
                     for (int j=0;j<parcelReturn.size();j++){
-                        int[] temp={parcelReturn.get(j).getLocation_x(),parcelReturn.get(j).getLocation_y()};
+                        int[] temp={parcelReturn.get(j).getLocation_y(),parcelReturn.get(j).getLocation_x()};
                         goals[j]=temp;
                     }
                     avgList.get(i).setRoute(FindPath.findPath(warehouse_structure,start,goals));

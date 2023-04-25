@@ -86,7 +86,14 @@ public class FindPath {
                 break;
             }
         }
+        //对最终路径中的所有数字都乘一个比例
+        double factor = ( 1000.0 / (10 * warehouse.length) ) * 10;
 
+        for (int[] arr : path) {
+            for (int i = 0; i < arr.length; i++) {
+                arr[i] = (int) (arr[i] * factor);
+            }
+        }
         return path;
     }
 

@@ -62,6 +62,7 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
             r.data("status_code",true);
         }else{//查询到用户以创建过仓库
             r.data("status_code",false);
+
         }
         return r;
     }
@@ -85,10 +86,15 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
             int avg = user.getAvg();
             System.out.println(length+"*******"+width);
             int[][][] warehouse = Generate_shelvesx(length,width);
-
+            for (int i = 0; i < warehouse.length; i++) {
+                for (int j = 0; j < warehouse[0].length; j++) {
+                    System.out.print(warehouse[i][j][0] + " ");
+                }
+                System.out.println();
+            }
             r.data("status", true);
             r.data("depository",warehouse);
-            InitData initData = new InitData(length,width,gate_machine,avg);
+            InitData initData = new InitData(width,length,gate_machine,avg);
             r.data("initData",initData);
         }
         return r;
