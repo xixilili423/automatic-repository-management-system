@@ -145,7 +145,7 @@ public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements 
         // 获取仓库结构
         InitStockImpl initStock = new InitStockImpl(wareMapper);
         int[][][] warehouse_structure = InitStockImpl.Generate_shelvesx(warehouse.getX(),warehouse.getY());
-        // 得到可入库的包裹序列
+        // 得到可出库的包裹序列
         ParcelList[] parcelList = select(outParam.getParcelOutList(), outParam.getToken());
         // 得到分类后的多个包裹序列
         List<List<Parcel>> divideParcel = divide(parcelList);
