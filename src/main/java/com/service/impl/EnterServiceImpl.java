@@ -15,7 +15,6 @@ import com.vo.param.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import com.service.impl.FindPath;
 import com.vo.param.CheckParcelParam;
 import com.vo.param.EnterParam;
 import com.vo.param.TableData;
@@ -220,7 +219,6 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
             }
 
         }
-
         // 返回小车列表,包裹列表，是否正常响应
         r.data("avgList",avgListResult);
         r.data("parcelList",parcelList);
