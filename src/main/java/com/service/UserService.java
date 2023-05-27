@@ -52,7 +52,7 @@ public interface UserService extends IService<User> {
      */
     R changeInformation(ChangeInfoParam changeInfoParam);
 
-
+    User findUserById(String id);
 
 
 }

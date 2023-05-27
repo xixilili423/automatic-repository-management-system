@@ -165,4 +165,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
             return r;
         }
     }
+
+    @Override
+    public User findUserById(String id) {
+        QueryWrapper<User> queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq("username",id);
+        User user = userMapper.selectOne(queryWrapper);
+        return user;
+    }
 }

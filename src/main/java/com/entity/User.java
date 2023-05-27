@@ -2,6 +2,7 @@ package com.entity;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -17,6 +18,7 @@ public class User {
         return JWT.create().withAudience(user.getUsername())
                 .sign(Algorithm.HMAC256(user.getPassword()));
     }
+    @TableId
     private String username; // 用户名
 
     private String password; // 密码

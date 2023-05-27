@@ -1,5 +1,6 @@
 package com.controller;
 
+import com.annotation.UserLoginToken;
 import com.service.UserService;
 import com.vo.R;
 import com.vo.param.*;
@@ -36,6 +37,7 @@ public class UserController {
 
     // 获取主页信息--get
     @GetMapping("information")
+    @UserLoginToken
     public R getInformation(@RequestParam(value="token") String token) { return userService.getInformation(token); }
     @PostMapping("changePassword")
     public R changePassword(@RequestBody ChangeParam changeParam){
