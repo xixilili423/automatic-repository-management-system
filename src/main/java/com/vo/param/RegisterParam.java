@@ -9,12 +9,20 @@ import lombok.Getter;
 @Getter
 public class RegisterParam {
     // 注册
-    private String username; // 用户名
-    private String password; // 密码
-
-    public RegisterParam(String username, String password, String passwordConfirm){
-        this.username = username;
-        this.password = password;
-    }
-
+    /**
+     * 所属上司用户名（ID）
+     */
+    private String managerID;
+    /**
+     * 密码，最长32个字符
+     */
+    private String password;
+    /**
+     * 用户名，最长32个字符
+     */
+    private String userID;
+    /**
+     * 真实姓名
+     */
+    private String userName;
 }

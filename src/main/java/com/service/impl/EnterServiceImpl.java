@@ -3,43 +3,32 @@ package com.service.impl;
 import com.auth0.jwt.JWT;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.entity.Place;
 import com.entity.StockIn;
 import com.entity.StockOut;
 import com.entity.Warehouse;
 import com.mapper.*;
 import com.service.EnterService;
 import com.vo.R;
-import com.vo.param.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import com.vo.param.CheckParcelParam;
 import com.vo.param.EnterParam;
 import com.vo.param.TableData;
 import com.vo.param.Parcel;
 import lombok.AllArgsConstructor;
-import com.baomidou.mybatisplus.core.assist.ISqlRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.vo.param.Avg;
 import com.vo.param.parcelReturn;
 import com.vo.param.ParcelList;
-import com.entity.StockOut;
-import com.service.impl.InitStockImpl;
 
-
+/**
 @Service
 @AllArgsConstructor
 public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implements EnterService {
     private final UserMapper userMapper;
 
-    private final EnterMapper enterMapper;
-
-    private final OutMapper outMapper;
-
-    private final PlaceMapper placeMapper;
 
 
     @Autowired
@@ -72,9 +61,9 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
         for(int i = 0;i<parcel.length;i++){
             // 可以入库的：不在入库表里，或者出库表内
             QueryWrapper<StockIn> queryWrapper1 = new QueryWrapper<>();
-            boolean in = enterMapper.exists(queryWrapper1.eq("warehouse",warehouse.getId()).eq("parcel",parcel[i].getId()));
+           // boolean in = enterMapper.exists(queryWrapper1.eq("warehouse",warehouse.getId()).eq("parcel",parcel[i].getId()));
             QueryWrapper<StockOut> queryWrapper2 = new QueryWrapper<>();
-            boolean out = outMapper.exists(queryWrapper2.eq("warehouse",warehouse.getId()).eq("parcel",parcel[i].getId()));
+           // boolean out = outMapper.exists(queryWrapper2.eq("warehouse",warehouse.getId()).eq("parcel",parcel[i].getId()));
             if (!in || out){
                 ParcelList p = new ParcelList(parcel[i].getId(),true, parcel[i].getPlace());
                 parcelLists[i]=p;
@@ -111,12 +100,7 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
     // 包裹分类
     private List<List<Parcel>> divide(ParcelList[] parcelLists){
         List<List<Parcel>> afterParcel =  new ArrayList<>();
-        /**
-         * 将 parcelList 按 place 分类
-         * place 是数字
-         * 先排序：冒泡排序
-         * 循环分类
-         */
+
         // 冒泡排序,按照place从小到大排序
         parcelLists = BubbleSort(parcelLists, parcelLists.length);
 
@@ -178,7 +162,7 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
         queryWrapper.eq("username",username);
         Warehouse warehouse = wareMapper.selectOne(queryWrapper);
         // 读取数据库，获取avg数量
-        int avg = warehouse.getAvg() ;
+     //   int avg = warehouse.getAvg() ;
         // 创建小车列表，应该放在初始化仓库部分
         List<Avg> avgList = createAvg(avg);
 
@@ -263,7 +247,7 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
                 QueryWrapper<StockIn> queryWrapper1 = new QueryWrapper<>();
                 queryWrapper1.eq("warehouse",warehouse_id);
 //                queryWrapper1.eq("1",warehouse_id); // 测试用
-                List<StockIn> stockIns= enterMapper.selectList(queryWrapper1);
+//              List<StockIn> stockIns= enterMapper.selectList(queryWrapper1);
                 TableData[] tableData = new TableData[stockIns.size()];
                 for (int i=0;i<stockIns.size();i++){
                     String package_id = stockIns.get(i).getParcel();
@@ -363,3 +347,4 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
         return r;
     }
 }
+*/

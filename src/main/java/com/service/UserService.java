@@ -38,7 +38,7 @@ public interface UserService extends IService<User> {
      * @return
      */
     R changePassword(ChangeParam changeparam);
-
+    R  registerManager(RegisterManagerParam registerManagerParam);
     /**
      * 4.主页信息获取
      * @get getInformation(token)
@@ -53,6 +53,6 @@ public interface UserService extends IService<User> {
     R changeInformation(ChangeInfoParam changeInfoParam);
 
     User findUserById(String id);
-
-
+    R managerHomePage(String id);
+    R userHomePage(String id);
 }

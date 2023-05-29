@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
  * Date: 2023/04/18
  * Describution: 该类用于充当 初始化仓库 的Controller层
  */
-
+/**
 @RestController
 @RequestMapping("/user")
 @CrossOrigin
@@ -31,3 +31,4 @@ public class InitStockController {
     public R getOldInitStock(@RequestParam(value="token") String token) { return initStockService.getOldInitStock(token); }
 
 }
+*/

@@ -1,10 +1,11 @@
 package com.mapper;
 
+
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.entity.Place;
+import com.entity.Warehouseperson;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface PlaceMapper  extends BaseMapper<Place> {
+public interface InboundpersonMapper  extends BaseMapper<Warehouseperson> {
 
 }

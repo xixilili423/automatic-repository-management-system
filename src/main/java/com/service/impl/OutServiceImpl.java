@@ -6,8 +6,7 @@ import com.entity.StockIn;
 import com.entity.StockOut;
 import com.entity.User;
 import com.entity.Warehouse;
-import com.mapper.EnterMapper;
-import com.mapper.OutMapper;
+import com.mapper.ShelfMapper;
 import com.mapper.UserMapper;
 import com.mapper.WareMapper;
 import com.service.OutService;
@@ -21,15 +20,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-
+/**
 @Service
 @AllArgsConstructor
-public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements OutService {
+public class OutServiceImpl extends ServiceImpl<ShelfMapper, StockOut> implements OutService {
 
     private final UserMapper userMapper;
 
     EnterMapper enterMapper;
-    OutMapper outMapper;
+    ShelfMapper outMapper;
 
     WareMapper wareMapper;
 
@@ -55,13 +54,7 @@ public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements 
     // 包裹分类
     private List<List<Parcel>> divide(ParcelList[] parcelLists) {
         List<List<Parcel>> afterParcel =  new ArrayList<>();
-        /**
-         * 将 parcelList 按 place 分类
-         * place 是数字
-         * 先排序：冒泡排序
-         * 循环分类
-         */
-        // 冒泡排序,按照place从小到大排序
+
         parcelLists = BubbleSort(parcelLists, parcelLists.length);
 
         for(int i = 0;i < parcelLists.length; i++){
@@ -255,3 +248,4 @@ public class OutServiceImpl extends ServiceImpl<OutMapper, StockOut> implements 
         return path;
     }
 }
+*/

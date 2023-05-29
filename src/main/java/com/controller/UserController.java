@@ -1,5 +1,6 @@
 package com.controller;
 
+import com.annotation.PassToken;
 import com.annotation.UserLoginToken;
 import com.service.UserService;
 import com.vo.R;
@@ -25,12 +26,14 @@ public class UserController {
 
     // 登陆--post保存
     @PostMapping("login")
+    @PassToken
     public R login(@RequestBody LoginParam loginParam) {
         return userService.login(loginParam);
     }
 
     // 注册--post保存
     @PostMapping("register")
+    @PassToken
     public R register(@RequestBody RegisterParam registerParam) {
         return userService.register(registerParam);
     }
@@ -40,13 +43,33 @@ public class UserController {
     @UserLoginToken
     public R getInformation(@RequestParam(value="token") String token) { return userService.getInformation(token); }
     @PostMapping("changePassword")
+    @UserLoginToken
     public R changePassword(@RequestBody ChangeParam changeParam){
 
         return userService.changePassword(changeParam);
     }
     @PostMapping("changeInfo")
+    @UserLoginToken
     public R changeInformation(@RequestBody ChangeInfoParam changeinfoParam)
     {
        return  userService.changeInformation(changeinfoParam);
+    }
+    @PostMapping("registerManager")
+    @UserLoginToken
+    public R registerManager(@RequestBody RegisterManagerParam registerManagerParam)
+    {
+        return  userService.registerManager(registerManagerParam);
+    }
+    @GetMapping("managerHomePage")
+    @UserLoginToken
+    public R managerHomePage(@RequestAttribute(value="id") String id)
+    {
+        return userService.managerHomePage(id);
+    }
+    @GetMapping("userHomePage")
+    @UserLoginToken
+    public R userHomePage(@RequestAttribute(value="id") String id)
+    {
+        return  userService.userHomePage(id);
     }
 }

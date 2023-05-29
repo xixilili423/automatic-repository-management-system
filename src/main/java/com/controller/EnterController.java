@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
  * FileName: EnterController
  * Date: 2023/04/18
  */
-
+/**
 @RestController
 @RequestMapping("/other")
 @CrossOrigin
@@ -34,3 +34,4 @@ public class EnterController {
 //
 
 }
+*/

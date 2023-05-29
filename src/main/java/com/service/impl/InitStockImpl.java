@@ -3,7 +3,6 @@ import com.auth0.jwt.JWT;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.entity.Warehouse;
-import com.mapper.InitStockMapper;
 import com.mapper.WareMapper;
 import com.service.InitStockService;
 import com.vo.R;
@@ -20,7 +19,7 @@ import com.auth0.jwt.JWT;
  * FileName:  InitStockImpl
  * Date: 2023/04/18
  */
-
+/**
 @Service
 //@Transactional
 @AllArgsConstructor
@@ -139,3 +138,4 @@ public class InitStockImpl extends ServiceImpl<InitStockMapper, Warehouse> imple
 
 }
 
+*/

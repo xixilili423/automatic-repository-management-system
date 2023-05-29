@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.*;
  * FileName:  OutController
  * Date: 2023/04/18
  */
-
+/**
 @RestController
 @RequestMapping("/other")
 @CrossOrigin
-
+/
 public class OutController {
 
     @Autowired
@@ -29,3 +29,4 @@ public class OutController {
     public R  getOutTable(@RequestParam(value="token") String token) { return outService.getOutTable(token); }
 
 }
+*/
