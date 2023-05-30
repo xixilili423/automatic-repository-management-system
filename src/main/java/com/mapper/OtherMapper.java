@@ -5,5 +5,5 @@
 //
 ////@Mapper
 //public interface OtherMapper extends BaseMapper<Other> {
-//
+
 //}

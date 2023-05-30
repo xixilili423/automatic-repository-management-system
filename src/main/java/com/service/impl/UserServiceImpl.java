@@ -253,7 +253,6 @@ public class UserServiceImpl  extends ServiceImpl<UserMapper, User> implements U
             r.data("companyNum", companyNum);
             r.data("inPeopleNum", inPeopleNum);
             r.data("outPeopleNum", outPeopleNum);
-
             return r;
         }
         else

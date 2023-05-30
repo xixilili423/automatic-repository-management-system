@@ -26,8 +26,8 @@ public class Shelfitem {
   }
 
 
-  public long getLocationid() {
-    return locationid;
+  public String getLocationid() {
+    return String.valueOf(locationid);
   }
 
   public void setLocationid(long locationid) {
