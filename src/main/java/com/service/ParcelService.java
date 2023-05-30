@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 
 public interface ParcelService {
-    public R searchParcel(String id, SearchParcelParam searchParcelParam);
 
-    public R searchPacelDetail(String id,String pacelId);
+
+    R searchParcel(String id, SearchParcelParam searchParcelParam);
+
+    public R searchPacelDetail(String id, String pacelId);
 
     public R deleteParcel ( String id,String pacelId);
 }

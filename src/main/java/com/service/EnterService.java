@@ -1,11 +1,12 @@
 package com.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.entity.Inbound;
 import com.vo.R;
 import com.vo.param.CheckParcelParam;
 import com.vo.param.EnterParam;
 
-public interface EnterService extends IService<StockIn> {
+public interface EnterService extends IService<Inbound> {
 
     /**
      * 1.入库请求

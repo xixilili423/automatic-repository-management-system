@@ -91,28 +91,86 @@ public class UserServiceImpl  extends ServiceImpl<UserMapper, User> implements U
         }
     }
 
-    //修改密码
+
     @Override
-    public R changePassword(ChangeParam changeParam) {
+    public R searchParce(String id,String userNickname) {
         R r = new R();
-        // 鉴权，获取username
-        String username = JWT.decode(changeParam.getToken()).getAudience().get(0);
-        System.out.println(username);
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("username", username);
-        User user = userMapper.selectOne(queryWrapper);
-        // 判断该username是否存在
-        if (user != null && user.getPassword().equals(changeParam.getPre_password())) {
-            UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("username", username).set("password", changeParam.getNew_password());
-            userMapper.update(user, updateWrapper);
-            r.data("status_code", true);
-            return r;
-        } else {
-            r.data("status_code", false);
+        User user = userMapper.selectById(id);
+        if (user == null) {
+            r.setMsg("用户不存在");
             return r;
         }
+        if(!user.getName().equals(userNickname))
+        {
+            r.setMsg("用户名错误");
+            return r;
+        }
+        r.data("userName", user.getName());
+        r.data("userPhone", user.getContactnumber());
+        r.data("stationName", user.getTransitstation());
+        r.data("startTime", user.getAccountcreatedtime().toString());
+        r.data("userEmail", user.getEmail());
+        return r;
     }
+
+    @Override
+    public R modifyUserInformation(String id,ModifyUserInformationParam modifyUserInformationParam) {
+        R r = new R();
+        r.data("status_code", false);
+        User user = userMapper.selectById(id);
+        if (user == null) {
+            return r;
+        }
+        if (modifyUserInformationParam.getUserName() != null) {
+            user.setName(modifyUserInformationParam.getUserName());
+        }
+        if (modifyUserInformationParam.getUserPhone() != null) {
+            user.setContactnumber(modifyUserInformationParam.getUserPhone());
+        }
+        if (!modifyUserInformationParam.getStationName().isEmpty()) {
+            try {
+                user.setAccountcreatedtime(Timestamp.valueOf(modifyUserInformationParam.getStartTime()));
+            } catch (IllegalArgumentException e) {
+                r.setMsg("时间格式错误");
+                return r;
+            }
+        }
+        if (modifyUserInformationParam.getStartTime() != null) {
+            user.setAccountcreatedtime(Timestamp.valueOf(modifyUserInformationParam.getStartTime()));
+        }
+        if (modifyUserInformationParam.getUserEmail() != null) {
+            user.setEmail(modifyUserInformationParam.getUserEmail());
+        }
+        userMapper.updateById(user);
+        r.data("status_code", true);
+       return r;
+    }
+
+    @Override
+    public R modifyPassword(String id,ModifyPasswordParam modifyPasswordParam) {
+        R r = new R();
+        r.data("status_code", false);
+        User user = userMapper.selectById(id);
+        if (user == null) {
+            r.setMsg("用户不存在");
+            return r;
+        }
+        if (!(modifyPasswordParam.getPassword().equals(user.getPassword()))) {
+            r.setMsg("密码错误");
+            return r;
+        }
+        if (!(modifyPasswordParam.getUserNickname().equals(user.getName()))) {
+            r.setMsg("用户名错误");
+            return r;
+        }
+        user.setPassword(modifyPasswordParam.getPassword());
+        userMapper.updateById(user);
+        r.setMsg("密码修改成功");
+        r.data("status_code", true);
+        return r;
+
+    }
+
 
     @Override
     public R registerManager(RegisterManagerParam registerManagerParam) {
@@ -139,64 +197,6 @@ public class UserServiceImpl  extends ServiceImpl<UserMapper, User> implements U
 
     }
 
-    // 主页请求用户信息
-    @Override
-    public R getInformation(String token) {
-        R r = new R();
-        if (token.equals("")) {
-            r.data("status_code", false);
-            return r;
-        }
-        // 鉴权，获取username
-        String username = JWT.decode(token).getAudience().get(0);
-        System.out.println(username);
-        // 判断该username是否存在
-        if (username != null) {
-            QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("username", username);
-            User user = userMapper.selectOne(queryWrapper);
-            // String phone = user.getPhone();
-            //String address = user.getAddress();
-            //String total_cost = user.getTotalcost();
-            r.data("status_code", true);
-            r.data("user_name", username);
-            // r.data("phone",phone);
-            //r.data("address",address);
-            //r.data("total_cost",total_cost);
-        }
-        return r;
-    }
-
-    //修改个人信息
-    @Override
-    public R changeInformation(ChangeInfoParam changeInfoParam) {
-        R r = new R();
-        // 鉴权，获取username
-        String username = JWT.decode(changeInfoParam.getToken()).getAudience().get(0);
-        System.out.println(username);
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("username", username);
-        User user = userMapper.selectOne(queryWrapper);
-        // 判断该username是否存在
-        if (user != null) {
-            UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("username", username);
-            if (changeInfoParam.getPhone() != null) {
-                updateWrapper.set("phone", changeInfoParam.getPhone());
-                System.out.println(changeInfoParam.getPhone());
-            }
-            if (changeInfoParam.getAddress() != null) {
-                System.out.println(changeInfoParam.getAddress());
-                updateWrapper.set("address", changeInfoParam.getAddress());
-            }
-            userMapper.update(user, updateWrapper);
-            r.data("status_code", true);
-            return r;
-        } else {
-            r.data("status_code", false);
-            return r;
-        }
-    }
 
     @Override
     public User findUserById(String id) {

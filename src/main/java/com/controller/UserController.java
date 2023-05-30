@@ -39,21 +39,7 @@ public class UserController {
     }
 
     // 获取主页信息--get
-    @GetMapping("information")
-    @UserLoginToken
-    public R getInformation(@RequestParam(value="token") String token) { return userService.getInformation(token); }
-    @PostMapping("changePassword")
-    @UserLoginToken
-    public R changePassword(@RequestBody ChangeParam changeParam){
 
-        return userService.changePassword(changeParam);
-    }
-    @PostMapping("changeInfo")
-    @UserLoginToken
-    public R changeInformation(@RequestBody ChangeInfoParam changeinfoParam)
-    {
-       return  userService.changeInformation(changeinfoParam);
-    }
     @PostMapping("registerManager")
     @UserLoginToken
     public R registerManager(@RequestBody RegisterManagerParam registerManagerParam)

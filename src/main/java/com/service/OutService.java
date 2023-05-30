@@ -1,10 +1,11 @@
 package com.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.entity.Outbound;
 import com.vo.R;
 import com.vo.param.OutParam;
 
-public interface OutService extends IService<StockOut> {
+public interface OutService extends IService<Outbound> {
     /**
      * 出库请求
      * @param outParam()

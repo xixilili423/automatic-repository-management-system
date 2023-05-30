@@ -1,21 +1,15 @@
 package com.service;
 
+import com.annotation.UserLoginToken;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.entity.User;
 import com.vo.R;
 import com.vo.param.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 
-//@Service
-//public class UserService {
-//
-//    @Autowired
-//    private Usermapper usermapper=(Usermapper)  ApplicationContextHelperUtil.getBean(Usermapper.class);
-//    public boolean Login(user user1){
-//        QueryWrapper<user> userQueryWrapper = new QueryWrapper<>();
-//        userQueryWrapper.eq("email",user1.getEmail()).eq("password",user1.getPassword());
-//        return usermapper.equals(userQueryWrapper);
-//    }
-//}
 
 public interface UserService extends IService<User> {
     /**
@@ -37,20 +31,22 @@ public interface UserService extends IService<User> {
      * @get getInformation(旧密码，新密码，token)
      * @return
      */
-    R changePassword(ChangeParam changeparam);
+   R searchParce(String id, String userNickname);
+   R modifyUserInformation(String id,ModifyUserInformationParam modifyUserInformationParam);
+
+   R modifyPassword(String id, ModifyPasswordParam modifyPasswordParam);
+
     R  registerManager(RegisterManagerParam registerManagerParam);
     /**
      * 4.主页信息获取
      * @get getInformation(token)
      * @return
      */
-    R getInformation(String token);
     /**
      * 5.修改个人信息
      * @get getInformation(手机号，所属中转，token)
      * @return
      */
-    R changeInformation(ChangeInfoParam changeInfoParam);
 
     User findUserById(String id);
     R managerHomePage(String id);
