@@ -1,28 +1,5 @@
 package com.service.impl;
 
-import com.auth0.jwt.JWT;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.entity.StockIn;
-import com.entity.StockOut;
-import com.entity.Warehouse;
-import com.mapper.*;
-import com.service.EnterService;
-import com.vo.R;
-
-import java.util.ArrayList;
-import java.util.List;
-import com.vo.param.CheckParcelParam;
-import com.vo.param.EnterParam;
-import com.vo.param.TableData;
-import com.vo.param.Parcel;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.vo.param.Avg;
-import com.vo.param.parcelReturn;
-import com.vo.param.ParcelList;
-
 /**
 @Service
 @AllArgsConstructor
@@ -201,8 +178,8 @@ public class EnterServiceImpl extends ServiceImpl<EnterMapper, StockIn> implemen
                     break;
                 }
             }
-
         }
+
         // 返回小车列表,包裹列表，是否正常响应
         r.data("avgList",avgListResult);
         r.data("parcelList",parcelList);

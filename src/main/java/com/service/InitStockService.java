@@ -1,7 +1,6 @@
 package com.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.entity.Warehouse;
 import com.vo.R;
 import com.vo.param.InitStockParam;
 
