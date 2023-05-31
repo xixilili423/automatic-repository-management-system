@@ -13,7 +13,7 @@ public interface ParcelService {
 
     R searchParcel(String id, SearchParcelParam searchParcelParam);
 
-    public R searchPacelDetail(String id, String pacelId);
+    public R searchParcelDetail(String id, String pacelId);
 
     public R deleteParcel ( String id,String pacelId);
 }

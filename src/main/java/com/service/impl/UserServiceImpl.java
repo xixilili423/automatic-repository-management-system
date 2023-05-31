@@ -105,9 +105,9 @@ public class UserServiceImpl  extends ServiceImpl<UserMapper, User> implements U
             r.setMsg("用户名错误");
             return r;
         }
-        r.data("userName", user.getName());
-        r.data("userPhone", user.getContactnumber());
-        r.data("stationName", user.getTransitstation());
+        r.data("userName",user.getName());
+        r.data("userPhone",user.getContactnumber());
+        r.data("stationName",user.getTransitstation());
         r.data("startTime", user.getAccountcreatedtime().toString());
         r.data("userEmail", user.getEmail());
         return r;

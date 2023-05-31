@@ -5,10 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.entity.User;
 import com.vo.R;
 import com.vo.param.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 public interface UserService extends IService<User> {

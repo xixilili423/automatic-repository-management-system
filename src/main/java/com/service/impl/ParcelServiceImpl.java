@@ -136,7 +136,7 @@ public class ParcelServiceImpl implements ParcelService {
     }
 
     @Override
-    public R searchPacelDetail(String id, String pacelId) {
+    public R searchParcelDetail(String id, String pacelId) {
         R r = new R();
       SearchPacelDetailParam s=new SearchPacelDetailParam();
         QueryWrapper<Shelfitem> queryWrapper3 = new QueryWrapper<>();

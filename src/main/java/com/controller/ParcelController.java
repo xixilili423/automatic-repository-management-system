@@ -22,11 +22,11 @@ public class ParcelController {
     {
         return parcelService.searchParcel(id,searchParcelParam);
     }
-    @GetMapping("searchPacelDetail")
+    @GetMapping("searchParcelDetail")
     @UserLoginToken
-    public R searchPacelDetail(@RequestAttribute(value="id") String id,@RequestBody String pacelId){
+    public R searchParcelDetail(@RequestAttribute(value="id") String id,@RequestBody String pacelId){
 
-        return parcelService.searchPacelDetail(id,pacelId);
+        return parcelService.searchParcelDetail(id,pacelId);
     }
    @DeleteMapping("deleteParcel")
    @UserLoginToken
