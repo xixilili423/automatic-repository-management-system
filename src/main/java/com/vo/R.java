@@ -40,7 +40,7 @@ public class R {
     }
 
     // 消息
-    public R message(String message){
+    public R setMsg(String message){
         this.setMessage(message);
         return this;
     }

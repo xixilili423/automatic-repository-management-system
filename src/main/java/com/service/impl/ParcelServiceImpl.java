@@ -9,7 +9,6 @@ import com.service.ParcelService;
 import com.vo.R;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -137,7 +136,7 @@ public class ParcelServiceImpl implements ParcelService {
     }
 
     @Override
-    public R searchPacelDetail(String id, String pacelId) {
+    public R searchParcelDetail(String id, String pacelId) {
         R r = new R();
       SearchPacelDetailParam s=new SearchPacelDetailParam();
         QueryWrapper<Shelfitem> queryWrapper3 = new QueryWrapper<>();
