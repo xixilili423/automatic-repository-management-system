@@ -17,7 +17,7 @@ import java.util.*;
 
 @Service
 @AllArgsConstructor
-public abstract class PeopleServiceImpl implements PeopleService {
+public class PeopleServiceImpl implements PeopleService {
     @Autowired
     private WarehousepersonMapper warehousepersonMapper;
     private OutboundpersonMapper outboundpersonMapper;
