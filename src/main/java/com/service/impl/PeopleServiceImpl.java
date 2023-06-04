@@ -2,20 +2,11 @@ package com.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.entity.Customer;
-import com.entity.Outboundperson;
-import com.entity.Transactionrecord;
-import com.entity.Warehouseperson;
-import com.mapper.CustomerMapper;
-import com.mapper.OutboundpersonMapper;
-import com.mapper.TransactionRecordMapper;
-import com.mapper.WarehousepersonMapper;
+import com.entity.*;
+import com.mapper.*;
 import com.service.PeopleService;
 import com.vo.R;
-import com.vo.param.checkCustomInformationParam;
-import com.vo.param.checkCustomTransactionParam;
-import com.vo.param.checkFetchOutPeopleInformationParam;
-import com.vo.param.checkInBoundPeopleInformationParam;
+import com.vo.param.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +23,7 @@ public abstract class PeopleServiceImpl implements PeopleService {
     private OutboundpersonMapper outboundpersonMapper;
     private CustomerMapper customerMapper;
     private TransactionRecordMapper transactionRecordMapper;
+    private UserMapper userMapper;
 
 
     //入库人信息查询
@@ -228,15 +220,15 @@ public abstract class PeopleServiceImpl implements PeopleService {
     }
 
 
-    public R delCustomInformation(int customerId, String userName) {
+    public R delCustomInformation(String id, delCustomInformationparam params) {
         R r = new R();
         r.data("status_code",false);
 
         // 查询customer表中的信息
-        Customer customer = customerMapper.selectById(customerId);
-        if (customer != null && customer.getUsername().equals(userName)) {
+        Customer customer = customerMapper.selectById(params.getCustomerId());
+        if (customer != null && customer.getUsername().equals(params.getUserName())) {
             // 执行删除操作
-            int rowsAffected = customerMapper.deleteById(customerId);
+            int rowsAffected = customerMapper.deleteById(params.getCustomerId());
             if (rowsAffected > 0) {
                 r.data("status_code", true);
             }
@@ -245,16 +237,16 @@ public abstract class PeopleServiceImpl implements PeopleService {
         return r;
     }
 
-    public R delFetchInPeopleInformation(int inBoundPersonId) {
+    public R delFetchInPeopleInformation(String id, delFetchInPeopleInformationparam params) {
         R r = new R();
         r.data("status_code",false);
 
         // 查询warehouseperson表中的信息
-        Warehouseperson warehouseperson = warehousepersonMapper.selectById(inBoundPersonId);
+        Warehouseperson warehouseperson = warehousepersonMapper.selectById(params.getInBoundPersonId());
 
         if (warehouseperson != null) {
             // 执行删除操作
-            int rowsAffected = warehousepersonMapper.deleteById(inBoundPersonId);
+            int rowsAffected = warehousepersonMapper.deleteById(params.getInBoundPersonId());
             if (rowsAffected > 0) {
                 r.data("status_code", true);
             }
@@ -263,16 +255,16 @@ public abstract class PeopleServiceImpl implements PeopleService {
         return r;
     }
 
-    public R delFetchOutPeopleInformation(int outBoundPresonId) {
+    public R delFetchOutPeopleInformation(String id, delFetchOutPeopleInformationparam params) {
         R r = new R();
         r.data("status_code", false);
 
         // 查询 warehouseperson 表中的信息
-        Warehouseperson warehouseperson = warehousepersonMapper.selectById(outBoundPresonId);
+        Warehouseperson warehouseperson = warehousepersonMapper.selectById(params.getOutBoundPresonId());
 
         if (warehouseperson != null) {
             // 执行删除操作
-            int rowsAffected = warehousepersonMapper.deleteById(outBoundPresonId);
+            int rowsAffected = warehousepersonMapper.deleteById(params.getOutBoundPresonId());
             if (rowsAffected > 0) {
                 r.data("status_code", true);
             }
@@ -281,15 +273,15 @@ public abstract class PeopleServiceImpl implements PeopleService {
         return r;
     }
 
-    public R incAccountsPayment(String customerId, String incAccounts, String notes) {
+    public R incAccountsPayment(String id, incAccountsPaymentparam params) {
         R r = new R();
         r.data("status_code", false);
 
         // 查询customer表中的信息
-        Customer customer = customerMapper.selectById(customerId);
+        Customer customer = customerMapper.selectById(params.getCustomerId());
         if (customer != null) {
             // 更新payableamount
-            double payableAmount = customer.getPayableamount() + Double.parseDouble(incAccounts);
+            double payableAmount = customer.getPayableamount() + Double.parseDouble(params.getIncAccounts());
             customer.setPayableamount(payableAmount);
             customerMapper.updateById(customer);
 
@@ -297,8 +289,8 @@ public abstract class PeopleServiceImpl implements PeopleService {
             Transactionrecord transaction = new Transactionrecord();
             transaction.setCustomerid(customer.getCustomerid());
             transaction.setUsername(customer.getUsername());
-            transaction.setTransactionamount(Double.parseDouble(incAccounts));
-            transaction.setTransactionremark(notes);
+            transaction.setTransactionamount(Double.parseDouble(params.getIncAccounts()));
+            transaction.setTransactionremark(params.getNotes());
 
             // 设置当前系统时间为transactiontime
             Date currentDate = new Date();
@@ -313,26 +305,26 @@ public abstract class PeopleServiceImpl implements PeopleService {
         return r;
     }
 
-    public R balanceAccountsPayment(String customerId, String balAccounts, String notes) {
+    public R balanceAccountsPayment(String id, balanceAccountsPaymentparam params) {
         R r = new R();
         r.data("status_code", false);
 
         // 查询customer表中的信息
-        Customer customer = customerMapper.selectById(customerId);
+        Customer customer = customerMapper.selectById(params.getCustomerId());
         if (customer != null) {
             // 更新payableamount
-            double payableAmount = customer.getPayableamount() - Double.parseDouble(balAccounts);
+            double payableAmount = customer.getPayableamount() - Double.parseDouble(params.getbalAccounts());
             customer.setPayableamount(payableAmount);
             customerMapper.updateById(customer);
 
-            double recordAmount = 0 - Double.parseDouble(balAccounts);
+            double recordAmount = 0 - Double.parseDouble(params.getbalAccounts());
 
             // 向transactionrecord表中插入记录
             Transactionrecord transaction = new Transactionrecord();
             transaction.setCustomerid(customer.getCustomerid());
             transaction.setUsername(customer.getUsername());
             transaction.setTransactionamount(Double.parseDouble(Double.toString(recordAmount)));//表中记录负数值
-            transaction.setTransactionremark(notes);
+            transaction.setTransactionremark(params.getNotes());
 
             // 设置当前系统时间为transactiontime
             Date currentDate = new Date();
@@ -347,8 +339,128 @@ public abstract class PeopleServiceImpl implements PeopleService {
         return r;
     }
 
+    public R checkStaffInformation(String id, checkStaffInformationparam params){
+        R r = new R();
+        r.data("status_code", false);
+
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+
+        // 根据参数设置查询条件
+        if (params.getEmail() != null) {
+            queryWrapper.eq("email", params.getEmail());
+        }
+        if (params.getName() != null) {
+            queryWrapper.eq("name", params.getName());
+        }
+        if (params.getPhone() != null) {
+            queryWrapper.eq("contactnumber", params.getPhone());
+        }
+        if (params.getTransferStation() != null) {
+            queryWrapper.eq("transitstation", params.getTransferStation());
+        }
+        if (params.getUserName() != null) {
+            queryWrapper.eq("username", params.getUserName());
+        }
+        if (params.getWarehouseId() != null) {
+            queryWrapper.eq("warehouseid", params.getWarehouseId());
+        }
+
+        // 执行查询并返回结果
+        List<User> userList = userMapper.selectList(queryWrapper);
+        List<Map<String, Object>> PeopleList = new ArrayList<>();
+
+        for (User user : userList) {
+            Map<String, Object> personMap = new HashMap<>();
+            personMap.put("name", user.getName());
+            personMap.put("email", user.getEmail());
+            personMap.put("phone", user.getContactnumber());
+            personMap.put("transferStation", user.getTransitstation());
+            personMap.put("userName", user.getId());
+            personMap.put("warehouseId", user.getWarehouseid());
 
 
+            // 添加其他属性到 personMap
+
+            PeopleList.add(personMap);
+
+        }
+
+        r.data("status_code", true);
+        r.data("staffList", PeopleList);
+
+        return r;
+    }
+
+    public R addInBoundPeople(String id, addInBoundPeopleparam params) {
+        R r = new R();
+        r.data("status_code", false);
+
+        Warehouseperson warehouseperson = new Warehouseperson();
+
+        // 设置参数值
+        warehouseperson.setAddress(params.getAddress());
+        warehouseperson.setEmail(params.getEmail());
+        warehouseperson.setWarehousepersonid(Long.parseLong(params.getInBoundPersonId()));
+        warehouseperson.setName(params.getName());
+        warehouseperson.setContactnumber(params.getPhone());
+        warehouseperson.setRemark(params.getRemark());
+        warehouseperson.setUsername(params.getUserName());
+
+        // 执行插入操作
+        int rowsAffected = warehousepersonMapper.insert(warehouseperson);
+
+        if(rowsAffected > 0){
+            r.data("status_code", true);
+
+        }
+
+        return r;
+    }
+
+    public R addFetchOutPeople(String id, addFetchOutPeopleparam params) {
+        R r = new R();
+        r.data("status_code", false);
+
+        Outboundperson outboundperson = new Outboundperson();
+
+        // 设置参数值
+        outboundperson.setAddress(params.getAddress());
+        outboundperson.setEmail(params.getEmail());
+        outboundperson.setOutboundpersonid(Long.parseLong(params.getOutBoundPresonId()));
+        outboundperson.setName(params.getName());
+        outboundperson.setContactnumber(params.getPhone());
+        outboundperson.setRemark(params.getRemark());
+        outboundperson.setUsername(params.getUserName());
+
+        // 执行插入操作
+        int rowsAffected = outboundpersonMapper.insert(outboundperson);
+
+        if(rowsAffected > 0){
+            r.data("status_code", true);
+
+        }
+
+        return r;
+
+    }
+
+    public R delStaffInformation(String id, delStaffInformationparam params) {
+        R r = new R();
+        r.data("status_code", false);
+
+        // 查询 warehouseperson 表中的信息
+        Warehouseperson warehouseperson = warehousepersonMapper.selectById(params.getUserName());
+
+        if (warehouseperson != null) {
+            // 执行删除操作
+            int rowsAffected = warehousepersonMapper.deleteById(params.getUserName());
+            if (rowsAffected > 0) {
+                r.data("status_code", true);
+            }
+        }
+
+        return r;
+    }
 
 
 

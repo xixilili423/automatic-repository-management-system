@@ -1,28 +1,32 @@
 package com.service;
 
 import com.vo.R;
-import com.vo.param.checkCustomInformationParam;
-import com.vo.param.checkCustomTransactionParam;
-import com.vo.param.checkFetchOutPeopleInformationParam;
-import com.vo.param.checkInBoundPeopleInformationParam;
+import com.vo.param.*;
 
 public interface PeopleService {
-    public R checkInBoundPeorsonInformation(String id, checkInBoundPeopleInformationParam param);
+    R checkInBoundPeorsonInformation(String id, checkInBoundPeopleInformationParam param);
 
-    public R checkFetchOutPeopleInformation(String id, checkFetchOutPeopleInformationParam params);
+    R checkFetchOutPeopleInformation(String id, checkFetchOutPeopleInformationParam params);
 
-    public R checkCustomInformation(String id, checkCustomInformationParam params);
+    R checkCustomInformation(String id, checkCustomInformationParam params);
 
     R checkCustomTransaction(String id, checkCustomTransactionParam params);
 
-    public R delCustomInformation(int customerId, String userName);
+    R delCustomInformation(String id, delCustomInformationparam params);
 
-    R delFetchInPeopleInformation(int inBoundPersonId);
+    R delFetchInPeopleInformation(String id, delFetchInPeopleInformationparam params);
 
-    R delFetchOutPeopleInformation(int inBoundPersonId);
+    R delFetchOutPeopleInformation(String id, delFetchOutPeopleInformationparam params);
 
-    R incAccountsPayment(String customerId, String incAccounts, String notes);
+    R incAccountsPayment(String id, incAccountsPaymentparam params);
 
-    R balanceAccountsPayment(String customerId, String balAccounts, String notes);
+    R balanceAccountsPayment(String id, balanceAccountsPaymentparam params);
 
+    R checkStaffInformation(String id, checkStaffInformationparam params);
+
+    R addInBoundPeople(String id, addInBoundPeopleparam params);
+
+    R addFetchOutPeople(String id, addFetchOutPeopleparam params);
+
+    R delStaffInformation(String id, delStaffInformationparam params);
 }

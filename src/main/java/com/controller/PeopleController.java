@@ -37,27 +37,43 @@ public class PeopleController {
 
     @PostMapping("checkCustomTransaction")
     @UserLoginToken
-    public R checkCustomTransaction(String id, checkCustomTransactionParam params) {return peopleService.checkCustomTransaction(id, params); }
+    public R checkCustomTransaction(@RequestAttribute(value="id") String id, checkCustomTransactionParam params) {return peopleService.checkCustomTransaction(id, params); }
 
     @PostMapping("delCustomInformation")
     @UserLoginToken
-    public R delCustomInformation(int customerId, String userName) {return peopleService.delCustomInformation(customerId, userName); }
+    public R delCustomInformation(@RequestAttribute(value="id") String id, delCustomInformationparam params) {return peopleService.delCustomInformation(id, params); }
 
     @PostMapping("delFetchInPeopleInformation")
     @UserLoginToken
-    public R delFetchInPeopleInformation(int inBoundPersonId) {return peopleService.delFetchInPeopleInformation(inBoundPersonId); }
+    public R delFetchInPeopleInformation(@RequestAttribute(value="id") String id, delFetchInPeopleInformationparam params) {return peopleService.delFetchInPeopleInformation(id, params); }
 
     @PostMapping("delFetchOutPeopleInformation")
     @UserLoginToken
-    public R delFetchOutPeopleInformation(int outBoundPresonId) {return peopleService.delFetchOutPeopleInformation(outBoundPresonId); }
+    public R delFetchOutPeopleInformation(@RequestAttribute(value="id") String id, delFetchOutPeopleInformationparam params) {return peopleService.delFetchOutPeopleInformation(id, params); }
 
     @PostMapping("incAccountsPayment")
     @UserLoginToken
-    public R incAccountsPayment(String customerId, String incAccounts, String notes) {return peopleService.incAccountsPayment(customerId, incAccounts, notes); }
+    public R incAccountsPayment(@RequestAttribute(value="id") String id, incAccountsPaymentparam params) {return peopleService.incAccountsPayment(id, params); }
 
     @PostMapping("balanceAccountsPayment")
     @UserLoginToken
-    public R balanceAccountsPayment(String customerId, String balAccounts, String notes) {return peopleService.balanceAccountsPayment(customerId, balAccounts, notes); }
+    public R balanceAccountsPayment(@RequestAttribute(value="id") String id, balanceAccountsPaymentparam params) {return peopleService.balanceAccountsPayment(id, params); }
+
+    @PostMapping("checkStaffInformation")
+    @UserLoginToken
+    public R checkStaffInformation(@RequestAttribute(value="id") String id, checkStaffInformationparam params) {return peopleService.checkStaffInformation(id, params); }
+
+    @PostMapping("addInBoundPeople")
+    @UserLoginToken
+    public R addInBoundPeople(@RequestAttribute(value="id") String id, addInBoundPeopleparam params) {return peopleService.addInBoundPeople(id, params); }
+
+    @PostMapping("addFetchOutPeople")
+    @UserLoginToken
+    public R addFetchOutPeople(@RequestAttribute(value="id") String id, addFetchOutPeopleparam params) {return peopleService.addFetchOutPeople(id, params); }
+
+    @PostMapping("delStaffInformation")
+    @UserLoginToken
+    public R delStaffInformation(@RequestAttribute(value="id") String id, delStaffInformationparam params) {return peopleService.delStaffInformation(id, params); }
 
 
 }
