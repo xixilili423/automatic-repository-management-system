@@ -30,8 +30,8 @@ public class ParcelController {
     }
    @DeleteMapping("deleteParcel")
    @UserLoginToken
-    public R deleteParcel (@RequestAttribute(value="id") String id,@RequestBody String pacelId){
+    public R deleteParcel (@RequestAttribute(value="id") String id,@RequestBody String parcelId){
 
-        return parcelService.deleteParcel(id,pacelId);
+        return parcelService.deleteParcel(id,parcelId);
     }
 }

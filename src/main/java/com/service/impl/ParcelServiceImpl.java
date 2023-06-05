@@ -3,6 +3,7 @@ package com.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.entity.*;
 import com.entity.Package;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mapper.*;
 import com.vo.param.*;
 import com.service.ParcelService;
@@ -10,9 +11,10 @@ import com.vo.R;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,7 +40,7 @@ public class ParcelServiceImpl implements ParcelService {
         r.data("status_code",false);
         QueryWrapper<Package> queryWrapper = new QueryWrapper<>();
         if (searchParcelParam.getParcelId() != null) {
-            queryWrapper.eq("id", searchParcelParam.getParcelId());
+            queryWrapper.eq("packageid", searchParcelParam.getParcelId());
         }
         if (searchParcelParam.getShelfID() != null) {
             QueryWrapper<Shelfitem> queryWrapper3 = new QueryWrapper<>();
@@ -46,13 +48,13 @@ public class ParcelServiceImpl implements ParcelService {
             List<Shelfitem> si = shelfitemMapper.selectList(queryWrapper3);
             if (!si.isEmpty()) {
                 Shelfitem shelfitem = si.get(0);
-                queryWrapper.eq("id", shelfitem.getPackageid());
+                queryWrapper.eq("packageid", shelfitem.getPackageid());
             }
         }
         if (searchParcelParam.getRegionName() != null) {
             QueryWrapper<Shelf> queryWrapper2 = new QueryWrapper<>();
             QueryWrapper<Area> queryWrapper1 = new QueryWrapper<>();
-            queryWrapper2.eq("areaid", queryWrapper1.select("id").eq("areaname", searchParcelParam.getRegionName()));
+            queryWrapper2.eq("areaid", queryWrapper1.select("areaid").eq("areaname", searchParcelParam.getRegionName()));
             List<Shelf> s = shelfMapper.selectList(queryWrapper2);
             if (!s.isEmpty()) {
                 List<String> shelfIds = s.stream().map(Shelf::getShelfid).collect(Collectors.toList());
@@ -60,14 +62,14 @@ public class ParcelServiceImpl implements ParcelService {
                 queryWrapper3.in("shelfid", shelfIds);
                 List<Shelfitem> si = shelfitemMapper.selectList(queryWrapper3);
                 if (!si.isEmpty()) {
-                    List<String> parcelIds;
-                    List<String> list = new ArrayList<>();
+                    List<Long> parcelIds;
+                    List<Long> list = new ArrayList<>();
                     for (Shelfitem shelfitem : si) {
                         Long packageid = shelfitem.getPackageid();
-                        list.add(String.valueOf(packageid));
+                        list.add(packageid);
                     }
                     parcelIds = list;
-                    queryWrapper.in("id", parcelIds);
+                    queryWrapper.in("packageid", parcelIds);
                 }
             }
         }
@@ -136,30 +138,46 @@ public class ParcelServiceImpl implements ParcelService {
     }
 
     @Override
-    public R searchParcelDetail(String id, String pacelId) {
+    public R searchParcelDetail(String id, String parcelId) {
         R r = new R();
+// 创建 ObjectMapper 对象，用于解析 JSON 字符串
+        ObjectMapper objectMapper = new ObjectMapper();
+// 解析 JSON 字符串，转换为一个 Map 对象
+        Map<String, String> map = null;
+        try {
+            map = objectMapper.readValue(parcelId, Map.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+// 获取 pacelId 属性值，并将其转换为 Long 类型
+        Long parcelid = Long.parseLong(map.get("parcelId"));
       SearchPacelDetailParam s=new SearchPacelDetailParam();
         QueryWrapper<Shelfitem> queryWrapper3 = new QueryWrapper<>();
         QueryWrapper<Ordertable> queryWrapper = new QueryWrapper<>();
-        queryWrapper3.eq("packageid",Integer.parseInt(pacelId));
-        queryWrapper.eq("packageid",Integer.parseInt(pacelId));
-
-        r.data("parceld",pacelId);
+        queryWrapper3.eq("packageid",parcelid);
+        queryWrapper.eq("packageid",parcelid);
+        r.data("parceld",parcelid);
         Shelfitem shelf=shelfitemMapper.selectOne(queryWrapper3);
-        r.data("shelfNumber",shelf.getLocationid());
-        r.data("shelfId",shelf.getShelfid());
-        List<Ordertable> o=orderMapper.selectList(queryWrapper);
-        for( Ordertable ordertable: o) {
-            QueryWrapper<Inbound> queryWrapper1 = new QueryWrapper<>();
-            QueryWrapper<Outbound> queryWrapper2 = new QueryWrapper<>();
-           queryWrapper1.eq("orderid",ordertable.getOrderid());
-           queryWrapper2.eq("orderid",ordertable.getOrderid());
-            Inbound inbound=inboundMapper.selectOne(queryWrapper1);
-            Outbound outbound=outboundMapper.selectOne(queryWrapper2);
-          r.data("inTime",inbound.getInboundtime().toString());
-          r.data("outTime",outbound.getOutboundtime().toString());
-          r.data("parcelState",inbound.getStatus());
-          r.data("parcelState",outbound.getStatus());
+        if(shelf!=null) {
+            r.data("shelfNumber", shelf.getLocationid());
+            r.data("shelfId", shelf.getShelfid());
+            List<Ordertable> o = orderMapper.selectList(queryWrapper);
+            for (Ordertable ordertable : o) {
+                QueryWrapper<Inbound> queryWrapper1 = new QueryWrapper<>();
+                QueryWrapper<Outbound> queryWrapper2 = new QueryWrapper<>();
+                queryWrapper1.eq("orderid", ordertable.getOrderid());
+                queryWrapper2.eq("orderid", ordertable.getOrderid());
+                Inbound inbound = inboundMapper.selectOne(queryWrapper1);
+                Outbound outbound = outboundMapper.selectOne(queryWrapper2);
+                r.data("inTime", inbound.getInboundtime().toString());
+                r.data("outTime", outbound.getOutboundtime().toString());
+                r.data("parcelState", inbound.getStatus());
+                r.data("parcelState", outbound.getStatus());
+            }
+        }
+        else
+        {
+            r.setMsg("查询不到货架信息");
         }
 
         return r;
