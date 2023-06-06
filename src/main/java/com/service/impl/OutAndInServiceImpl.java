@@ -812,9 +812,9 @@ public class OutAndInServiceImpl implements OutAndInService {
             outMap.put("outTime", outbound.getOutboundtime().toString());
             Ordertable orderTable = orderMapper.selectOne(new QueryWrapper<Ordertable>().eq("orderid", outbound.getOrderid()));
             if (orderTable != null) {
-                Package packageInfo = packageMapper.selectById(orderTable.getPackageid());
+                User packageInfo = userMapper.selectById(id);
                 if (packageInfo != null) {
-                    outMap.put("userName", packageInfo.getConsigneename());
+                    outMap.put("userName", packageInfo.getName());
                 }
             }
             outMapList.add(outMap);
