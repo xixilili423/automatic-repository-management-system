@@ -236,8 +236,7 @@ public class OutAndInServiceImpl implements OutAndInService {
             r.data("massage", "用户不存在");
             return r;
         }
-        Long warehouseID = user.getWarehouseid();
-
+      //  Long warehouseID = user.getWarehouseid();
         // 遍历包裹列表，查询包裹是否已经在库中
         ParcelList[] parcelList = addInOrderParam.getParcelList();
         for (ParcelList parcel : parcelList) {
@@ -254,7 +253,7 @@ public class OutAndInServiceImpl implements OutAndInService {
             inbound.setInboundid(Long.parseLong(addInOrderParam.getInID()));
             inbound.setWarehousepersonid(warehousepersonMapper.selectOne(queryWrapper).getWarehousepersonid());
             inbound.setStatus("待审核");
-            inbound.setInboundtime((Timestamp) new Date());
+            inbound.setInboundtime(Timestamp.valueOf(new Date().toString()));
             inbound.setUserid(id);
             inboundMapper.insert(inbound);
             // 插入订单记录
@@ -296,7 +295,7 @@ public class OutAndInServiceImpl implements OutAndInService {
             r.data("status_code", false);
             return r.setMsg("用户不存在");
         }
-        Long warehouseID = user.getWarehouseid();
+        //Long warehouseID = user.getWarehouseid();
         // 遍历包裹列表，查询包裹是否在库中
         ParcelList[]  parcelList = addOutOrderParam.getParcelList();
         for ( ParcelList parcel : parcelList) {
@@ -313,7 +312,7 @@ public class OutAndInServiceImpl implements OutAndInService {
             outbound.setOrderid(addOutOrderParam.getOrderID());
             outbound.setOutboundpersonid(outboundpersonMapper.selectOne(queryWrapper).getOutboundpersonid());
             outbound.setStatus("待审核");
-            outbound.setOutboundtime((Timestamp) new Date());
+            outbound.setOutboundtime(Timestamp.valueOf(new Date().toString()));
             outbound.setUserid(id);
             outboundMapper.insert(outbound);
             // 插入订单记录
@@ -781,7 +780,7 @@ public class OutAndInServiceImpl implements OutAndInService {
             inMap.put("inTime", inbound.getInboundtime().toString());
             Ordertable orderTable = orderMapper.selectOne(new QueryWrapper<Ordertable>().eq("orderid", inbound.getOrderid()));
             if (orderTable != null) {
-                User user = userMapper.selectById(orderTable.getUsername());
+                User user = userMapper.selectById(id);
                 if (user != null) {
                     inMap.put("userName", user.getName());
                 }
