@@ -2,13 +2,11 @@ package com.entity;
 
 
 public class Inbound {
-
   private long inboundid;
   private String orderid;
   private long warehousepersonid;
   private String status;
   private java.sql.Timestamp inboundtime;
-
 
   public long getInboundid() {
     return inboundid;

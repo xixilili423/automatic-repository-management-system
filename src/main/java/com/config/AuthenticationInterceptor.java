@@ -56,6 +56,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 }
                User user = userService.findUserById(userId);
                 if (user == null) {
+
                     throw new RuntimeException("用户不存在，请重新登录");
                 }
                 // 验证 token
@@ -63,6 +64,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 try {
                     jwtVerifier.verify(token);
                 } catch (JWTVerificationException e) {
+                    httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Error: Unauthorized");
                     throw new RuntimeException("401");
                 }
                 return true;
