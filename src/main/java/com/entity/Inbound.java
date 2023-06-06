@@ -12,6 +12,7 @@ public class Inbound {
   private String managerid;
 
 
+
   public long getInboundid() {
     return inboundid;
   }
@@ -73,5 +74,7 @@ public class Inbound {
   public void setManagerid(String managerid) {
     this.managerid = managerid;
   }
+
+
 
 }

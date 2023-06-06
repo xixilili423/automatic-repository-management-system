@@ -253,11 +253,10 @@ public class OutAndInServiceImpl implements OutAndInService {
             inbound.setOrderid(addInOrderParam.getOrderID());
             inbound.setInboundid(Long.parseLong(addInOrderParam.getInID()));
             inbound.setWarehousepersonid(warehousepersonMapper.selectOne(queryWrapper).getWarehousepersonid());
-            inbound.setStatus("待入库");
+            inbound.setStatus("待审核");
             inbound.setInboundtime((Timestamp) new Date());
             inbound.setUserid(id);
             inboundMapper.insert(inbound);
-
             // 插入订单记录
             Ordertable ordertable = new Ordertable();
             ordertable.setOrderid(addInOrderParam.getOrderID());
@@ -266,7 +265,7 @@ public class OutAndInServiceImpl implements OutAndInService {
             orderMapper.insert(ordertable);
         }
         // 更新包裹信息
-        for (ParcelList parcel : parcelList) {
+       /* for (ParcelList parcel : parcelList) {
             Package p ;
             //= packageMapper.selectById(parcel.getParcelID());
            // if (p != null) {
@@ -282,7 +281,7 @@ public class OutAndInServiceImpl implements OutAndInService {
                 p.setConsigneeaddress(parcel.getToAddr());
                 packageMapper.insert(p);
             }
-
+*/
         r.data("status_code", true);
         r.data("massage", "入库成功");
         return r;
@@ -313,7 +312,7 @@ public class OutAndInServiceImpl implements OutAndInService {
             Outbound outbound = new Outbound();
             outbound.setOrderid(addOutOrderParam.getOrderID());
             outbound.setOutboundpersonid(outboundpersonMapper.selectOne(queryWrapper).getOutboundpersonid());
-            outbound.setStatus("待出库");
+            outbound.setStatus("待审核");
             outbound.setOutboundtime((Timestamp) new Date());
             outbound.setUserid(id);
             outboundMapper.insert(outbound);
@@ -442,7 +441,7 @@ public class OutAndInServiceImpl implements OutAndInService {
         if (inbound == null) {
             return r.setMsg("入库单不存在");
         }
-
+        inbound.setUserid(id);
         // 更新入库单信息
         if (StringUtils.isNotBlank(examineInParam.getOrderID())) {
             inbound.setOrderid(examineInParam.getOrderID());
@@ -467,12 +466,22 @@ public class OutAndInServiceImpl implements OutAndInService {
                 return r.setMsg("入库时间格式错误");
             }
         }
+        User user1 = userMapper.selectOne(new QueryWrapper<User>().eq("name", examineInParam.getManagerName()));
+        if(user1!=null)
+        {
+            inbound.setManagerid(user1.getId());
+        }
+        else
+        {
+            return r.setMsg("权限不足");
+        }
         inboundMapper.updateById(inbound);
 
         // 更新包裹信息
         ParcelList[] parcelList = examineInParam.getParcelList();
-        if (parcelList != null ) {
-            for (ParcelList parcel : parcelList) {
+        if (parcelList != null &&"已入库".equals(examineInParam.getInStatus()))
+        {
+                for (ParcelList parcel : parcelList) {
                 Package p = packageMapper.selectById(parcel.getParcelID());
                 if (p != null) {
                     if (StringUtils.isNotBlank(parcel.getFromPeople())) {
@@ -521,36 +530,297 @@ public class OutAndInServiceImpl implements OutAndInService {
 
     @Override
     public R ExamineOut(String id, ExamineOutParam examineOutParam) {
-        return null;
+        R r = new R();
+        Outbound outbound = outboundMapper.selectById(examineOutParam.getOutID());
+        if (outbound == null) {
+            return r.setMsg("出库单不存在");
+        }
+        User user1 = userMapper.selectOne(new QueryWrapper<User>().eq("name", examineOutParam.getManagerName()));
+        if(user1!=null)
+        {
+            outbound.setManagerid(user1.getId());
+        }
+        else {
+            return r.setMsg("权限不足");
+        }
+
+
+        // 更新出库单信息
+        if (StringUtils.isNotBlank(examineOutParam.getOrderID())) {
+            outbound.setOrderid(examineOutParam.getOrderID());
+            outbound.setUserid(id);
+        }
+        if (StringUtils.isNotBlank(examineOutParam.getOutPeopleName())) {
+            Outboundperson user = outboundpersonMapper.selectOne(new QueryWrapper<Outboundperson>().eq("name", examineOutParam.getOutPeopleName()));
+            if (user != null) {
+                outbound.setOutboundpersonid(user.getOutboundpersonid());            }
+            else {
+                return r.setMsg("出库交接人不存在");
+            }
+        }
+        if (StringUtils.isNotBlank(examineOutParam.getOutStatus())) {
+            outbound.setStatus(examineOutParam.getOutStatus());
+        }
+        if (StringUtils.isNotBlank(examineOutParam.getOutTime())) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            try {
+                Date date = sdf.parse(examineOutParam.getOutTime());
+                outbound.setOutboundtime(new Timestamp(date.getTime()));
+            } catch (ParseException e) {
+                return r.setMsg("出库时间格式错误");
+            }
+        }
+        outbound.setManagerid(id);
+        outboundMapper.updateById(outbound);
+
+        // 更新包裹信息
+        ParcelList[] parcelList = examineOutParam.getParcelList();
+        if (parcelList != null ) {
+            for (ParcelList parcel : parcelList) {
+                Package p = packageMapper.selectById(parcel.getParcelID());
+                if (p != null) {
+                    if (StringUtils.isNotBlank(parcel.getFromPeople())) {
+                        p.setShippername(parcel.getFromPeople());
+                    }
+                    if (StringUtils.isNotBlank(parcel.getFromPhone())) {
+                        p.setShippercontact(parcel.getFromPhone());
+                    }
+                    if (StringUtils.isNotBlank(parcel.getFromAddr())) {
+                        p.setShipperaddress(parcel.getFromAddr());
+                    }
+                    if (StringUtils.isNotBlank(parcel.getToPeople())) {
+                        p.setConsigneename(parcel.getToPeople());
+                    }
+                    if (StringUtils.isNotBlank(parcel.getToPhone())) {
+                        p.setConsigneecontact(parcel.getToPhone());
+                    }
+                    if (StringUtils.isNotBlank(parcel.getToAddr())) {
+                        p.setConsigneeaddress(parcel.getToAddr());
+                    }
+                    packageMapper.updateById(p);
+                }
+            }
+        }
+        else {
+            return r.setMsg("包裹不存在");
+        }
+
+        // 删除或更新包裹表
+        if ("已出库".equals(examineOutParam.getOutStatus())) {
+            for (ParcelList parcel : parcelList) {
+                packageMapper.deleteById(parcel.getParcelID());
+            }
+        } else {
+            for (ParcelList parcel : parcelList) {
+                Package p = packageMapper.selectById(parcel.getParcelID());
+                if (p != null) {
+                    packageMapper.deleteById(p);
+                }
+            }
+        }
+        r.setMsg("出库单审核成功");
+        r.data("status_code", true);
+        return r;
     }
 
     @Override
     public R InNeedTocheck(String id) {
-        return null;
+        R r = new R();
+        List<Inbound> inboundList = inboundMapper.selectList(new QueryWrapper<Inbound>().eq("status", "待审核"));
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        for (Inbound inbound : inboundList) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("inID", inbound.getInboundid());
+            map.put("orderID", inbound.getOrderid());
+            Warehouseperson warehouseperson = warehousepersonMapper.selectById(inbound.getWarehousepersonid());
+            if (warehouseperson != null) {
+                map.put("inPeopleName", warehouseperson.getName());
+            }
+            map.put("inStatus", inbound.getStatus());
+            map.put("inTime", inbound.getInboundtime().toString());
+            User orderTable = userMapper.selectOne(new QueryWrapper<User>().eq("id", id));
+            if (orderTable != null) {
+                map.put("userName", orderTable.getName());
+            }
+            resultList.add(map);
+        }
+        r.data("inList", resultList);
+        r.data("status_code", true);
+        return r;
     }
 
     @Override
     public R OutNeedTocheck(String id) {
-        return null;
+        R r = new R();
+        List<Outbound> outboundList = outboundMapper.selectList(new QueryWrapper<Outbound>().eq("status", "待审核"));
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        for (Outbound outbound : outboundList) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("outID", outbound.getOutboundid());
+            map.put("orderID", outbound.getOrderid());
+            Outboundperson outboundperson = outboundpersonMapper.selectById(outbound.getOutboundpersonid());
+            if (outboundperson != null) {
+                map.put("outPeopleName", outboundperson.getName());
+            }
+            map.put("outStatus", outbound.getStatus());
+            map.put("outTime", outbound.getOutboundtime().toString());
+            User orderTable = userMapper.selectOne(new QueryWrapper<User>().eq("id", id));
+            if (orderTable != null) {
+                map.put("userName", orderTable.getName());
+            }
+            resultList.add(map);
+        }
+        r.data("outList", resultList);
+        r.data("status_code", true);
+        return r;
     }
 
     @Override
     public R singleInOrderDetail(String id, String InID) {
-        return null;
+
+        R r = new R();
+        Inbound inbound = inboundMapper.selectById(InID);
+        if (inbound == null) {
+            r.data("status_code", false);
+            r.data("message", "入库单不存在");
+            return r;
+        }
+        r.data("inID", inbound.getInboundid());
+        r.data("orderID", inbound.getOrderid());
+        Warehouseperson warehouseperson = warehousepersonMapper.selectById(inbound.getWarehousepersonid());
+        if (warehouseperson != null) {
+            r.data("inPeopleName", warehouseperson.getName());
+        }
+        r.data("inStatus", inbound.getStatus());
+        r.data("inTime", inbound.getInboundtime().toString());
+        Ordertable orderTable = orderMapper.selectOne(new QueryWrapper<Ordertable>().eq("orderid", inbound.getOrderid()));
+        if (orderTable != null) {
+            r.data("userName", orderTable.getUsername());
+        }
+        User user = userMapper.selectById(inbound.getManagerid());
+        if (user != null) {
+            r.data("managerName", user.getName());
+        }
+        List<Package> packageList = packageMapper.selectList(new QueryWrapper<Package>().eq("inboundid", InID));
+        List<Map<String, Object>> parcelMapList = new ArrayList<>();
+        for (Package p : packageList) {
+            Map<String, Object> parcelMap = new HashMap<>();
+            parcelMap.put("parcelID", p.getPackageid());
+            parcelMap.put("fromPeople", p.getShippername());
+            parcelMap.put("fromPhone", p.getShippercontact());
+            parcelMap.put("fromAddr", p.getShipperaddress());
+            parcelMap.put("toPeople", p.getConsigneename());
+            parcelMap.put("toPhone", p.getConsigneecontact());
+            parcelMap.put("toAddr", p.getConsigneeaddress());
+            parcelMapList.add(parcelMap);
+        }
+        r.data("parcelList", parcelMapList);
+        r.data("status_code", true);
+        return r;
     }
 
     @Override
     public R singleOutOrderDetail(String id, String OutID) {
-        return null;
+        R r = new R();
+        Outbound outbound = outboundMapper.selectById(OutID);
+        if (outbound == null) {
+            r.data("status_code", false);
+            r.data("message", "出库单不存在");
+            return r;
+        }
+        r.data("outID", outbound.getOutboundid());
+        r.data("orderID", outbound.getOrderid());
+        Warehouseperson warehouseperson = warehousepersonMapper.selectById(outbound.getOutboundpersonid());
+        if (warehouseperson != null) {
+            r.data("outPeopleName", warehouseperson.getName());
+        }
+        r.data("outStatus", outbound.getStatus());
+        r.data("outTime", outbound.getOutboundtime().toString());
+        Ordertable orderTable = orderMapper.selectOne(new QueryWrapper<Ordertable>().eq("orderid", outbound.getOrderid()));
+        if (orderTable != null) {
+            r.data("userName", orderTable.getUsername());
+        }
+        User user = userMapper.selectById(outbound.getManagerid());
+        if (user != null) {
+            r.data("managerName", user.getName());
+        }
+        List<Package> packageList = packageMapper.selectList(new QueryWrapper<Package>().eq("orderid", outbound.getOrderid()));
+        List<Map<String, Object>> parcelMapList = new ArrayList<>();
+        for (Package p : packageList) {
+            Map<String, Object> parcelMap = new HashMap<>();
+            parcelMap.put("parcelID", p.getPackageid());
+            parcelMap.put("fromPeople", p.getShippername());
+            parcelMap.put("fromPhone", p.getShippercontact());
+            parcelMap.put("fromAddr", p.getShipperaddress());
+            parcelMap.put("toPeople", p.getConsigneename());
+            parcelMap.put("toPhone", p.getConsigneecontact());
+            parcelMap.put("toAddr", p.getConsigneeaddress());
+            parcelMapList.add(parcelMap);
+        }
+        r.data("parcelList", parcelMapList);
+        r.data("status_code", true);
+        return r;
     }
 
     @Override
     public R InNeedToEnter(String id) {
-        return null;
+        R r = new R();
+        List<Inbound> inboundList = inboundMapper.selectList(new QueryWrapper<Inbound>()
+                .eq("userid", id)
+                .eq("status", "待入库"));
+        List<Map<String, Object>> inMapList = new ArrayList<>();
+        for (Inbound inbound : inboundList) {
+            Map<String, Object> inMap = new HashMap<>();
+            inMap.put("inID", inbound.getInboundid());
+            inMap.put("orderID", inbound.getOrderid());
+            Warehouseperson warehouseperson = warehousepersonMapper.selectById(inbound.getWarehousepersonid());
+            if (warehouseperson != null) {
+                inMap.put("inPeopleName", warehouseperson.getName());
+            }
+            inMap.put("inStatus", inbound.getStatus());
+            inMap.put("inTime", inbound.getInboundtime().toString());
+            Ordertable orderTable = orderMapper.selectOne(new QueryWrapper<Ordertable>().eq("orderid", inbound.getOrderid()));
+            if (orderTable != null) {
+                User user = userMapper.selectById(orderTable.getUsername());
+                if (user != null) {
+                    inMap.put("userName", user.getName());
+                }
+            }
+            inMapList.add(inMap);
+        }
+        r.data("inList", inMapList);
+        r.data("status_code", true);
+        return r;
     }
 
     @Override
     public R OutNeedToOut(String id) {
-        return null;
+        R r = new R();
+        List<Outbound> outboundList = outboundMapper.selectList(new QueryWrapper<Outbound>()
+                .eq("userid", id)
+                .eq("status", "待出库"));
+        List<Map<String, Object>> outMapList = new ArrayList<>();
+        for (Outbound outbound : outboundList) {
+            Map<String, Object> outMap = new HashMap<>();
+            outMap.put("outID", outbound.getOutboundid());
+            outMap.put("orderID", outbound.getOrderid());
+            Warehouseperson warehouseperson = warehousepersonMapper.selectById(outbound.getOutboundpersonid());
+            if (warehouseperson != null) {
+                outMap.put("outPeopleName", warehouseperson.getName());
+            }
+            outMap.put("outStatus", outbound.getStatus());
+            outMap.put("outTime", outbound.getOutboundtime().toString());
+            Ordertable orderTable = orderMapper.selectOne(new QueryWrapper<Ordertable>().eq("orderid", outbound.getOrderid()));
+            if (orderTable != null) {
+                Package packageInfo = packageMapper.selectById(orderTable.getPackageid());
+                if (packageInfo != null) {
+                    outMap.put("userName", packageInfo.getConsigneename());
+                }
+            }
+            outMapList.add(outMap);
+        }
+        r.data("outList", outMapList);
+        r.data("status_code", true);
+        return r;
     }
 }
