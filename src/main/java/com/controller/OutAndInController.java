@@ -79,16 +79,16 @@ public class OutAndInController {
         return OutDelMultitude(id,outOrderLIst);
     }
     @PutMapping("ExamineIn")
-    public R ExamineIn(@RequestAttribute(value="id") String id,@RequestBody int[] outOrderLIst) {
+    public R ExamineIn(@RequestAttribute(value="id") String id,@RequestBody ExamineInParam examineInParam) {
 
 
-        return outAndInService.ExamineIn(id,outOrderLIst);
+        return outAndInService.ExamineIn(id,examineInParam);
     }
     @PutMapping("ExamineOut")
-    public R ExamineOut(@RequestAttribute(value="id") String id,@RequestBody ExamineInParam examineInParam) {
+    public R ExamineOut(@RequestAttribute(value="id") String id,@RequestBody ExamineOutParam examineOutParam) {
 
 
-        return outAndInService.ExamineOut(id,examineInParam);
+        return outAndInService.ExamineOut(id,examineOutParam);
     }
     @GetMapping("InNeedTocheck")
     public R InNeedTocheck(@RequestAttribute(value="id") String id) {

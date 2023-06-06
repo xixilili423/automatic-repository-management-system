@@ -7,7 +7,6 @@ public class Ordertable {
   private long packageid;
   private String username;
 
-
   public String getOrderid() {
     return orderid;
   }

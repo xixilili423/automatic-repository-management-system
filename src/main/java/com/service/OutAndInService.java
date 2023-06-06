@@ -19,8 +19,11 @@ public interface OutAndInService {
    R fetchOutPeopleNameList( String id) ;
     R InDelMultitude( String id, int[] inOrderLIst) ;
   R OutDelMultitude( String id,int[] outOrderLIst);
-   R ExamineIn(String id, int[] outOrderLIst) ;
-   R ExamineOut( String id, ExamineInParam examineInParam) ;
+
+    R ExamineIn(String id, ExamineInParam examineInParam);
+
+    R ExamineOut(String id, ExamineOutParam examineOutParam);
+
     R InNeedTocheck(String id);
     R OutNeedTocheck( String id) ;
  R singleInOrderDetail(String id, String InID) ;
