@@ -91,4 +91,22 @@ public class PeopleController {
     @UserLoginToken
     public R getCustomInformationAll(@RequestAttribute(value="id") String id) {return peopleService.getCustomInformationAll(id); }
 
+    @GetMapping("getStaffNameList")
+    @UserLoginToken
+    public R getStaffNameList(@RequestAttribute(value="id") String id) {return peopleService.getStaffNameList(id); }
+
+    @PostMapping("addCustom")
+    @UserLoginToken
+    public R addCustom(@RequestAttribute(value="id") String id, addCustomparam params) {return peopleService.addCustom(id, params); }
+
+    @GetMapping("getCustomNameList")
+    @UserLoginToken
+    public R getCustomNameList(@RequestAttribute(value="id") String id) {return peopleService.getCustomNameList(id); }
+
+
+
+
+
+
+
 }
