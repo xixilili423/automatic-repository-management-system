@@ -68,12 +68,11 @@ public class UserServiceImpl  extends ServiceImpl<UserMapper, User> implements U
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         QueryWrapper<User> queryWrapper1 = new QueryWrapper<>();
         queryWrapper.eq("id", registerParam.getUserID());
-        queryWrapper1.eq("id", registerParam.getManagerID()).eq("permission", registerParam.getManagerID());
+        queryWrapper1.eq("id", registerParam.getManagerID()).eq("permission", "manager");
         boolean u = userMapper.exists(queryWrapper);
         boolean u1 = userMapper.exists(queryWrapper1);
         System.out.println(u);
-        if (!u && !u1) {
-
+        if (!u && u1) {
             User user = new User();
             user.setEmail("");
             user.setId(registerParam.getUserID());
@@ -86,7 +85,13 @@ public class UserServiceImpl  extends ServiceImpl<UserMapper, User> implements U
             return r;
         } else {
             r.data("status_code", false);
-            r.data("errorMag", "user has existed");
+            if(u1) {
+                r.data("errorMag", "user has existed ");
+            }
+            else
+            {
+                r.data("errorMag","manager is not existed");
+            }
             return r;
         }
     }
