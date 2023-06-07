@@ -5,6 +5,7 @@ public class Customer {
 
   private long customerid;
   private String username;
+  private String name;
   private String companyname;
   private String contactpersonname;
   private String contactnumber;
@@ -31,6 +32,15 @@ public class Customer {
 
   public void setUsername(String username) {
     this.username = username;
+  }
+
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 
 

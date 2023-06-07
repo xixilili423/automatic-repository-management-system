@@ -4,7 +4,7 @@ import com.vo.R;
 import com.vo.param.*;
 
 public interface PeopleService {
-    R checkInBoundPeorsonInformation(String id, checkInBoundPeopleInformationParam param);
+    R checkInBoundPeopleInformation(String id, checkInBoundPeopleInformationParam param);
 
     R checkFetchOutPeopleInformation(String id, checkFetchOutPeopleInformationParam params);
 
@@ -29,4 +29,12 @@ public interface PeopleService {
     R addFetchOutPeople(String id, addFetchOutPeopleparam params);
 
     R delStaffInformation(String id, delStaffInformationparam params);
+
+    R getInBoundPeopleInformationAll(String id);
+
+    R getFetchOutPeopleInformationAll(String id);
+
+    R getCustomInformationAll(String id);
+
+    R getStaffInformationAll(String id);
 }

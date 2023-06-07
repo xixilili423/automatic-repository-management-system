@@ -3,6 +3,7 @@ package com.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.entity.*;
+import com.entity.Package;
 import com.mapper.*;
 import com.service.PeopleService;
 import com.vo.R;
@@ -27,27 +28,29 @@ public class PeopleServiceImpl implements PeopleService {
 
 
     //入库人信息查询
-    public R checkInBoundPeorsonInformation(String id, checkInBoundPeopleInformationParam params){
+    public R checkInBoundPeopleInformation(String id, checkInBoundPeopleInformationParam params){
         R r = new R();
         r.data("status_code",false);
 
         QueryWrapper<Warehouseperson> queryWrapper = new QueryWrapper<>();
 
+        System.out.println(params.getInBoundPersonId());
         // 判断属性是否不为空，并根据不同属性设置查询条件
+        if (StringUtils.isNotBlank(params.getInBoundPersonId())) {
+            queryWrapper.eq("warehousepersonid", params.getInBoundPersonId());
+        }
+
         if (StringUtils.isNotBlank(params.getAddress())) {
             queryWrapper.like("address", params.getAddress());
         }
         if (StringUtils.isNotBlank(params.getEmail())) {
             queryWrapper.like("email", params.getEmail());
         }
-        if (StringUtils.isNotBlank(params.getInBoundPersonId())) {
-            queryWrapper.eq("warehousepersonid ", params.getInBoundPersonId());
-        }
         if (StringUtils.isNotBlank(params.getName())) {
             queryWrapper.like("name", params.getName());
         }
         if (StringUtils.isNotBlank(params.getPhone())) {
-            queryWrapper.like("contactnumber ", params.getPhone());
+            queryWrapper.like("contactnumber", params.getPhone());
         }
         if (StringUtils.isNotBlank(params.getUserName())) {
             queryWrapper.like("username", params.getUserName());
@@ -58,15 +61,13 @@ public class PeopleServiceImpl implements PeopleService {
 
         for (Warehouseperson warehouseperson : warehousepersons) {
             Map<String, Object> personMap = new HashMap<>();
-            personMap.put("inBoundPersonId", warehouseperson.getCustomerid());
+            personMap.put("inBoundPersonId", warehouseperson.getWarehousepersonid());
             personMap.put("userName", warehouseperson.getUsername());
             personMap.put("name", warehouseperson.getName());
             personMap.put("phone", warehouseperson.getContactnumber());
             personMap.put("address", warehouseperson.getAddress());
             personMap.put("email", warehouseperson.getEmail());
             personMap.put("remark", warehouseperson.getRemark());
-
-            // 添加其他属性到 personMap
 
             PeopleList.add(personMap);
         }
@@ -219,19 +220,19 @@ public class PeopleServiceImpl implements PeopleService {
         return r;
     }
 
-
     public R delCustomInformation(String id, delCustomInformationparam params) {
         R r = new R();
-        r.data("status_code",false);
+        r.data("status_code", false);
 
-        // 查询customer表中的信息
-        Customer customer = customerMapper.selectById(params.getCustomerId());
-        if (customer != null && customer.getUsername().equals(params.getUserName())) {
-            // 执行删除操作
-            int rowsAffected = customerMapper.deleteById(params.getCustomerId());
-            if (rowsAffected > 0) {
-                r.data("status_code", true);
-            }
+        QueryWrapper<Customer> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("customerid", params.getCustomerId());
+        queryWrapper.like("username", params.getUserName());
+        System.out.println(params.getCustomerId());
+        System.out.println(params.getUserName());
+        int rowsAffected = customerMapper.delete(queryWrapper);
+
+        if (rowsAffected > 0) {
+            r.data("status_code", true);
         }
 
         return r;
@@ -457,6 +458,164 @@ public class PeopleServiceImpl implements PeopleService {
             if (rowsAffected > 0) {
                 r.data("status_code", true);
             }
+        }
+
+        return r;
+    }
+
+    public R getInBoundPeopleInformationAll(String id){
+        R r = new R();
+
+        List<Warehouseperson> list = warehousepersonMapper.selectList(null);
+
+        List<Map<String, Object>> PeopleList = new ArrayList<>();
+        for (Warehouseperson warehouseperson : list) {
+            Map<String, Object> personMap = new HashMap<>();
+            personMap.put("inBoundPersonId", warehouseperson.getWarehousepersonid());
+            personMap.put("userName", warehouseperson.getUsername());
+            personMap.put("name", warehouseperson.getName());
+            personMap.put("phone", warehouseperson.getContactnumber());
+            personMap.put("address", warehouseperson.getAddress());
+            personMap.put("email", warehouseperson.getEmail());
+            personMap.put("remark", warehouseperson.getRemark());
+
+            // 添加其他属性到 personMap
+
+            PeopleList.add(personMap);
+        }
+
+        r.data("status_code",true);
+
+        r.data("inBoundPeopleList", PeopleList);
+
+        return r;
+    }
+
+    public R getFetchOutPeopleInformationAll(String id) {
+        R r = new R();
+
+        List<Outboundperson> outboundpersons = outboundpersonMapper.selectList(null);
+        List<Map<String, Object>> PeopleList = new ArrayList<>();
+
+        for (Outboundperson outboundperson : outboundpersons) {
+            Map<String, Object> personMap = new HashMap<>();
+            personMap.put("outBoundPersonId", outboundperson.getCustomerid());
+            personMap.put("userName", outboundperson.getUsername());
+            personMap.put("name", outboundperson.getName());
+            personMap.put("phone", outboundperson.getContactnumber());
+            personMap.put("address", outboundperson.getAddress());
+            personMap.put("email", outboundperson.getEmail());
+            personMap.put("remark", outboundperson.getRemark());
+
+            // 添加其他属性到 personMap
+
+            PeopleList.add(personMap);
+        }
+
+        r.data("status_code",true);
+
+        r.data("outBoundPeopleList", PeopleList);
+        return r;
+
+    }
+
+    public R getCustomInformationAll(String id) {
+        R r = new R();
+
+        List<Customer> customers = customerMapper.selectList(null);
+        List<Map<String, Object>> PeopleList = new ArrayList<>();
+
+        for (Customer customer : customers) {
+            Map<String, Object> personMap = new HashMap<>();
+            personMap.put("customerId", customer.getCustomerid());
+            personMap.put("companyName", customer.getCompanyname());
+            personMap.put("payableAmount", customer.getPayableamount());
+            personMap.put("contactPersonName", customer.getContactpersonname());
+            personMap.put("phone", customer.getContactnumber());
+            personMap.put("address", customer.getAddress());
+            personMap.put("email", customer.getEmail());
+            personMap.put("remark", customer.getRemark());
+
+            // 添加其他属性到 personMap
+
+            PeopleList.add(personMap);
+        }
+
+        r.data("status_code",true);
+
+        r.data("customList", PeopleList);
+
+
+        return r;
+    }
+
+    public R getStaffInformationAll(String id) {
+        R r = new R();
+
+        // 执行查询并返回结果
+        List<User> userList = userMapper.selectList(null);
+        List<Map<String, Object>> PeopleList = new ArrayList<>();
+
+        for (User user : userList) {
+            Map<String, Object> personMap = new HashMap<>();
+            personMap.put("name", user.getName());
+            personMap.put("email", user.getEmail());
+            personMap.put("phone", user.getContactnumber());
+            personMap.put("transferStation", user.getTransitstation());
+            personMap.put("userName", user.getId());
+            personMap.put("warehouseId", user.getWarehouseid());
+
+
+            // 添加其他属性到 personMap
+
+            PeopleList.add(personMap);
+
+        }
+
+        r.data("status_code", true);
+        r.data("staffList", PeopleList);
+
+
+        return r;
+    }
+
+    public R getStaffNameList(String id) {
+        R r = new R();
+
+        // 执行查询并返回结果
+        List<User> userList = userMapper.selectList(null);
+        List<String> PeopleList = new ArrayList<>();
+
+        for (User user : userList) {
+            PeopleList.add(user.getName());
+        }
+
+        r.data("status_code", true);
+        r.data("staffNameList", PeopleList);
+
+        return r;
+    }
+
+    public R addCustom(String id, addCustomparam params) {
+        R r = new R();
+        r.data("status_code", false);
+
+        Customer customer = new Customer();
+
+        // 设置参数值
+        customer.setAddress(params.getAddress());
+        customer.setEmail(params.getEmail());
+        customer.setContactnumber(params.getPhone());
+        customer.setUsername(params.getUserName());
+        customer.setCompanyname(params.getCompanyName());
+
+
+        // 执行插入操作
+        int rowsAffected = customerMapper.insert(customer);
+
+        if(rowsAffected > 0){
+            r.data("status_code", true);
+
         }
 
         return r;

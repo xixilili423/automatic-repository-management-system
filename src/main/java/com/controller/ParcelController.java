@@ -24,9 +24,9 @@ public class ParcelController {
     }
     @GetMapping("searchParcelDetail")
     @UserLoginToken
-    public R searchParcelDetail(@RequestAttribute(value="id") String id,@RequestBody String pacelId){
+    public R searchParcelDetail(@RequestAttribute(value="id") String id,@RequestBody String parcelId){
 
-        return parcelService.searchParcelDetail(id,pacelId);
+        return parcelService.searchParcelDetail(id,parcelId);
     }
    @DeleteMapping("deleteParcel")
    @UserLoginToken
