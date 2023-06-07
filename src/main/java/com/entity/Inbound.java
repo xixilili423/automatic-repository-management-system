@@ -8,6 +8,9 @@ public class Inbound {
   private long warehousepersonid;
   private String status;
   private java.sql.Timestamp inboundtime;
+  private String userid;
+  private String managerid;
+
 
 
   public long getInboundid() {
@@ -53,5 +56,25 @@ public class Inbound {
   public void setInboundtime(java.sql.Timestamp inboundtime) {
     this.inboundtime = inboundtime;
   }
+
+
+  public String getUserid() {
+    return userid;
+  }
+
+  public void setUserid(String userid) {
+    this.userid = userid;
+  }
+
+
+  public String getManagerid() {
+    return managerid;
+  }
+
+  public void setManagerid(String managerid) {
+    this.managerid = managerid;
+  }
+
+
 
 }

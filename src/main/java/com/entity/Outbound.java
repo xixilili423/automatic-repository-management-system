@@ -8,6 +8,8 @@ public class Outbound {
   private long outboundpersonid;
   private String status;
   private java.sql.Timestamp outboundtime;
+  private String userid;
+  private String managerid;
 
 
   public long getOutboundid() {
@@ -53,5 +55,24 @@ public class Outbound {
   public void setOutboundtime(java.sql.Timestamp outboundtime) {
     this.outboundtime = outboundtime;
   }
+
+
+  public String getUserid() {
+    return userid;
+  }
+
+  public void setUserid(String userid) {
+    this.userid = userid;
+  }
+
+
+  public String getManagerid() {
+    return managerid;
+  }
+
+  public void setManagerid(String managerid) {
+    this.managerid = managerid;
+  }
+
 
 }
