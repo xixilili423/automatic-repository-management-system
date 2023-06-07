@@ -1,6 +1,10 @@
 package com.entity;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+
+import java.util.List;
+
 public class Shelf {
 
   private String shelfid;
@@ -43,5 +47,5 @@ public class Shelf {
   public void setRemainingcapacity(long remainingcapacity) {
     this.remainingcapacity = remainingcapacity;
   }
+  }
 
-}

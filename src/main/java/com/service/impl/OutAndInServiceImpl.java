@@ -37,6 +37,11 @@ public class OutAndInServiceImpl implements OutAndInService {
     private final UserMapper userMapper;
     @Autowired
     private ParcelMapper packageMapper;
+    @Autowired
+    private ShelfMapper shelfMapper;
+    @Autowired
+    private  ShelfitemMapper shelfitemMapper;
+
     @Override
     public R searchIn(String id,SearchInParam searchInParam) {
 
@@ -502,10 +507,27 @@ public class OutAndInServiceImpl implements OutAndInService {
                         p.setConsigneeaddress(parcel.getToAddr());
                     }
                     packageMapper.updateById(p);
+                    List<Shelf> availableShelves = selectAvailableShelves();
+                    if (availableShelves.isEmpty()) {
+                        // 如果没有可用的货架，返回错误信息
+                        return r.setMsg("No available shelf");
+                    }
+                    // 选择第一个可用的货架
+                    Shelf selectedShelf = availableShelves.get(0);
+                    // 更新货架信息
+                    selectedShelf.setRemainingcapacity(selectedShelf.getRemainingcapacity() - 1);
+                    shelfMapper.updateById(selectedShelf);
+                    // 插入货物和包裹的对应信息
+                    Shelfitem newShelfitem = new Shelfitem();
+                    newShelfitem.setPackageid(p.getPackageid());
+                    newShelfitem.setShelfid(selectedShelf.getShelfid());
+                    newShelfitem.setLocationid(selectedShelf.getCapacity()-selectedShelf.getRemainingcapacity()); // 这里假设货物放在货架的第一个位置
+                    shelfitemMapper.insert(newShelfitem);
+                    // 返回成功信息
+                    return R.ok();
                 }
             }
         }
-
         // 更新订单信息
         Ordertable orderTable = orderMapper.selectOne(new QueryWrapper<Ordertable>().eq("orderid", examineInParam.getOrderID()));
         if (orderTable != null) {
@@ -608,15 +630,27 @@ public class OutAndInServiceImpl implements OutAndInService {
         if ("已出库".equals(examineOutParam.getOutStatus())) {
             for (ParcelList parcel : parcelList) {
                 packageMapper.deleteById(parcel.getParcelID());
+
+            Shelfitem shelfitem = shelfitemMapper.selectOne(new QueryWrapper<Shelfitem>().eq("packageid", parcel.getParcelID()));
+            if (shelfitem == null) {
+                // 如果 Shelfitem 表中不存在对应记录，返回错误信息
+                return r.setMsg("Shelfitem not found");
             }
-        } else {
-            for (ParcelList parcel : parcelList) {
-                Package p = packageMapper.selectById(parcel.getParcelID());
-                if (p != null) {
-                    packageMapper.deleteById(p);
-                }
+            // 查询 Shelf 表获取货架信息
+            Shelf shelf = shelfMapper.selectById(shelfitem.getShelfid());
+            if (shelf == null) {
+                // 如果 Shelf 表中不存在对应记录，返回错误信息
+                return r.setMsg("Shelf not found");
             }
+            // 更新货架信息
+            shelf.setRemainingcapacity(shelf.getRemainingcapacity() + 1);
+            shelfMapper.updateById(shelf);
+            // 删除货物和包裹的对应信息
+            shelfitemMapper.delete(new QueryWrapper<Shelfitem>().eq("packageid", parcel.getParcelID()));
+            // 返回成功信息
         }
+        }
+
         r.setMsg("出库单审核成功");
         r.data("status_code", true);
         return r;
@@ -821,5 +855,8 @@ public class OutAndInServiceImpl implements OutAndInService {
         r.data("outList", outMapList);
         r.data("status_code", true);
         return r;
+    }
+    public List<Shelf> selectAvailableShelves() {
+        return shelfMapper.selectList(new QueryWrapper<Shelf>().gt("remainingcapacity", 0));
     }
 }
