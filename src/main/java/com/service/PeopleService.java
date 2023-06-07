@@ -37,4 +37,10 @@ public interface PeopleService {
     R getCustomInformationAll(String id);
 
     R getStaffInformationAll(String id);
+
+    R getStaffNameList(String id);
+
+    R getCustomNameList(String id);
+
+    R addCustom(String id, addCustomparam params);
 }

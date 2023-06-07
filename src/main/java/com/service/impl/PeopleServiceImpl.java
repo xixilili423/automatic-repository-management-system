@@ -152,11 +152,14 @@ public class PeopleServiceImpl implements PeopleService {
         if (StringUtils.isNotBlank(params.getCompanyName())) {
             queryWrapper.like("companyname", params.getCompanyName());
         }
-        if (StringUtils.isNotBlank(params.getCustomerId())) {
-            queryWrapper.like("customerid", params.getCustomerId());
+        if (StringUtils.isNotBlank(params.getCustomId())) {
+            queryWrapper.like("customerid", params.getCustomId());
         }
-        if (StringUtils.isNotBlank(params.getUsername())) {
-            queryWrapper.like("username", params.getUsername());
+        if (StringUtils.isNotBlank(params.getUserName())) {
+            queryWrapper.like("username", params.getUserName());
+        }
+        if (StringUtils.isNotBlank(params.getName())) {
+            queryWrapper.like("name", params.getName());
         }
 
 
@@ -225,9 +228,9 @@ public class PeopleServiceImpl implements PeopleService {
         r.data("status_code", false);
 
         QueryWrapper<Customer> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("customerid", params.getCustomerId());
+        queryWrapper.like("customerid", params.getCustomId());
         queryWrapper.like("username", params.getUserName());
-        System.out.println(params.getCustomerId());
+        System.out.println(params.getCustomId());
         System.out.println(params.getUserName());
         int rowsAffected = customerMapper.delete(queryWrapper);
 
@@ -608,6 +611,7 @@ public class PeopleServiceImpl implements PeopleService {
         customer.setContactnumber(params.getPhone());
         customer.setUsername(params.getUserName());
         customer.setCompanyname(params.getCompanyName());
+        customer.setName(params.getName());
 
 
         // 执行插入操作
@@ -620,6 +624,24 @@ public class PeopleServiceImpl implements PeopleService {
 
         return r;
     }
+
+    public R getCustomNameList(String id) {
+        R r = new R();
+
+        // 执行查询并返回结果
+        List<Customer> userList = customerMapper.selectList(null);
+        List<String> PeopleList = new ArrayList<>();
+
+        for (Customer cus : userList) {
+            PeopleList.add(cus.getName());
+        }
+
+        r.data("status_code", true);
+        r.data("customNameList", PeopleList);
+
+        return r;
+    }
+
 
 
 

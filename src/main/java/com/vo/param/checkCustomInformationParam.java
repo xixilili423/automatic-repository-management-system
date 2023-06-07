@@ -12,7 +12,7 @@ public class checkCustomInformationParam {
     /**
      * 客户id
      */
-    private String customerId;
+    private String customId;
     /**
      * 邮箱
      */
@@ -22,13 +22,17 @@ public class checkCustomInformationParam {
      */
     private String name;
     /**
+     * 应付款
+     */
+    private String payable;
+    /**
      * 联系电话
      */
     private String phone;
     /**
      * 客户名字
      */
-    private String username;
+    private String userName;
 
     public String getAddress() { return address; }
     public void setAddress(String value) { this.address = value; }
@@ -36,8 +40,8 @@ public class checkCustomInformationParam {
     public String getCompanyName() { return companyName; }
     public void setCompanyName(String value) { this.companyName = value; }
 
-    public String getCustomerId() { return customerId; }
-    public void setCustomerId(String value) { this.customerId = value; }
+    public String getCustomId() { return customId; }
+    public void setCustomId(String value) { this.customId = value; }
 
     public String getEmail() { return email; }
     public void setEmail(String value) { this.email = value; }
@@ -45,9 +49,11 @@ public class checkCustomInformationParam {
     public String getName() { return name; }
     public void setName(String value) { this.name = value; }
 
+    public String getPayable() { return payable; }
+    public void setPayable(String value) { this.payable = value; }
+
     public String getPhone() { return phone; }
     public void setPhone(String value) { this.phone = value; }
 
-    public String getUsername() { return username; }
-    public void setUsername(String value) { this.username = value; }
-}
+    public String getUserName() { return userName; }
+    public void setUserName(String value) { this.userName = value; }}
