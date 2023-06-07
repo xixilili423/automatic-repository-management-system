@@ -41,7 +41,7 @@ public class UserController {
     // 获取主页信息--get
 
     @PostMapping("registerManager")
-    @UserLoginToken
+    @PassToken
     public R registerManager(@RequestBody RegisterManagerParam registerManagerParam)
     {
         return  userService.registerManager(registerManagerParam);

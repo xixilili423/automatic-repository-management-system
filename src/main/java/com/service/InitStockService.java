@@ -15,7 +15,7 @@ public interface InitStockService extends IService<Warehouse> {
      * 3.仓库初始化 initStock(x,y,闸机数，小车数)
      * @return
      */
-    R initStock(InitStockParam initStockParam);
+//    R initStock(InitStockParam initStockParam);
 
     R getOldInitStock(String token);
 }
