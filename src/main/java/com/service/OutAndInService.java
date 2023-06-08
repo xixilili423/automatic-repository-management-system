@@ -2,8 +2,6 @@ package com.service;
 
 import com.vo.R;
 import com.vo.param.*;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
 
 
 public interface OutAndInService {
@@ -17,8 +15,8 @@ public interface OutAndInService {
    R showParcel( String id) ;
     R fetchInPeopleNameList( String id);
    R fetchOutPeopleNameList( String id) ;
-    R InDelMultitude( String id, int[] inOrderLIst) ;
-  R OutDelMultitude( String id,int[] outOrderLIst);
+    R InDelMultitude(String id, InOrderLIst inOrderLIst) ;
+  R OutDelMultitude( String id,InOrderLIst  outOrderLIst);
 
     R ExamineIn(String id, ExamineInParam examineInParam);
 

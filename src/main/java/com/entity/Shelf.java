@@ -3,10 +3,11 @@ package com.entity;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
+import javax.persistence.Id;
 import java.util.List;
 
 public class Shelf {
-
+  @Id
   private String shelfid;
   private long areaid;
   private long capacity;

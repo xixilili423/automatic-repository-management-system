@@ -4,8 +4,10 @@ package com.entity;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
-public class User {
+import javax.persistence.Id;
 
+public class User {
+  @Id
   private String id;
   private String name;
   private String permission;

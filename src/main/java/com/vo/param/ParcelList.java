@@ -11,7 +11,7 @@ class ParcelList {
     private String fromAddr;
     private String fromPeople;
     private String fromPhone;
-    private String parcelID;
+    private long parcelID;
     private String toAddr;
     private String toPeople;
     private String toPhone;

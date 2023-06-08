@@ -1,8 +1,10 @@
 package com.entity;
 
 
-public class Transactionrecord {
+import javax.persistence.Id;
 
+public class Transactionrecord {
+  @Id
   private long transactionid;
   private long customerid;
   private String username;

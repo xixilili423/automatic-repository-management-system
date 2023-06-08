@@ -1,8 +1,10 @@
 package com.entity;
 
 
-public class Warehouseperson {
+import javax.persistence.Id;
 
+public class Warehouseperson {
+  @Id
   private long warehousepersonid;
   private String username;
   private long customerid;

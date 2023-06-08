@@ -1,8 +1,10 @@
 package com.entity;
 
 
-public class Shelfitem {
+import javax.persistence.Id;
 
+public class Shelfitem {
+  @Id
   private long packageid;
   private String shelfid;
   private long locationid;

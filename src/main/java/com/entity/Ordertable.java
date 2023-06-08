@@ -1,8 +1,10 @@
 package com.entity;
 
 
-public class Ordertable {
+import javax.persistence.Id;
 
+public class Ordertable {
+  @Id
   private String orderid;
   private long packageid;
   private String username;

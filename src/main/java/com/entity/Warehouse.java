@@ -1,8 +1,10 @@
 package com.entity;
 
 
-public class Warehouse {
+import javax.persistence.Id;
 
+public class Warehouse {
+  @Id
   private long warehouseid;
   private long areacount;
 

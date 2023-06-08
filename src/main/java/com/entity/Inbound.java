@@ -1,8 +1,12 @@
 package com.entity;
 
 
+import javax.persistence.Id;
+import java.sql.Timestamp;
+
 public class Inbound {
 
+ @Id
   private long inboundid;
   private String orderid;
   private long warehousepersonid;
@@ -53,7 +57,7 @@ public class Inbound {
     return inboundtime;
   }
 
-  public void setInboundtime(java.sql.Timestamp inboundtime) {
+  public void setInboundtime(Timestamp inboundtime) {
     this.inboundtime = inboundtime;
   }
 

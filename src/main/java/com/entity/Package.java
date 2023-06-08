@@ -1,8 +1,12 @@
 package com.entity;
+import com.baomidou.mybatisplus.annotation.TableName;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 public class Package {
-
+  @Id
   private long packageid;
   private String shippername;
   private String shippercontact;
