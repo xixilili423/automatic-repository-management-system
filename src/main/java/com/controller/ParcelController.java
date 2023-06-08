@@ -34,4 +34,9 @@ public class ParcelController {
 
         return parcelService.deleteParcel(id,parcelId);
     }
+    @GetMapping("allParcel")
+    @UserLoginToken
+    public R searchAllParcel(@RequestAttribute(value="id") String id) {
+        return parcelService.searchAllParcel(id);
+    }
 }

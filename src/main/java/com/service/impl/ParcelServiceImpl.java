@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -212,6 +213,27 @@ public class ParcelServiceImpl implements ParcelService {
                 }
             }
         }
+        return r;
+    }
+
+    @Override
+    public R searchAllParcel(String id) {
+        List<Package> packageList = parcelMapper.selectList(null);
+        List<Map<String, String>> parcelInformation = new ArrayList<>();
+        for (Package p : packageList) {
+            Map<String, String> parcel = new HashMap<>();
+            parcel.put("parcelId", String.valueOf(p.getPackageid()));
+            parcel.put("shipperName", p.getShippername());
+            parcel.put("shipperPhone", p.getShippercontact());
+            parcel.put("shipperAddress", p.getShipperaddress());
+            parcel.put("consigneeName", p.getConsigneename());
+            parcel.put("consigneePhone", p.getConsigneecontact());
+            parcel.put("consigneeAddress", p.getConsigneeaddress());
+            parcelInformation.add(parcel);
+        }
+        R r = new R();
+        r.data("status_code", true);
+        r.data("parcelInformation", parcelInformation);
         return r;
     }
 }
