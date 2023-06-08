@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class CenterController {
     private final UserService userService;
-    @GetMapping("searchParce")
+    @GetMapping("personInformation")
     @UserLoginToken
-    public R searchParce(@RequestAttribute(value="id") String id,@RequestBody String userNickname)
-    { return userService.searchParce(id,userNickname); }
+    public R personInformation(@RequestAttribute(value="id") String id,@RequestBody String userNickname)
+    { return userService.personInformation(id,userNickname); }
     @PostMapping("modifyUserInformation")
     @UserLoginToken
     public R modifyUserInformation(@RequestAttribute(value="id") String id,@RequestBody ModifyUserInformationParam modifyUserInformationParam)
