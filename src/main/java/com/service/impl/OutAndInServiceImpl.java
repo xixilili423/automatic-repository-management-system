@@ -506,6 +506,7 @@ public class OutAndInServiceImpl implements OutAndInService {
                     if (StringUtils.isNotBlank(parcel.getToAddr())) {
                         p.setConsigneeaddress(parcel.getToAddr());
                     }
+                     p.setStatus(examineInParam.getInStatus());
                     packageMapper.updateById(p);
                     List<Shelf> availableShelves = selectAvailableShelves();
                     if (availableShelves.isEmpty()) {
@@ -593,7 +594,6 @@ public class OutAndInServiceImpl implements OutAndInService {
         }
         outbound.setManagerid(id);
         outboundMapper.updateById(outbound);
-
         // 更新包裹信息
         ParcelList[] parcelList = examineOutParam.getParcelList();
         if (parcelList != null ) {
@@ -618,6 +618,7 @@ public class OutAndInServiceImpl implements OutAndInService {
                     if (StringUtils.isNotBlank(parcel.getToAddr())) {
                         p.setConsigneeaddress(parcel.getToAddr());
                     }
+                    p.setStatus(examineOutParam.getOutStatus());
                     packageMapper.updateById(p);
                 }
             }
@@ -648,9 +649,8 @@ public class OutAndInServiceImpl implements OutAndInService {
             // 删除货物和包裹的对应信息
             shelfitemMapper.delete(new QueryWrapper<Shelfitem>().eq("packageid", parcel.getParcelID()));
             // 返回成功信息
+            }
         }
-        }
-
         r.setMsg("出库单审核成功");
         r.data("status_code", true);
         return r;

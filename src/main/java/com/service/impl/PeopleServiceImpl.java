@@ -3,7 +3,6 @@ package com.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.entity.*;
-import com.entity.Package;
 import com.mapper.*;
 import com.service.PeopleService;
 import com.vo.R;
@@ -12,7 +11,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.*;
 

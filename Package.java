@@ -1,4 +1,4 @@
-package com.entity;
+package com.sample;
 
 
 public class Package {
