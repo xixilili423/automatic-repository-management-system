@@ -96,11 +96,10 @@ public class UserServiceImpl  extends ServiceImpl<UserMapper, User> implements U
         }
     }
 
-
     @Override
-    public R searchParce(String id,String userNickname) {
+    public R personInformation(String id, String userNickname) {
         R r = new R();
-        User user = userMapper.selectById(id);
+        User user = userMapper.selectById(Long.parseLong(id));
         if (user == null) {
             r.setMsg("用户不存在");
             return r;
@@ -118,11 +117,13 @@ public class UserServiceImpl  extends ServiceImpl<UserMapper, User> implements U
         return r;
     }
 
+
+
     @Override
     public R modifyUserInformation(String id,ModifyUserInformationParam modifyUserInformationParam) {
         R r = new R();
         r.data("status_code", false);
-        User user = userMapper.selectById(id);
+        User user = userMapper.selectById(Long.parseLong(id));
         if (user == null) {
             return r;
         }
@@ -155,7 +156,7 @@ public class UserServiceImpl  extends ServiceImpl<UserMapper, User> implements U
     public R modifyPassword(String id,ModifyPasswordParam modifyPasswordParam) {
         R r = new R();
         r.data("status_code", false);
-        User user = userMapper.selectById(id);
+        User user = userMapper.selectById(Long.parseLong(id));
         if (user == null) {
             r.setMsg("用户不存在");
             return r;
