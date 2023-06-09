@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 
 public class Inbound {
 
- @Id
+  @Id
   private long inboundid;
   private String orderid;
   private long warehousepersonid;
@@ -14,8 +14,6 @@ public class Inbound {
   private java.sql.Timestamp inboundtime;
   private String userid;
   private String managerid;
-
-
 
   public long getInboundid() {
     return inboundid;
