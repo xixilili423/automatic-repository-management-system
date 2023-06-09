@@ -77,7 +77,7 @@ public class OutAndInServiceImpl implements OutAndInService {
             item.setInTime(inbound.getInboundtime().toString());
             Warehouseperson warehouseperson = warehousepersonMapper.selectById(inbound.getWarehousepersonid());
             if (warehouseperson != null) {
-                item.setUserName(userMapper.selectById(inbound.getUserid()).getName());
+                item.setUserName(userMapper.selectById(Long.parseLong(inbound.getUserid())).getName());
                 item.setInPeopleName(warehouseperson.getName());
             }
 
@@ -123,7 +123,7 @@ public class OutAndInServiceImpl implements OutAndInService {
             item.put("outTime", outbound.getOutboundtime().toString());
             Outboundperson warehouseperson = outboundpersonMapper.selectById(outbound.getOutboundpersonid());
             if (warehouseperson != null) {
-                item.put("userName", userMapper.selectById(outbound.getUserid()).getName());
+                item.put("userName", userMapper.selectById(Long.parseLong(outbound.getUserid())).getName());
                 item.put("outPeopleName", warehouseperson.getName());
             }
             outList.add(item);
@@ -163,7 +163,7 @@ public class OutAndInServiceImpl implements OutAndInService {
             Warehouseperson wp = warehousepersonMapper.selectById(inbound.getWarehousepersonid());
             if (wp != null) {
                 item.put("inPeopleName", wp.getName());
-                item.put("userName", userMapper.selectById(inbound.getUserid()).getName());
+                item.put("userName", userMapper.selectById(Long.parseLong(inbound.getUserid())).getName());
             }
             inList.add(item);
         }
@@ -197,7 +197,7 @@ public class OutAndInServiceImpl implements OutAndInService {
              Outboundperson wp = outboundpersonMapper.selectById(outbound.getOutboundpersonid());
             if (wp != null) {
                 item.put("outPeopleName", wp.getName());
-                item.put("userName", userMapper.selectById(outbound.getUserid()).getName());
+                item.put("userName", userMapper.selectById(Long.parseLong(outbound.getUserid())).getName());
             }
             outList.add(item);
         }
@@ -772,7 +772,7 @@ public class OutAndInServiceImpl implements OutAndInService {
         if (orderTable != null) {
             r.data("userName", orderTable.getUsername());
         }
-        User user = userMapper.selectById(inbound.getManagerid());
+        User user = userMapper.selectById(Long.parseLong(inbound.getManagerid()));
         if (user != null) {
             r.data("managerName", user.getName());
         }
@@ -815,7 +815,7 @@ public class OutAndInServiceImpl implements OutAndInService {
         if (orderTable != null) {
             r.data("userName", orderTable.getUsername());
         }
-        User user = userMapper.selectById(outbound.getManagerid());
+        User user = userMapper.selectById(Long.parseLong(outbound.getManagerid()));
         if (user != null) {
             r.data("managerName", user.getName());
         }
