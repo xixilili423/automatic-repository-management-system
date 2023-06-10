@@ -1,7 +1,6 @@
 package com.controller;
 
 import com.annotation.UserLoginToken;
-import com.service.ParcelService;
 import com.service.PeopleService;
 import com.vo.R;
 import com.vo.param.*;
