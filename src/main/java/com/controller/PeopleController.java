@@ -18,61 +18,61 @@ public class PeopleController {
 
     @PostMapping("checkInBoundPeopleInformation")
     @UserLoginToken
-    public R checkInBoundPeopleInformation(@RequestAttribute(value="id") String id, checkInBoundPeopleInformationParam param)
+    public R checkInBoundPeopleInformation(@RequestAttribute(value="id") String id,@RequestBody checkInBoundPeopleInformationParam param)
     {
         return peopleService.checkInBoundPeopleInformation(id, param);
     }
 
     @PostMapping("checkFetchOutPeopleInformation")
     @UserLoginToken
-    public R checkFetchOutPeopleInformation(@RequestAttribute(value="id") String id, checkFetchOutPeopleInformationParam params)
+    public R checkFetchOutPeopleInformation(@RequestAttribute(value="id") String id,@RequestBody checkFetchOutPeopleInformationParam params)
     {
         return peopleService.checkFetchOutPeopleInformation(id, params);
     }
 
     @PostMapping("checkCustomInformation")
     @UserLoginToken
-    public R checkCustomInformation(@RequestAttribute(value="id") String id, checkCustomInformationParam params){return peopleService.checkCustomInformation(id, params);}
+    public R checkCustomInformation(@RequestAttribute(value="id") String id,@RequestBody checkCustomInformationParam params){return peopleService.checkCustomInformation(id, params);}
 
     @PostMapping("checkCustomTransaction")
     @UserLoginToken
-    public R checkCustomTransaction(@RequestAttribute(value="id") String id, checkCustomTransactionParam params) {return peopleService.checkCustomTransaction(id, params); }
+    public R checkCustomTransaction(@RequestAttribute(value="id") String id,@RequestBody checkCustomTransactionParam params) {return peopleService.checkCustomTransaction(id, params); }
 
     @DeleteMapping("delCustomInformation")
     @UserLoginToken
-    public R delCustomInformation(@RequestAttribute(value="id") String id, delCustomInformationparam params) {return peopleService.delCustomInformation(id, params); }
+    public R delCustomInformation(@RequestAttribute(value="id") String id,@RequestBody delCustomInformationparam params) {return peopleService.delCustomInformation(id, params); }
 
     @DeleteMapping("delFetchInPeopleInformation")
     @UserLoginToken
-    public R delFetchInPeopleInformation(@RequestAttribute(value="id") String id, delFetchInPeopleInformationparam params) {return peopleService.delFetchInPeopleInformation(id, params); }
+    public R delFetchInPeopleInformation(@RequestAttribute(value="id") String id,@RequestBody delFetchInPeopleInformationparam params) {return peopleService.delFetchInPeopleInformation(id, params); }
 
     @DeleteMapping("delFetchOutPeopleInformation")
     @UserLoginToken
-    public R delFetchOutPeopleInformation(@RequestAttribute(value="id") String id, delFetchOutPeopleInformationparam params) {return peopleService.delFetchOutPeopleInformation(id, params); }
+    public R delFetchOutPeopleInformation(@RequestAttribute(value="id") String id,@RequestBody delFetchOutPeopleInformationparam params) {return peopleService.delFetchOutPeopleInformation(id, params); }
 
     @PostMapping("incAccountsPayment")
     @UserLoginToken
-    public R incAccountsPayment(@RequestAttribute(value="id") String id, incAccountsPaymentparam params) {return peopleService.incAccountsPayment(id, params); }
+    public R incAccountsPayment(@RequestAttribute(value="id") String id,@RequestBody incAccountsPaymentparam params) {return peopleService.incAccountsPayment(id, params); }
 
     @PostMapping("balanceAccountsPayment")
     @UserLoginToken
-    public R balanceAccountsPayment(@RequestAttribute(value="id") String id, balanceAccountsPaymentparam params) {return peopleService.balanceAccountsPayment(id, params); }
+    public R balanceAccountsPayment(@RequestAttribute(value="id") String id,@RequestBody balanceAccountsPaymentparam params) {return peopleService.balanceAccountsPayment(id, params); }
 
     @PostMapping("checkStaffInformation")
     @UserLoginToken
-    public R checkStaffInformation(@RequestAttribute(value="id") String id, checkStaffInformationparam params) {return peopleService.checkStaffInformation(id, params); }
+    public R checkStaffInformation(@RequestAttribute(value="id") String id,@RequestBody checkStaffInformationparam params) {return peopleService.checkStaffInformation(id, params); }
 
     @PostMapping("addInBoundPeople")
     @UserLoginToken
-    public R addInBoundPeople(@RequestAttribute(value="id") String id, addInBoundPeopleparam params) {return peopleService.addInBoundPeople(id, params); }
+    public R addInBoundPeople(@RequestAttribute(value="id") String id,@RequestBody addInBoundPeopleparam params) {return peopleService.addInBoundPeople(id, params); }
 
     @PostMapping("addFetchOutPeople")
     @UserLoginToken
-    public R addFetchOutPeople(@RequestAttribute(value="id") String id, addFetchOutPeopleparam params) {return peopleService.addFetchOutPeople(id, params); }
+    public R addFetchOutPeople(@RequestAttribute(value="id") String id,@RequestBody addFetchOutPeopleparam params) {return peopleService.addFetchOutPeople(id, params); }
 
     @DeleteMapping("delStaffInformation")
     @UserLoginToken
-    public R delStaffInformation(@RequestAttribute(value="id") String id, delStaffInformationparam params) {return peopleService.delStaffInformation(id, params); }
+    public R delStaffInformation(@RequestAttribute(value="id") String id,@RequestBody delStaffInformationparam params) {return peopleService.delStaffInformation(id, params); }
 
     @GetMapping("getInBoundPeopleInformationAll")
     @UserLoginToken
@@ -96,7 +96,7 @@ public class PeopleController {
 
     @PostMapping("addCustom")
     @UserLoginToken
-    public R addCustom(@RequestAttribute(value="id") String id, addCustomparam params) {return peopleService.addCustom(id, params); }
+    public R addCustom(@RequestAttribute(value="id") String id,@RequestBody addCustomparam params) {return peopleService.addCustom(id, params); }
 
     @GetMapping("getCustomNameList")
     @UserLoginToken
