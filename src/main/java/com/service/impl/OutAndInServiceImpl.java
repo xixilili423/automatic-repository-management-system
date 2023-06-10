@@ -48,22 +48,22 @@ public class OutAndInServiceImpl implements OutAndInService {
     public R searchIn(String id,SearchInParam searchInParam) {
         R r = new R();
         // 从请求参数中获取查询条件
-        Long inID = Long.parseLong(searchInParam.getInID());
-        String inPeopleName = searchInParam.getInPeopleName();
-        String inStatus = searchInParam.getInStatus();
-        String orderID = searchInParam.getOrderID();
         // 构造查询条件
         QueryWrapper<Inbound> queryWrapper = new QueryWrapper<>();
-        if (inID!=null) {
+        if (StringUtils.isNotBlank(searchInParam.getInID())) {
+            Long inID = Long.parseLong(searchInParam.getInID());
             queryWrapper.eq("inboundid", inID);
         }
-        if (StringUtils.isNotBlank(inPeopleName)) {
+        if (StringUtils.isNotBlank(searchInParam.getInPeopleName())) {
+            String inPeopleName = searchInParam.getInPeopleName();
             queryWrapper.eq("warehousepersonid", warehousepersonMapper.selectOne(new QueryWrapper<Warehouseperson>().eq("name",inPeopleName)).getWarehousepersonid());
         }
-        if (StringUtils.isNotBlank(inStatus)) {
+        if (StringUtils.isNotBlank(searchInParam.getInStatus())) {
+            String inStatus = searchInParam.getInStatus();
             queryWrapper.eq("status", inStatus);
         }
-        if (StringUtils.isNotBlank(orderID)) {
+        if (StringUtils.isNotBlank(searchInParam.getOrderID())) {
+            String orderID = searchInParam.getOrderID();
             queryWrapper.eq("orderid", orderID);
         }
         // 执行查询操作，并将结果封装到 Response 对象中返回
@@ -92,23 +92,22 @@ public class OutAndInServiceImpl implements OutAndInService {
     @Override
     public R searchOut(String id, SearchOutParam searchOutParam) {
         // 从请求参数中获取查询条件
-        String outID = searchOutParam.getOutID();
-        String outPeopleName = searchOutParam.getOutPeopleName();
-        String outStatus = searchOutParam.getOutStatus();
-        String orderID = searchOutParam.getOrderID();
-
         // 构造查询条件
         QueryWrapper<Outbound> queryWrapper = new QueryWrapper<>();
-        if (StringUtils.isNotBlank(outID)) {
+        if (StringUtils.isNotBlank(searchOutParam.getOutID())) {
+            String outID = searchOutParam.getOutID();
             queryWrapper.eq("outboundid", outID);
         }
-        if (StringUtils.isNotBlank(outPeopleName)) {
+        if (StringUtils.isNotBlank(searchOutParam.getOutPeopleName())) {
+            String outPeopleName = searchOutParam.getOutPeopleName();
             queryWrapper.eq("outboundpersonid",outboundpersonMapper.selectOne(new QueryWrapper<Outboundperson>().eq("name",outPeopleName)).getOutboundpersonid());
         }
-        if (StringUtils.isNotBlank(outStatus)) {
+        if (StringUtils.isNotBlank(searchOutParam.getOutStatus())) {
+            String outStatus = searchOutParam.getOutStatus();
             queryWrapper.eq("status", outStatus);
         }
-        if (StringUtils.isNotBlank(orderID)) {
+        if (StringUtils.isNotBlank(searchOutParam.getOrderID())) {
+            String orderID = searchOutParam.getOrderID();
             queryWrapper.eq("orderid", orderID);
         }
         // 执行查询操作，并将结果封装到 Response 对象中返回

@@ -81,6 +81,7 @@ public class ParcelServiceImpl implements ParcelService {
         if (!p.isEmpty()) {
             Package parcel = p.get(0);
             PacelInformation pacelInformation = new PacelInformation();
+            pacelInformation.setParcelId(String.valueOf(parcel.getPackageid()));
             pacelInformation.setConsigneeAddress(parcel.getConsigneeaddress());
             pacelInformation.setConsigneePhone(parcel.getConsigneecontact());
             pacelInformation.setConsigneeName(parcel.getConsigneename());

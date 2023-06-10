@@ -56,19 +56,13 @@ public class RegionAndShelfImpl implements RegionAndShelfService {
     public R searchShelf(String id, searchShelfparam params) {
         R r = new R();
         r.data("status_code",false);
-
         QueryWrapper<Shelf> queryWrapper = new QueryWrapper<>();
-
         queryWrapper.eq("areaname", params.getShelfId());
-
         List<Shelf> shelfs = shelfMapper.selectList(queryWrapper);
-
         if(shelfs.size()>0){
             r.data("status_code",true);
         }
-
         List<Map<String, Object>> ParamList = new ArrayList<>();
-
         for (Shelf shelf : shelfs) {
             Map<String, Object> param = new HashMap<>();
             param.put("regionId", shelf.getAreaid());
@@ -78,7 +72,6 @@ public class RegionAndShelfImpl implements RegionAndShelfService {
 
             ParamList.add(param);
         }
-
         r.data("inBoundPeopleList", ParamList);
         return r;
     }
@@ -118,14 +111,10 @@ public class RegionAndShelfImpl implements RegionAndShelfService {
     public R allShelf(String id, allShelfparam params) {
         R r = new R();
         r.data("status_code",false);
-
         List<Map<String, Object>> shelfList = new ArrayList<>();
-
         QueryWrapper<Shelf> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("areaid", params.getRegionId());
-
         List<Shelf> shelves = shelfMapper.selectList(queryWrapper);
-
         if(shelves.size()>0){
             r.data("status_code",true);
         }
