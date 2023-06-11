@@ -228,8 +228,6 @@ public class PeopleServiceImpl implements PeopleService {
         QueryWrapper<Customer> queryWrapper = new QueryWrapper<>();
         queryWrapper.like("customerid", params.getCustomId());
         queryWrapper.like("username", params.getUserName());
-        System.out.println(params.getCustomId());
-        System.out.println(params.getUserName());
         int rowsAffected = customerMapper.delete(queryWrapper);
 
         if (rowsAffected > 0) {
@@ -244,14 +242,12 @@ public class PeopleServiceImpl implements PeopleService {
         r.data("status_code",false);
 
         // 查询warehouseperson表中的信息
-        Warehouseperson warehouseperson = warehousepersonMapper.selectById(params.getInBoundPersonId());
+        QueryWrapper<Warehouseperson> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("warehousepersonid", params.getInBoundPersonId());
+        int rowsAffected = warehousepersonMapper.delete(queryWrapper);
 
-        if (warehouseperson != null) {
-            // 执行删除操作
-            int rowsAffected = warehousepersonMapper.deleteById(params.getInBoundPersonId());
-            if (rowsAffected > 0) {
-                r.data("status_code", true);
-            }
+        if (rowsAffected > 0) {
+            r.data("status_code", true);
         }
 
         return r;
@@ -261,15 +257,13 @@ public class PeopleServiceImpl implements PeopleService {
         R r = new R();
         r.data("status_code", false);
 
-        // 查询 warehouseperson 表中的信息
-        Warehouseperson warehouseperson = warehousepersonMapper.selectById(params.getOutBoundPresonId());
+        // 查询outboundperson表中的信息
+        QueryWrapper<Outboundperson> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("warehousepersonid", params.getOutBoundPresonId());
+        int rowsAffected = outboundpersonMapper.delete(queryWrapper);
 
-        if (warehouseperson != null) {
-            // 执行删除操作
-            int rowsAffected = warehousepersonMapper.deleteById(params.getOutBoundPresonId());
-            if (rowsAffected > 0) {
-                r.data("status_code", true);
-            }
+        if (rowsAffected > 0) {
+            r.data("status_code", true);
         }
 
         return r;
@@ -450,15 +444,13 @@ public class PeopleServiceImpl implements PeopleService {
         R r = new R();
         r.data("status_code", false);
 
-        // 查询 warehouseperson 表中的信息
-        Warehouseperson warehouseperson = warehousepersonMapper.selectById(params.getUserName());
+        // 查询customer表中的信息
+        QueryWrapper<Customer> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("username", params.getUserName());
+        int rowsAffected = customerMapper.delete(queryWrapper);
 
-        if (warehouseperson != null) {
-            // 执行删除操作
-            int rowsAffected = warehousepersonMapper.deleteById(params.getUserName());
-            if (rowsAffected > 0) {
-                r.data("status_code", true);
-            }
+        if (rowsAffected > 0) {
+            r.data("status_code", true);
         }
 
         return r;
