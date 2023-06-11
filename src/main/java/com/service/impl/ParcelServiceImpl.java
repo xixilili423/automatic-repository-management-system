@@ -77,9 +77,10 @@ public class ParcelServiceImpl implements ParcelService {
         if (searchParcelParam.getPacelState() != null) {
             queryWrapper.eq("status", searchParcelParam.getPacelState());
         }
-        List<Package> p = parcelMapper.selectList(queryWrapper);
-        if (!p.isEmpty()) {
-            Package parcel = p.get(0);
+        List<Package> packageList = parcelMapper.selectList(queryWrapper);
+        int i=0;
+        PacelInformation[] parcelInformation = new PacelInformation[packageList.size()];
+        for ( Package parcel: packageList) {
             PacelInformation pacelInformation = new PacelInformation();
             pacelInformation.setParcelId(String.valueOf(parcel.getPackageid()));
             pacelInformation.setConsigneeAddress(parcel.getConsigneeaddress());
@@ -88,55 +89,12 @@ public class ParcelServiceImpl implements ParcelService {
             pacelInformation.setShipperPhone(parcel.getShippercontact());
             pacelInformation.setShipperAddress(parcel.getShipperaddress());
             pacelInformation.setShipperName(parcel.getShippername());
-            r.data("pacelInformation", pacelInformation);
-            r.data("status_code", true);
+            parcelInformation[i]=pacelInformation;
+            i++;
         }
-        /**
-        PacelInformation pacelInformation = new PacelInformation();
-        QueryWrapper<Shelf> queryWrapper2 = new QueryWrapper<>();
-        QueryWrapper<Shelfitem> queryWrapper3 = new QueryWrapper<>();
-        QueryWrapper<Area> queryWrapper1 = new QueryWrapper<>();
-        QueryWrapper<Package> queryWrapper = new QueryWrapper<>();
-        if (searchParcelParam.getParcelId() != null) {
-        queryWrapper3.eq("packageid", searchParcelParam.getParcelId());}
-        if(searchParcelParam.getShelfID()!=null) {
-            queryWrapper3.eq("shelfid",searchParcelParam.getShelfID());
-        }
-        if(searchParcelParam.getRegionName()!=null) {
-            queryWrapper1.eq("areaname", searchParcelParam.getRegionName());
-        }
-        if(searchParcelParam.getPacelState()!=null) {
-            queryWrapper.eq()
-        }
-        List<Shelfitem> si = shelfitemMapper.selectList(queryWrapper3);
-            if (!si.isEmpty()) {
-                Shelfitem shelfitem = si.get(0);
-                queryWrapper2.eq("id", shelfitem.getShelfid());
-                List<Shelf> s = shelfMapper.selectList(queryWrapper2);
-                if (!s.isEmpty()) {
-                    Shelf shelf = s.get(0);
-                    queryWrapper1.eq("id", shelf.getAreaid());
-                    List<Area> a = areaMapper.selectList(queryWrapper1);
-                    if (!a.isEmpty()) {
-                        Area area = a.get(0);
-                        queryWrapper.eq("id", shelfitem.getPackageid());
-                        List<Package> p = parcelMapper.selectList(queryWrapper);
-                        if (!p.isEmpty()) {
-                            Package parcel = p.get(0);
-                            pacelInformation.setConsigneeAddress(parcel.getConsigneeaddress());
-                            pacelInformation.setConsigneeName(parcel.getConsigneename());
-                            pacelInformation.setConsigneePhone(parcel.getConsigneecontact());
-                            pacelInformation.setShipperPhone(parcel.getShippercontact());
-                            pacelInformation.setShipperAddress(parcel.getShipperaddress());
-                            pacelInformation.setShipperName(parcel.getShippername());
-                            r.data("pacelInformation",pacelInformation);
-                            r.data("status_code",true);
-                        }
-                    }
-                }
-            }
-*/
-    return r;
+        r.data("parcelInformation", parcelInformation);
+        r.data("status_code", true);
+        return r;
     }
 
     @Override
