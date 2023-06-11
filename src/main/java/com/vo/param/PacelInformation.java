@@ -3,6 +3,10 @@ package com.vo.param;
 @lombok.Data
 public class PacelInformation {
     /**
+     * 包裹id
+     */
+    private String parcelId;
+    /**
      * 收货人地址
      */
     private String consigneeAddress;
