@@ -40,15 +40,15 @@ public class PeopleController {
 
     @DeleteMapping("delCustomInformation")
     @UserLoginToken
-    public R delCustomInformation(@RequestAttribute(value="id") String id,@RequestBody delCustomInformationparam params) {return peopleService.delCustomInformation(id, params); }
+    public R delCustomInformation(@RequestAttribute(value="id") String id,@RequestBody String customId) {return peopleService.delCustomInformation(id, customId); }
 
     @DeleteMapping("delFetchInPeopleInformation")
     @UserLoginToken
-    public R delFetchInPeopleInformation(@RequestAttribute(value="id") String id,@RequestBody delFetchInPeopleInformationparam params) {return peopleService.delFetchInPeopleInformation(id, params); }
+    public R delFetchInPeopleInformation(@RequestAttribute(value="id") String id,@RequestBody String inBoundPersonId) {return peopleService.delFetchInPeopleInformation(id, inBoundPersonId); }
 
     @DeleteMapping("delFetchOutPeopleInformation")
     @UserLoginToken
-    public R delFetchOutPeopleInformation(@RequestAttribute(value="id") String id,@RequestBody delFetchOutPeopleInformationparam params) {return peopleService.delFetchOutPeopleInformation(id, params); }
+    public R delFetchOutPeopleInformation(@RequestAttribute(value="id") String id,@RequestBody String outBoundPresonId) {return peopleService.delFetchOutPeopleInformation(id, outBoundPresonId); }
 
     @PostMapping("incAccountsPayment")
     @UserLoginToken
@@ -72,7 +72,7 @@ public class PeopleController {
 
     @DeleteMapping("delStaffInformation")
     @UserLoginToken
-    public R delStaffInformation(@RequestAttribute(value="id") String id,@RequestBody delStaffInformationparam params) {return peopleService.delStaffInformation(id, params); }
+    public R delStaffInformation(@RequestAttribute(value="id") String id,@RequestBody String userName) {return peopleService.delStaffInformation(id, userName); }
 
     @GetMapping("getInBoundPeopleInformationAll")
     @UserLoginToken

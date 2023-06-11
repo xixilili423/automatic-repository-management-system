@@ -12,11 +12,11 @@ public interface PeopleService {
 
     R checkCustomTransaction(String id, checkCustomTransactionParam params);
 
-    R delCustomInformation(String id, delCustomInformationparam params);
+    R delCustomInformation(String id, String params);
 
-    R delFetchInPeopleInformation(String id, delFetchInPeopleInformationparam params);
+    R delFetchInPeopleInformation(String id, String inBoundPersonId);
 
-    R delFetchOutPeopleInformation(String id, delFetchOutPeopleInformationparam params);
+    R delFetchOutPeopleInformation(String id, String outBoundPresonId);
 
     R incAccountsPayment(String id, incAccountsPaymentparam params);
 
@@ -28,7 +28,7 @@ public interface PeopleService {
 
     R addFetchOutPeople(String id, addFetchOutPeopleparam params);
 
-    R delStaffInformation(String id, delStaffInformationparam params);
+    R delStaffInformation(String id, String userName);
 
     R getInBoundPeopleInformationAll(String id);
 
