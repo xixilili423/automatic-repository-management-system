@@ -202,7 +202,6 @@ public class UserServiceImpl  extends ServiceImpl<UserMapper, User> implements U
 
     }
 
-
     @Override
     public User findUserById(String id) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
@@ -231,7 +230,6 @@ public class UserServiceImpl  extends ServiceImpl<UserMapper, User> implements U
         r.data("companyNum", companyNum);
         r.data("inPeopleNum", inPeopleNum);
         r.data("outPeopleNum", outPeopleNum);
-
         return r;
     }
 

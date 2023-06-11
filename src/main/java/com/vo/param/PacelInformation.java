@@ -1,6 +1,11 @@
 package com.vo.param;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @lombok.Data
+@Getter
+@Setter
 public class PacelInformation {
     /**
      * 包裹id

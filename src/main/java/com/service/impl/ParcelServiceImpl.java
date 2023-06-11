@@ -220,17 +220,19 @@ public class ParcelServiceImpl implements ParcelService {
     @Override
     public R searchAllParcel(String id) {
         List<Package> packageList = parcelMapper.selectList(null);
-        List<Map<String, String>> parcelInformation = new ArrayList<>();
+        PacelInformation[] parcelInformation = new PacelInformation[packageList.size()];
+        int i = 0;
         for (Package p : packageList) {
-            Map<String, String> parcel = new HashMap<>();
-            parcel.put("parcelId", String.valueOf(p.getPackageid()));
-            parcel.put("shipperName", p.getShippername());
-            parcel.put("shipperPhone", p.getShippercontact());
-            parcel.put("shipperAddress", p.getShipperaddress());
-            parcel.put("consigneeName", p.getConsigneename());
-            parcel.put("consigneePhone", p.getConsigneecontact());
-            parcel.put("consigneeAddress", p.getConsigneeaddress());
-            parcelInformation.add(parcel);
+            PacelInformation parcel =new PacelInformation();
+            parcel.setParcelId( String.valueOf(p.getPackageid()));
+            parcel.setShipperName( p.getShippername());
+            parcel.setShipperPhone(p.getShippercontact());
+            parcel.setShipperAddress( p.getShipperaddress());
+            parcel.setConsigneeName(p.getConsigneename());
+            parcel.setConsigneePhone(p.getConsigneecontact());
+            parcel.setConsigneeAddress(p.getConsigneeaddress());
+            parcelInformation[i]=parcel;
+            i++;
         }
         R r = new R();
         r.data("status_code", true);
