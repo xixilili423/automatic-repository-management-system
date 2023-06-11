@@ -15,8 +15,8 @@ public interface OutAndInService {
    R showParcel( String id) ;
     R fetchInPeopleNameList( String id);
    R fetchOutPeopleNameList( String id) ;
-    R InDelMultitude(String id, InOrderLIst inOrderLIst) ;
-  R OutDelMultitude( String id,InOrderLIst  outOrderLIst);
+    R InDelMultitude(String id, Long[] inOrderLIst) ;
+  R OutDelMultitude( String id,Long[]  outOrderLIst);
 
     R ExamineIn(String id, ExamineInParam examineInParam);
 

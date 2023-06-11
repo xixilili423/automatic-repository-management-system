@@ -391,9 +391,9 @@ public class OutAndInServiceImpl implements OutAndInService {
     }
 
     @Override
-    public R InDelMultitude(String id, InOrderLIst inOrderList) {
+    public R InDelMultitude(String id, Long[] inOrderList) {
         List<Long> inboundIdList = new ArrayList<>();
-        for (long i : inOrderList.getInOrderList()) {
+        for (long i : inOrderList) {
             inboundIdList.add(i);
         }
         QueryWrapper<Inbound> queryWrapper = new QueryWrapper<>();
@@ -405,9 +405,9 @@ public class OutAndInServiceImpl implements OutAndInService {
     }
 
     @Override
-    public R OutDelMultitude(String id, InOrderLIst  outOrderList) {
+    public R OutDelMultitude(String id, Long[]  outOrderList) {
         List<Long> outboundIdList = new ArrayList<>();
-        for (long i : outOrderList.getInOrderList()) {
+        for (long i : outOrderList) {
             outboundIdList.add(i);
         }
         QueryWrapper<Outbound> queryWrapper = new QueryWrapper<>();

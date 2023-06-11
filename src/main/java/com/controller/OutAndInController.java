@@ -78,14 +78,14 @@ public class OutAndInController {
     }
     @DeleteMapping("InDelMultitude")
     @UserLoginToken
-    public R InDelMultitude(@RequestAttribute(value="id") String id,@RequestBody InOrderLIst inOrderLIst) {
+    public R InDelMultitude(@RequestAttribute(value="id") String id,@RequestBody Long[] inOrderLIst) {
 
 
         return outAndInService.InDelMultitude(id,inOrderLIst);
     }
     @DeleteMapping("OutDelMultitude")
     @UserLoginToken
-    public R OutDelMultitude(@RequestAttribute(value="id") String id,@RequestBody InOrderLIst outOrderLIst) {
+    public R OutDelMultitude(@RequestAttribute(value="id") String id,@RequestBody Long[] outOrderLIst) {
 
 
         return outAndInService.OutDelMultitude(id,outOrderLIst);
