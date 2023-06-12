@@ -1,201 +1,117 @@
 package com;
 
+import com.entity.Inbound;
+import com.entity.Shelf;
+import com.entity.Warehouseperson;
+import com.mapper.InboundMapper;
+import com.mapper.ShelfMapper;
+import com.mapper.WarehousepersonMapper;
+import com.service.OutAndInService;
+import com.service.impl.OutAndInServiceImpl;
+import com.vo.R;
+import com.vo.param.ExamineInParam;
+import com.vo.param.ParcelList;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
+
 @SpringBootTest
 public class test {
+    @Mock
+    private InboundMapper inboundMapper;
+
+    @Mock
+    private WarehousepersonMapper warehousepersonMapper;
+    @Mock
+    private ShelfMapper shelfMapper;
+    @InjectMocks
+    private OutAndInServiceImpl examineInService;
+
     @Test
-    public void test1() {
-        int[][][] warehouse = Generate_shelvesx(100,300);
+    public void testExamineInInboundNotExist() {
+        // 模拟入库单不存在的情况
+        when(inboundMapper.selectById(anyLong())).thenReturn(null);
+        ExamineInParam param = new ExamineInParam();
+        param.setInID("5");
+        // 调用被测试的方法
+        R result;
+        result = examineInService.ExamineIn("123", param);
 
-        for (int i = 0; i < warehouse.length; i++) {
-            for (int j = 0; j < warehouse[0].length; j++) {
-                System.out.print(warehouse[i][j][0] + " ");
-            }
-            System.out.println();
-        }
-
-//
-//        int[] start = new int[]{0, 0};
-//        int[][] goals = {{1, 5}};
-//        List<int[]> path = findPath(warehouse, start, goals);
-
-        //边界测试，结果path为空
-//        int[] start = new int[]{0, 0};
-//        int[][] goals = {{0, 0}};
-//        List<int[]> path = findPath(warehouse, start, goals);
-
-        //多目标点测试
-        int[] start = new int[]{0, 0};
-        int[][] goals = {{3, 5}, {7, 9}, {9, 1}};
-        List<Integer> sortedIndices = getSortedGoalIndices(start, goals);
-        List<int[]> path = findPath(warehouse, start, goals);
-
-        for(int i = 0;i < path.size(); i++){
-            System.out.println("["+ path.get(i)[0] + "," + path.get(i)[1] + "] ");
-        }
+        // 验证返回结果是否符合预期
+        assertEquals("入库单不存在", result.getMessage());
     }
 
-    public static List<int[]> findPath(int[][][] warehouse, int[] start, int[][] goals) {
-        List<Integer> sortedIndices = getSortedGoalIndices(start, goals);
+    @Test
+    public void testExamineInWarehousepersonNotExist() {
+        // 模拟入库单存在但入库交接人不存在的情况
+        Inbound inbound = new Inbound();
+        inbound.setInboundid(1L);
+        when(inboundMapper.selectById(anyLong())).thenReturn(inbound);
+        when(warehousepersonMapper.selectOne(any())).thenReturn(null);
 
-        List<int[]> path = new ArrayList<>();
-        int currX = start[0];
-        int currY = start[1];
-        int[][] visited = new int[warehouse.length][warehouse[0].length];
-        visited[currX][currY] = 1;
+        // 调用被测试的方法
+        ExamineInParam param = new ExamineInParam();
+        param.setInID("1");
+        param.setInPeopleName("张三");
+        R result = examineInService.ExamineIn("123", param);
 
-        // 计算所有目标点
-        List<int[]> targetPoints = new ArrayList<>();
-
-        System.out.println("sorted goals: ");
-        for (int i = 0; i < goals.length; i++) {
-            targetPoints.add(goals[sortedIndices.get(i)]); // 移动到目标点
-            System.out.println("[" + goals[sortedIndices.get(i)][0] + "," + goals[sortedIndices.get(i)][1] + "]");
-        }
-        System.out.println("sorted goals end");
-
-        // 依次寻路经过所有目标点
-        for (int[] targetPoint : targetPoints) {
-
-            visited = new int[warehouse.length][warehouse[0].length];
-
-            int targetX = targetPoint[0];
-            int targetY = targetPoint[1];
-            List<int[]> neighbors = getNeighbors(currX, currY);
-
-            while (Math.abs(currX - targetX) + Math.abs(currY - targetY) > 1) {//未到达目标点周围就进行寻路，曼哈顿距离为1时到达目标附近，距离大于1时未到达目标点附近
-
-                int minCost = Integer.MAX_VALUE;
-                int[] next = null;
-
-                for (int[] neighbor : neighbors) {
-                    int neighborX = neighbor[0];
-                    int neighborY = neighbor[1];
-                    if (neighborX < 0 || neighborY < 0 || neighborX >= warehouse.length || neighborY >= warehouse[0].length || warehouse[neighborX][neighborY][0] > 0) {
-                        continue; // 越界或目标为货架，不能作为邻居考虑
-                    }
-
-                    if (Math.abs(neighborX - targetX) + Math.abs(neighborY - targetY) < minCost && visited[neighborX][neighborY] == 0) {
-                        next = neighbor;
-                        minCost = Math.abs(neighborX - targetX) + Math.abs(neighborY - targetY);
-                    }
-                }
-
-                if(next == null){//走不动被堵死了，放出回头的路并将该死路堵上
-                    visited = new int[warehouse.length][warehouse[0].length];
-                    visited[currX][currY] = 1;
-                    path.remove(path.size() - 1);
-                    path.remove(path.size() - 1);
-
-                    continue;
-                }
-
-                //节点移动
-                path.add(next);
-                currX = next[0];
-                currY = next[1];
-                visited[currX][currY] = 1;
-
-//                System.out.println("["+ currX + "," + currY + "] ");
-
-                if(currX == start[0] && currY == start[1]){//回到起点，退出循环,同时避免next为起点时数组越界
-                    break;
-                }
-
-                neighbors = getNeighbors(currX, currY);
-            }
-
-//            System.out.println("arrive a target`s around: [" + targetX + "," + targetY +"]");
-
-            if(currX == start[0] && currY == start[1]){//回到起点，退出循环
-                break;
-            }
-        }
-
-        double factor = ( 1000.0 / (10 * warehouse[0].length) ) * 10;
-
-        for (int[] arr : path) {
-            for (int i = 0; i < arr.length; i++) {
-                arr[i] = (int) (arr[i] * factor);
-            }
-        }
-
-        return path;
+        // 验证返回结果是否符合预期
+        assertEquals("入库交接人不存在", result.getMessage());
     }
 
-    private static List<int[]> getNeighbors(int currX, int currY) {
-        List<int[]> neighbors = new ArrayList<>();
-        neighbors.add(new int[]{currX, currY + 1}); // 下方邻居
-        neighbors.add(new int[]{currX + 1, currY}); // 右侧邻居
-        neighbors.add(new int[]{currX, currY - 1}); // 上方邻居
-        neighbors.add(new int[]{currX - 1, currY}); // 左侧邻居
-        return neighbors;
+    @Test
+    public void testExamineInSuccess() {
+        // 模拟入库单存在且入库交接人存在的情况
+        Inbound inbound = new Inbound();
+        inbound.setInboundid(1L);
+        when(inboundMapper.selectById(anyLong())).thenReturn(inbound);
+        when(warehousepersonMapper.selectOne(any())).thenReturn(new Warehouseperson());
+        when(examineInService.selectAvailableShelves()).thenReturn(new ArrayList<Shelf>());
+
+        // 调用被测试的方法
+        ExamineInParam param = new ExamineInParam();
+        param.setInID("1");
+        param.setInPeopleName("张三");
+        param.setInStatus("已入库");
+        ParcelList[] parcelLists=new ParcelList[1];
+        ParcelList p=new ParcelList();
+        p.setParcelID(9);
+        parcelLists[0]=p;
+        param.setParcelList(parcelLists);
+        R result = examineInService.ExamineIn("123", param);
+
+        // 验证返回结果是否符合预期
+        assertEquals("No available shelf", result.getMessage());
     }
 
-    public static List<Integer> getSortedGoalIndices(int[] start, int[][] goals) {
-        List<Integer> indices = new ArrayList<>();
-        Map<Integer, Integer> distanceMap = new HashMap<>();
+    @Test
+    public void testExamineInNoAvailableShelf() {
+        // 模拟入库单存在但没有可用的货架的情况
+        Inbound inbound = new Inbound();
+        inbound.setInboundid(1L);
+        when(inboundMapper.selectById(anyLong())).thenReturn(inbound);
+        when(warehousepersonMapper.selectOne(any())).thenReturn(new Warehouseperson());
+        when(examineInService.selectAvailableShelves()).thenReturn(new ArrayList<Shelf>());
 
-        for (int i = 0; i < goals.length; i++) {
-            int[] goal = goals[i];
-            int distance = Math.abs(start[0] - goal[0]) + Math.abs(start[1] - goal[1]);
-            distanceMap.put(i, distance);
-        }
+        // 调用被测试的方法
+        ExamineInParam param = new ExamineInParam();
+        param.setInID("1");
+        param.setInPeopleName("张三");
+        param.setInStatus("已入库");
+        param.setParcelList(new ParcelList[]{new ParcelList()});
+        R result = examineInService.ExamineIn("123", param);
 
-        Map<Integer, Integer> sortedDistanceMap = distanceMap.entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByValue())
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-
-        sortedDistanceMap.keySet().forEach(indices::add);
-
-        return indices;
-    }
-
-
-
-    public static int[][][] Generate_shelvesx(int x, int y) {
-        x = x / 10;
-        y = y / 10;
-
-        int[][][] warehouse = new int[x][y][3];
-        int num = x / 2 * y / 2 / 32 - 1;
-        int count = 0, code = 1;
-        int record = 0;
-
-        int start_x = x / 2;
-        int end_y = y / 2;
-
-        // 生成货架
-        for (int i = 0; i < x; i++) {
-            for (int j = 0; j < y; j++) {
-                if(i % 2 == 0){
-                    warehouse[i][j][0] = 0;
-                    continue;
-                }
-                if (j % 2 == 0 ) {
-                    warehouse[i][j][0] = 0;//生成道路
-                    count++;
-                } else {
-                    if (code < 32) {
-                        warehouse[i][j][0] = code;//初始化将货架均匀的分为32个区域
-                    } else {
-                        warehouse[i][j][0] = 32;//剩下的区域作为备用区域
-                    }
-                    if (count - record > num) {
-                        record = count;
-                        code++;
-                    }
-                }
-            }
-        }
-
-        return warehouse;
+        // 验证返回结果是否符合预期
+        assertEquals("No available shelf", result.getMessage());
     }
 
 }
