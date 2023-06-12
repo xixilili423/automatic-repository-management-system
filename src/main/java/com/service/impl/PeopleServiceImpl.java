@@ -204,6 +204,7 @@ public class PeopleServiceImpl implements PeopleService {
                 transactionMap.put("transactionId", transaction.getTransactionid());
                 transactionMap.put("transactionAmount", transaction.getTransactionamount());
                 transactionMap.put("time", transaction.getTransactiontime());
+                transactionMap.put("remark",transaction.getTransactionremark());
 
                 // 查询customer表中的信息
                 LambdaQueryWrapper<Customer> queryWrapper = new LambdaQueryWrapper<>();
@@ -225,6 +226,8 @@ public class PeopleServiceImpl implements PeopleService {
         r.data("transactionList", transactionList);
         r.data("status_code", true);
 
+        System.out.println("获取用户流水信息获取完毕");
+        System.out.println("transactionList: "+ transactionList);
         return r;
     }
 
