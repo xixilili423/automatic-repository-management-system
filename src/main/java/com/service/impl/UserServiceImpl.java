@@ -47,6 +47,7 @@ public class UserServiceImpl  extends ServiceImpl<UserMapper, User> implements U
         if (user != null && user.getPassword().equals(loginParam.getPassword())) {
             System.out.println(user.getId());
             String token = user.getToken(user);
+            System.out.println("token: " + token);
             r.data("user_id", user.getId());
             r.data("token", token);
             r.data("userName", user.getName());

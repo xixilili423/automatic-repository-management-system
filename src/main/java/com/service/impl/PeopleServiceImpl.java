@@ -191,13 +191,17 @@ public class PeopleServiceImpl implements PeopleService {
     public R checkCustomTransaction(String id, checkCustomTransactionParam params) {
         R r = new R();
         r.data("status_code",false);
+        System.out.println("查询客户交易信息开始执行");
+        System.out.println("客户id： "+ params.getCustomerId());
+//        System.out.println("客户姓名");
 
         // 查询transactionrecord表中的信息
         List<Transactionrecord> transactions = transactionRecordMapper.selectList(null);
 
         List<Map<String, Object>> transactionList = new ArrayList<>();
         for (Transactionrecord transaction : transactions) {
-            if (transaction.getTransactionid () == Long.parseLong(params.getCustomerId().replaceAll("[^0-9]", "")) && transaction.getUsername().equals(params.getUserName())) {
+//            if (transaction.getTransactionid () == Long.parseLong(params.getCustomerId().replaceAll("[^0-9]", "")) && transaction.getUsername().equals(params.getUserName())) {
+            if (transaction.getTransactionid () == Long.parseLong(params.getCustomerId().replaceAll("[^0-9]", ""))) {
                 Map<String, Object> transactionMap = new HashMap<>();
                 transactionMap.put("transactionId", transaction.getTransactionid());
                 transactionMap.put("transactionAmount", transaction.getTransactionamount());
@@ -219,10 +223,14 @@ public class PeopleServiceImpl implements PeopleService {
         r.data("transactionList", transactionList);
         r.data("status_code", true);
 
+        System.out.println("执行完毕");
+        System.out.println("transactionList" + transactionList);
+
         return r;
     }
 
     public R delCustomInformation(String id, String customId) {
+        System.out.println("删除客户操作执行");
         R r = new R();
         r.data("status_code", false);
 
@@ -241,6 +249,7 @@ public class PeopleServiceImpl implements PeopleService {
     public R delFetchInPeopleInformation(String id, String inBoundPersonId) {
         R r = new R();
         r.data("status_code",false);
+        System.out.println("删除入库人操作执行");
 
         // 查询warehouseperson表中的信息
         LambdaQueryWrapper<Warehouseperson> queryWrapper = new LambdaQueryWrapper<>();
@@ -256,6 +265,7 @@ public class PeopleServiceImpl implements PeopleService {
     public R delFetchOutPeopleInformation(String id, String outBoundPresonId) {
         R r = new R();
         r.data("status_code", false);
+        System.out.println("删除出库人操作执行");
 
         // 查询outboundperson表中的信息
 
@@ -389,6 +399,7 @@ public class PeopleServiceImpl implements PeopleService {
     }
 
     public R addInBoundPeople(String id, addInBoundPeopleparam params) {
+        System.out.println("增加入库人操作开始执行");
         R r = new R();
         r.data("status_code", false);
 
@@ -410,6 +421,7 @@ public class PeopleServiceImpl implements PeopleService {
             r.data("status_code", true);
 
         }
+        System.out.println("增加入库人操作执行完毕");
 
         return r;
     }
@@ -444,6 +456,7 @@ public class PeopleServiceImpl implements PeopleService {
     public R delStaffInformation(String id, String userName) {
         R r = new R();
         r.data("status_code", false);
+        System.out.println("删除员工操作执行");
 
         // 查询customer表中的信息
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
@@ -521,7 +534,7 @@ public class PeopleServiceImpl implements PeopleService {
 
         for (Customer customer : customers) {
             Map<String, Object> personMap = new HashMap<>();
-            personMap.put("customerId", customer.getCustomerid());
+            personMap.put("customId", customer.getCustomerid());
             personMap.put("companyName", customer.getCompanyname());
             personMap.put("payableAmount", customer.getPayableamount());
             personMap.put("contactPersonName", customer.getContactpersonname());
@@ -539,6 +552,7 @@ public class PeopleServiceImpl implements PeopleService {
 
         r.data("customList", PeopleList);
 
+        System.out.println("客户列表"+ PeopleList);
 
         return r;
     }
@@ -559,8 +573,6 @@ public class PeopleServiceImpl implements PeopleService {
                 personMap.put("transferStation", user.getTransitstation());
                 personMap.put("userName", user.getId());
                 personMap.put("warehouseId", user.getWarehouseid());
-
-
                 // 添加其他属性到 personMap
 
                 PeopleList.add(personMap);
@@ -570,7 +582,8 @@ public class PeopleServiceImpl implements PeopleService {
         r.data("status_code", true);
         r.data("staffList", PeopleList);
 
-
+        System.out.println("获取员工所有信息执行完毕");
+        System.out.println("PeopleList"+PeopleList);
         return r;
     }
 
@@ -633,8 +646,5 @@ public class PeopleServiceImpl implements PeopleService {
 
         return r;
     }
-
-
-
 
 }

@@ -85,7 +85,6 @@ public class OutAndInServiceImpl implements OutAndInService {
         return r;
     }
 
-
     @Override
     public R searchOut(String id, SearchOutParam searchOutParam) {
         // 从请求参数中获取查询条件
@@ -129,7 +128,6 @@ public class OutAndInServiceImpl implements OutAndInService {
         r.data("outList", outList);
         return r;
     }
-
 
     @Override
     public R showIn(String id) {
@@ -183,7 +181,6 @@ public class OutAndInServiceImpl implements OutAndInService {
         r.data("outList", outList);
         return r;
     }
-
 
     @Override
     public R addInOrder(String id, AddInOrderParam addInOrderParam) {
@@ -360,6 +357,7 @@ public class OutAndInServiceImpl implements OutAndInService {
 
     @Override
     public R fetchInPeopleNameList(String id) {
+        System.out.println("获取入库人姓名列表开始执行");
         QueryWrapper<Warehouseperson> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", id);
         List<Warehouseperson> warehousepersonList = warehousepersonMapper.selectList(queryWrapper);
@@ -370,6 +368,8 @@ public class OutAndInServiceImpl implements OutAndInService {
         R r = new R();
         r.data("status_code", true);
         r.data("inPeopleNameList", inPeopleNameList);
+        System.out.println("inPeopleNameList" + inPeopleNameList);
+        System.out.println("获取入库人姓名列表执行完毕");
         return r;
     }
 
@@ -537,7 +537,6 @@ public class OutAndInServiceImpl implements OutAndInService {
         r.data("status_code", true);
         return r;
     }
-
 
     @Override
     public R ExamineOut(String id, ExamineOutParam examineOutParam) {
