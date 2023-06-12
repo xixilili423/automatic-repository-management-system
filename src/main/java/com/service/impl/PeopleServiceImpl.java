@@ -152,7 +152,7 @@ public class PeopleServiceImpl implements PeopleService {
             queryWrapper.like("companyname", params.getCompanyName());
         }
         if (StringUtils.isNotBlank(params.getCustomId())) {
-            queryWrapper.like("customerid", params.getCustomId().replaceAll("[^0-9]", ""));
+            queryWrapper.like("customid", params.getCustomId().replaceAll("[^0-9]", ""));
         }
         if (StringUtils.isNotBlank(params.getUserName())) {
             queryWrapper.like("username", params.getUserName());
