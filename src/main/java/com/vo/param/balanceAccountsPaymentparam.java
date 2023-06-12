@@ -17,8 +17,8 @@ public class balanceAccountsPaymentparam {
     public String getbalAccounts() { return balAccounts; }
     public void setbalAccounts(String value) { this.balAccounts = value; }
 
-    public String getCustomerId() { return customId; }
-    public void setCustomerId(String value) { this.customId = value; }
+    public String getCustomId() { return customId; }
+    public void setCustomId(String value) { this.customId = value; }
 
     public String getNotes() { return notes; }
     public void setNotes(String value) { this.notes = value; }

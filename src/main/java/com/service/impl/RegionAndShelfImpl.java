@@ -57,7 +57,7 @@ public class RegionAndShelfImpl implements RegionAndShelfService {
         R r = new R();
         r.data("status_code",false);
         QueryWrapper<Shelf> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("areaname", params.getShelfId());
+        queryWrapper.eq("shelfid", params.getShelfId());
         List<Shelf> shelfs = shelfMapper.selectList(queryWrapper);
         if(shelfs.size()>0){
             r.data("status_code",true);

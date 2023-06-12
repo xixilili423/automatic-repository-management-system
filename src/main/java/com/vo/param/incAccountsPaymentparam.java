@@ -14,8 +14,8 @@ public class incAccountsPaymentparam {
      */
     private String notes;
 
-    public String getCustomerId() { return customId; }
-    public void setCustomerId(String value) { this.customId = value; }
+    public String getCustomId() { return customId; }
+    public void setCustomId(String value) { this.customId = value; }
 
     public String getIncAccounts() { return incAccounts; }
     public void setIncAccounts(String value) { this.incAccounts = value; }
