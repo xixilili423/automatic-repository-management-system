@@ -154,8 +154,8 @@ public class RegionAndShelfImpl implements RegionAndShelfService {
         r.data("status_code",false);
 
         UpdateWrapper<Shelf> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.like("shelfid", params.getShelfId());
-        updateWrapper.like("remainingcapacity", 0);
+        updateWrapper.eq("shelfid", params.getShelfId());
+        updateWrapper.eq("remainingcapacity", 0);
 
         int affectedRows = shelfMapper.delete(updateWrapper);
 
