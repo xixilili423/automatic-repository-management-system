@@ -27,14 +27,14 @@ public class RegionAndShelfImpl implements RegionAndShelfService {
     private ShelfMapper shelfMapper;
 
 
-    public R searchRegion(String id, searchRegionparam params) {
+    public R searchRegion(String id, String params) {
         R r = new R();
         r.data("status_code",false);
 
         QueryWrapper<Area> queryWrapper = new QueryWrapper<>();
 
-        queryWrapper.eq("areaname", params.getRegionName());
-
+        //queryWrapper.eq("areaname", params.getRegionName());
+        queryWrapper.eq("areaname", params);
         List<Area> areas = areaMapper.selectList(queryWrapper);
 
         List<Map<String, Object>> ParamList = new ArrayList<>();
@@ -50,6 +50,7 @@ public class RegionAndShelfImpl implements RegionAndShelfService {
 
         r.data("status_code",true);
         r.data("inBoundPeopleList", ParamList);
+        System.out.println(r);
         return r;
     }
 
@@ -108,12 +109,13 @@ public class RegionAndShelfImpl implements RegionAndShelfService {
         return r;
     }
 
-    public R allShelf(String id, allShelfparam params) {
+    public R allShelf(String id, String params) {
         R r = new R();
         r.data("status_code",false);
         List<Map<String, Object>> shelfList = new ArrayList<>();
         QueryWrapper<Shelf> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("areaid", params.getRegionId());
+        Long area = Long.parseLong(params);
+        queryWrapper.eq("areaid", area);
         List<Shelf> shelves = shelfMapper.selectList(queryWrapper);
         if(shelves.size()>0){
             r.data("status_code",true);
@@ -121,15 +123,16 @@ public class RegionAndShelfImpl implements RegionAndShelfService {
 
         for (Shelf shelf : shelves) {
             Map<String, Object> shelfInfo = new HashMap<>();
-            shelfInfo.put("regionId", params.getRegionId());
+            shelfInfo.put("regionId", area);
             shelfInfo.put("shelfId", shelf.getShelfid());
-            shelfInfo.put("capacity", shelf.getCapacity());
-            shelfInfo.put("remainingCapacity", shelf.getRemainingcapacity());
+            shelfInfo.put("shelfCapacity", shelf.getCapacity());
+            shelfInfo.put("shelfAllowance", shelf.getRemainingcapacity());
 
             shelfList.add(shelfInfo);
         }
 
         r.data("shelfList", shelfList);
+        System.out.println(r);
         return r;
     }
 

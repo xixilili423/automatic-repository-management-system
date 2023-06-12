@@ -18,8 +18,9 @@ public class CenterController {
     private final UserService userService;
     @GetMapping("personInformation")
     @UserLoginToken
-    public R personInformation(@RequestAttribute(value="id") String id,@RequestBody String userNickname)
-    { return userService.personInformation(id,userNickname); }
+    public R personInformation(@RequestAttribute(value="id") String id)
+    { System.out.println("ok");
+        return userService.personInformation(id); }
     @PostMapping("modifyUserInformation")
     @UserLoginToken
     public R modifyUserInformation(@RequestAttribute(value="id") String id,@RequestBody ModifyUserInformationParam modifyUserInformationParam)

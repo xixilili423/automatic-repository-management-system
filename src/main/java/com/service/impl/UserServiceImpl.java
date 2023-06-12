@@ -97,23 +97,24 @@ public class UserServiceImpl  extends ServiceImpl<UserMapper, User> implements U
     }
 
     @Override
-    public R personInformation(String id, String userNickname) {
+    public R personInformation(String id) {
         R r = new R();
         User user = userMapper.selectById(id);
         if (user == null) {
             r.setMsg("用户不存在");
             return r;
         }
-        if(!user.getName().equals(userNickname))
-        {
-            r.setMsg("用户名错误");
-            return r;
-        }
+//        if(!user.getName().equals(userNickname))
+//        {
+//            r.setMsg("用户名错误");
+//            return r;
+//        }
         r.data("userName",user.getName());
         r.data("userPhone",user.getContactnumber());
         r.data("stationName",user.getTransitstation());
         r.data("startTime", user.getAccountcreatedtime().toString());
         r.data("userEmail", user.getEmail());
+        System.out.println(r);
         return r;
     }
 

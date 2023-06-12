@@ -20,13 +20,16 @@ public class ParcelController {
     @UserLoginToken
     public R searchParcel(@RequestAttribute(value="id") String id, @RequestBody SearchParcelParam searchParcelParam)
     {
+        System.out.println("成功");
         return parcelService.searchParcel(id,searchParcelParam);
+
     }
     @GetMapping("searchParcelDetail")
     @UserLoginToken
-    public R searchParcelDetail(@RequestAttribute(value="id") String id,@RequestBody String parcelId){
-
+    public R searchParcelDetail(@RequestAttribute(value="id") String id, @RequestParam("parcelId") String parcelId){
+        System.out.println(parcelId);
         return parcelService.searchParcelDetail(id,parcelId);
+//        return R.ok();
     }
    @DeleteMapping("deleteParcel")
    @UserLoginToken

@@ -28,7 +28,7 @@ public interface UserService extends IService<User> {
      * @get getInformation(旧密码，新密码，token)
      * @return
      */
-   R personInformation(String id, String userNickname);
+   R personInformation(String id);
    R modifyUserInformation(String id,ModifyUserInformationParam modifyUserInformationParam);
 
    R modifyPassword(String id, ModifyPasswordParam modifyPasswordParam);

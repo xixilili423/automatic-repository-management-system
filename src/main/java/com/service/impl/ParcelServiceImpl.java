@@ -37,9 +37,11 @@ public class ParcelServiceImpl implements ParcelService {
     private  final OutboundMapper outboundMapper;
     @Override
     public R searchParcel(String id, SearchParcelParam searchParcelParam) {
+        System.out.println("成功函数");
         R r = new R();
         r.data("status_code",false);
         QueryWrapper<Package> queryWrapper = new QueryWrapper<>();
+        System.out.println(searchParcelParam.getParcelId());
         if (searchParcelParam.getParcelId() != null) {
             queryWrapper.eq("packageid", searchParcelParam.getParcelId());
         }
@@ -77,10 +79,9 @@ public class ParcelServiceImpl implements ParcelService {
         if (searchParcelParam.getPacelState() != null) {
             queryWrapper.eq("status", searchParcelParam.getPacelState());
         }
-        List<Package> packageList = parcelMapper.selectList(queryWrapper);
-        int i=0;
-        PacelInformation[] parcelInformation = new PacelInformation[packageList.size()];
-        for ( Package parcel: packageList) {
+        List<Package> p = parcelMapper.selectList(queryWrapper);
+        if (!p.isEmpty()) {
+            Package parcel = p.get(0);
             PacelInformation pacelInformation = new PacelInformation();
             pacelInformation.setParcelId(String.valueOf(parcel.getPackageid()));
             pacelInformation.setConsigneeAddress(parcel.getConsigneeaddress());
@@ -89,34 +90,35 @@ public class ParcelServiceImpl implements ParcelService {
             pacelInformation.setShipperPhone(parcel.getShippercontact());
             pacelInformation.setShipperAddress(parcel.getShipperaddress());
             pacelInformation.setShipperName(parcel.getShippername());
-            parcelInformation[i]=pacelInformation;
-            i++;
+            r.data("parcelInformation", pacelInformation);
+            r.data("status_code", true);
         }
-        r.data("parcelInformation", parcelInformation);
-        r.data("status_code", true);
-        return r;
+       System.out.println(r);
+    return r;
     }
 
     @Override
     public R searchParcelDetail(String id, String parcelId) {
+        System.out.println(parcelId);
         R r = new R();
 // 创建 ObjectMapper 对象，用于解析 JSON 字符串
-        ObjectMapper objectMapper = new ObjectMapper();
-// 解析 JSON 字符串，转换为一个 Map 对象
-        Map<String, String> map = null;
-        try {
-            map = objectMapper.readValue(parcelId, Map.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+//        ObjectMapper objectMapper = new ObjectMapper();
+//// 解析 JSON 字符串，转换为一个 Map 对象
+//        Map<String, String> map = null;
+//        try {
+//            map = objectMapper.readValue(parcelId, Map.class);
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException(e);
+//        }
 // 获取 pacelId 属性值，并将其转换为 Long 类型
-        Long parcelid = Long.parseLong(map.get("parcelId"));
+        //Long parcelid = Long.parseLong(map.get("parcelId"));
+        Long parcelid = Long.parseLong(parcelId);
       SearchPacelDetailParam s=new SearchPacelDetailParam();
         QueryWrapper<Shelfitem> queryWrapper3 = new QueryWrapper<>();
         QueryWrapper<Ordertable> queryWrapper = new QueryWrapper<>();
         queryWrapper3.eq("packageid",parcelid);
         queryWrapper.eq("packageid",parcelid);
-        r.data("parceld",parcelid);
+        r.data("parcelId",parcelid);
         Shelfitem shelf=shelfitemMapper.selectOne(queryWrapper3);
         if(shelf!=null) {
             r.data("shelfNumber", shelf.getLocationid());

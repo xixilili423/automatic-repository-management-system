@@ -15,9 +15,11 @@ public class RegionAndShelfController {
     @Autowired
     private final RegionAndShelfService regionAndShelfService;
 
-    @GetMapping("searchRegion")
+    @GetMapping ("searchRegion")
     @UserLoginToken
-    public R searchRegion(@RequestAttribute(value="id") String id,@RequestBody searchRegionparam params) { return regionAndShelfService.searchRegion(id, params); }
+    public R searchRegion(@RequestAttribute(value="id") String id,@RequestParam("regionName") String params) {
+        System.out.println(params);
+        return regionAndShelfService.searchRegion(id, params); }
 
     @GetMapping("searchShelf")
     @UserLoginToken
@@ -29,7 +31,8 @@ public class RegionAndShelfController {
 
     @GetMapping("allShelf")
     @UserLoginToken
-    public R allShelf(@RequestAttribute(value="id") String id,@RequestBody allShelfparam params) { return regionAndShelfService.allShelf(id, params); }
+    public R allShelf(@RequestAttribute(value="id") String id,@RequestParam("regionId") String params) {
+        return regionAndShelfService.allShelf(id, params); }
 
     @DeleteMapping("deleteShelf")
     @UserLoginToken
