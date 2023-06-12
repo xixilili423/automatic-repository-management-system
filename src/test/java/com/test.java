@@ -57,7 +57,6 @@ public class test {
         inbound.setInboundid(1L);
         when(inboundMapper.selectById(anyLong())).thenReturn(inbound);
         when(warehousepersonMapper.selectOne(any())).thenReturn(null);
-
         // 调用被测试的方法
         ExamineInParam param = new ExamineInParam();
         param.setInID("1");
@@ -109,7 +108,6 @@ public class test {
         param.setInStatus("已入库");
         param.setParcelList(new ParcelList[]{new ParcelList()});
         R result = examineInService.ExamineIn("123", param);
-
         // 验证返回结果是否符合预期
         assertEquals("No available shelf", result.getMessage());
     }
