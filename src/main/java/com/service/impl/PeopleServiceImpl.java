@@ -362,22 +362,22 @@ public class PeopleServiceImpl implements PeopleService {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
 
         // 根据参数设置查询条件
-        if (params.getEmail() != null) {
+        if (StringUtils.isNotBlank(params.getEmail())) {
             queryWrapper.eq("email", params.getEmail());
         }
-        if (params.getName() != null) {
+        if (StringUtils.isNotBlank(params.getName())) {
             queryWrapper.eq("name", params.getName());
         }
-        if (params.getPhone() != null) {
+        if (StringUtils.isNotBlank(params.getPhone())) {
             queryWrapper.eq("contactnumber", params.getPhone());
         }
-        if (params.getTransferStation() != null) {
+        if (StringUtils.isNotBlank(params.getTransferStation())) {
             queryWrapper.eq("transitstation", params.getTransferStation());
         }
-        if (params.getUserName() != null) {
-            queryWrapper.eq("username", params.getUserName());
+        if (StringUtils.isNotBlank(params.getUserName())) {
+            queryWrapper.eq("id", params.getUserName());
         }
-        if (params.getWarehouseId() != null) {
+        if (StringUtils.isNotBlank(params.getWarehouseId())) {
             queryWrapper.eq("warehouseid", params.getWarehouseId());
         }
 
@@ -386,19 +386,20 @@ public class PeopleServiceImpl implements PeopleService {
         List<Map<String, Object>> PeopleList = new ArrayList<>();
 
         for (User user : userList) {
-            Map<String, Object> personMap = new HashMap<>();
-            personMap.put("name", user.getName());
-            personMap.put("email", user.getEmail());
-            personMap.put("phone", user.getContactnumber());
-            personMap.put("transferStation", user.getTransitstation());
-            personMap.put("userName", user.getId());
-            personMap.put("warehouseId", user.getWarehouseid());
+            if(user.getPermission().equals("user")) {
+                Map<String, Object> personMap = new HashMap<>();
+                personMap.put("name", user.getName());
+                personMap.put("email", user.getEmail());
+                personMap.put("phone", user.getContactnumber());
+                personMap.put("transferStation", user.getTransitstation());
+                personMap.put("userName", user.getId());
+                personMap.put("warehouseId", user.getWarehouseid());
 
 
-            // 添加其他属性到 personMap
+                // 添加其他属性到 personMap
 
-            PeopleList.add(personMap);
-
+                PeopleList.add(personMap);
+            }
         }
 
         r.data("status_code", true);

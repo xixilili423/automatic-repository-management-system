@@ -3,6 +3,7 @@ package com.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.entity.Area;
+import com.entity.Customer;
 import com.entity.Shelf;
 import com.mapper.AreaMapper;
 import com.mapper.ShelfMapper;
@@ -79,7 +80,7 @@ public class RegionAndShelfImpl implements RegionAndShelfService {
     //对应库区表货架数加一，货架表创建一个新货架,新货架默认容量为100
     public R addShelf(String id, addShelfparam params) {
         R r = new R();
-        r.data("status_code",false);
+        r.data("status_code", false);
 
         QueryWrapper<Area> areaQueryWrapper = new QueryWrapper<>();
         areaQueryWrapper.eq("areaid", params.getRegionId());
@@ -87,18 +88,34 @@ public class RegionAndShelfImpl implements RegionAndShelfService {
         Area area = areaMapper.selectOne(areaQueryWrapper);
 
         if (area != null) {
-            r.data("status_code",true);
+            r.data("status_code", true);
 
-            int newShelfCount = Math.toIntExact(area.getShelfcount() + 1);
+            // 获取对应 areaid 下最大的 shelfid
+            int maxShelfId = 0;
+            // 查询customer表中的信息
+            QueryWrapper<Shelf> queryWrapper = new QueryWrapper<>();
+            queryWrapper.like("areaid", params.getRegionId());
+            List<Shelf> shelfList = shelfMapper.selectList(queryWrapper);
+
+            for(Shelf shelf : shelfList){
+                int tempnum = Integer.parseInt(shelf.getShelfid());
+                if(tempnum > maxShelfId){
+                    maxShelfId = tempnum;
+                }
+            }
+
+
+            int newShelfId = maxShelfId + 1;
 
             UpdateWrapper<Area> areaUpdateWrapper = new UpdateWrapper<>();
-            areaUpdateWrapper.set("shelfcount", newShelfCount)
+            areaUpdateWrapper.set("shelfcount", area.getShelfcount() + 1)
                     .eq("areaid", params.getRegionId());
 
             areaMapper.update(null, areaUpdateWrapper);
 
             Shelf newShelf = new Shelf();
             newShelf.setAreaid(Long.parseLong(params.getRegionId()));
+            newShelf.setShelfid(String.valueOf(newShelfId));
             newShelf.setCapacity(100);
             newShelf.setRemainingcapacity(100);
 
@@ -107,7 +124,6 @@ public class RegionAndShelfImpl implements RegionAndShelfService {
 
         return r;
     }
-
     public R allShelf(String id, allShelfparam params) {
         R r = new R();
         r.data("status_code",false);
@@ -138,7 +154,8 @@ public class RegionAndShelfImpl implements RegionAndShelfService {
         r.data("status_code",false);
 
         UpdateWrapper<Shelf> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("shelfid", params.getShelfId());
+        updateWrapper.like("shelfid", params.getShelfId());
+        updateWrapper.like("remainingcapacity", 0);
 
         int affectedRows = shelfMapper.delete(updateWrapper);
 
