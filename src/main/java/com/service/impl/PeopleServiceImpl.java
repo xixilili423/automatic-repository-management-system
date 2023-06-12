@@ -2,6 +2,7 @@ package com.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.entity.*;
 import com.mapper.*;
@@ -33,13 +34,14 @@ public class PeopleServiceImpl implements PeopleService {
 
         QueryWrapper<Warehouseperson> queryWrapper = new QueryWrapper<>();
 
-        System.out.println(params.getInBoundPersonId());
-        // 判断属性是否不为空，并根据不同属性设置查询条件
+        System.out.println(params.getAddress());
+        // 判断属性不为空则设置相应查询条件
         if (StringUtils.isNotBlank(params.getInBoundPersonId())) {
             queryWrapper.eq("warehousepersonid", params.getInBoundPersonId().replaceAll("[^0-9]", ""));
         }
 
         if (StringUtils.isNotBlank(params.getAddress())) {
+            System.out.println("HHHHHH");
             queryWrapper.like("address", params.getAddress());
         }
         if (StringUtils.isNotBlank(params.getEmail())) {
@@ -51,7 +53,7 @@ public class PeopleServiceImpl implements PeopleService {
         if (StringUtils.isNotBlank(params.getPhone())) {
             queryWrapper.like("contactnumber", params.getPhone());
         }
-        if (StringUtils.isNotBlank(params.getUserName())) {
+        if (StringUtils.isNotBlank(params.getAddress())) {
             queryWrapper.like("username", params.getUserName());
         }
 
@@ -92,7 +94,7 @@ public class PeopleServiceImpl implements PeopleService {
             queryWrapper.like("email", params.getEmail());
         }
         if (StringUtils.isNotBlank(params.getOutBoundPresonId())) {
-            queryWrapper.eq("outboundpersonid", params.getOutBoundPresonId().replaceAll("[^0-9]", ""));
+            queryWrapper.like("outboundpersonid", params.getOutBoundPresonId().replaceAll("[^0-9]", ""));
         }
         if (StringUtils.isNotBlank(params.getName())) {
             queryWrapper.like("name", params.getName());
@@ -109,7 +111,7 @@ public class PeopleServiceImpl implements PeopleService {
 
         for (Outboundperson outboundperson : outboundpersons) {
             Map<String, Object> personMap = new HashMap<>();
-            personMap.put("outBoundPersonId", outboundperson.getCustomerid());
+            personMap.put("outBoundPersonId", outboundperson.getOutboundpersonid());
             personMap.put("userName", outboundperson.getUsername());
             personMap.put("name", outboundperson.getName());
             personMap.put("phone", outboundperson.getContactnumber());
@@ -167,7 +169,7 @@ public class PeopleServiceImpl implements PeopleService {
 
         for (Customer customer : customers) {
             Map<String, Object> personMap = new HashMap<>();
-            personMap.put("customId", customer.getCustomerid());
+            personMap.put("customerId", customer.getCustomerid());
             personMap.put("companyName", customer.getCompanyname());
             personMap.put("payableAmount", customer.getPayableamount());
             personMap.put("contactPersonName", customer.getContactpersonname());
@@ -191,29 +193,29 @@ public class PeopleServiceImpl implements PeopleService {
     public R checkCustomTransaction(String id, checkCustomTransactionParam params) {
         R r = new R();
         r.data("status_code",false);
-        System.out.println("查询客户交易信息开始执行");
-        System.out.println("客户id： "+ params.getCustomerId());
-//        System.out.println("客户姓名");
 
         // 查询transactionrecord表中的信息
         List<Transactionrecord> transactions = transactionRecordMapper.selectList(null);
 
         List<Map<String, Object>> transactionList = new ArrayList<>();
         for (Transactionrecord transaction : transactions) {
-//            if (transaction.getTransactionid () == Long.parseLong(params.getCustomerId().replaceAll("[^0-9]", "")) && transaction.getUsername().equals(params.getUserName())) {
-            if (transaction.getTransactionid () == Long.parseLong(params.getCustomerId().replaceAll("[^0-9]", ""))) {
+            if (transaction.getTransactionid () == Long.parseLong(params.getCustomId().replaceAll("[^0-9]", ""))) {
                 Map<String, Object> transactionMap = new HashMap<>();
                 transactionMap.put("transactionId", transaction.getTransactionid());
                 transactionMap.put("transactionAmount", transaction.getTransactionamount());
                 transactionMap.put("time", transaction.getTransactiontime());
 
                 // 查询customer表中的信息
-                Customer customer = customerMapper.selectById(params.getCustomerId());
-                if (customer != null) {
-                    transactionMap.put("contactName", customer.getContactpersonname());
-                    transactionMap.put("phone", customer.getContactnumber());
-                    transactionMap.put("bankName", customer.getBankname());
-                    transactionMap.put("bankCardNum", customer.getBankcardnumber());
+                LambdaQueryWrapper<Customer> queryWrapper = new LambdaQueryWrapper<>();
+                queryWrapper.like(Customer::getCustomerid, params.getCustomId().replaceAll("[^0-9]", ""));
+                List<Customer> customers = customerMapper.selectList(queryWrapper);
+                System.out.println(customers.size());
+
+                if (customers.size() > 0) {
+                    transactionMap.put("contactName", customers.get(0).getContactpersonname());
+                    transactionMap.put("phone", customers.get(0).getContactnumber());
+                    transactionMap.put("bankName", customers.get(0).getBankname());
+                    transactionMap.put("bankCardNum", customers.get(0).getBankcardnumber());
                 }
 
                 transactionList.add(transactionMap);
@@ -223,14 +225,10 @@ public class PeopleServiceImpl implements PeopleService {
         r.data("transactionList", transactionList);
         r.data("status_code", true);
 
-        System.out.println("执行完毕");
-        System.out.println("transactionList" + transactionList);
-
         return r;
     }
 
     public R delCustomInformation(String id, String customId) {
-        System.out.println("删除客户操作执行");
         R r = new R();
         r.data("status_code", false);
 
@@ -249,7 +247,6 @@ public class PeopleServiceImpl implements PeopleService {
     public R delFetchInPeopleInformation(String id, String inBoundPersonId) {
         R r = new R();
         r.data("status_code",false);
-        System.out.println("删除入库人操作执行");
 
         // 查询warehouseperson表中的信息
         LambdaQueryWrapper<Warehouseperson> queryWrapper = new LambdaQueryWrapper<>();
@@ -265,7 +262,6 @@ public class PeopleServiceImpl implements PeopleService {
     public R delFetchOutPeopleInformation(String id, String outBoundPresonId) {
         R r = new R();
         r.data("status_code", false);
-        System.out.println("删除出库人操作执行");
 
         // 查询outboundperson表中的信息
 
@@ -285,13 +281,20 @@ public class PeopleServiceImpl implements PeopleService {
         r.data("status_code", false);
 
         // 查询customer表中的信息
-        Customer customer = customerMapper.selectById(params.getCustomerId());
-        if (customer != null) {
+        QueryWrapper<Customer> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("customerid", params.getCustomId());
+        List<Customer> customers = customerMapper.selectList(queryWrapper);
+
+        if (customers.size() > 0) {
+            Customer customer = customers.get(0);
+
             // 更新payableamount
             double payableAmount = customer.getPayableamount() + Double.parseDouble(params.getIncAccounts());
-            customer.setPayableamount(payableAmount);
-            customerMapper.updateById(customer);
+            LambdaUpdateWrapper<Customer> updateWrapper = new LambdaUpdateWrapper<>();
+            updateWrapper.eq(Customer::getCustomerid, customer.getCustomerid())
+                    .set(Customer::getPayableamount, payableAmount);
 
+            customerMapper.update(null, updateWrapper);
             // 向transactionrecord表中插入记录
             Transactionrecord transaction = new Transactionrecord();
             transaction.setCustomerid(customer.getCustomerid());
@@ -317,12 +320,18 @@ public class PeopleServiceImpl implements PeopleService {
         r.data("status_code", false);
 
         // 查询customer表中的信息
-        Customer customer = customerMapper.selectById(params.getCustomerId());
-        if (customer != null) {
+
+        QueryWrapper<Customer> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("customerid", params.getCustomId());
+        List<Customer> customers = customerMapper.selectList(queryWrapper);
+
+        if (customers.size() > 0) {
+            Customer customer = customers.get(0);
             // 更新payableamount
             double payableAmount = customer.getPayableamount() - Double.parseDouble(params.getbalAccounts());
-            customer.setPayableamount(payableAmount);
-            customerMapper.updateById(customer);
+            LambdaUpdateWrapper<Customer> updateWrapper = new LambdaUpdateWrapper<>();
+            updateWrapper.eq(Customer::getCustomerid, customer.getCustomerid())
+                    .set(Customer::getPayableamount, payableAmount);
 
             double recordAmount = 0 - Double.parseDouble(params.getbalAccounts());
 
@@ -399,7 +408,6 @@ public class PeopleServiceImpl implements PeopleService {
     }
 
     public R addInBoundPeople(String id, addInBoundPeopleparam params) {
-        System.out.println("增加入库人操作开始执行");
         R r = new R();
         r.data("status_code", false);
 
@@ -421,7 +429,6 @@ public class PeopleServiceImpl implements PeopleService {
             r.data("status_code", true);
 
         }
-        System.out.println("增加入库人操作执行完毕");
 
         return r;
     }
@@ -456,7 +463,6 @@ public class PeopleServiceImpl implements PeopleService {
     public R delStaffInformation(String id, String userName) {
         R r = new R();
         r.data("status_code", false);
-        System.out.println("删除员工操作执行");
 
         // 查询customer表中的信息
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
@@ -534,7 +540,7 @@ public class PeopleServiceImpl implements PeopleService {
 
         for (Customer customer : customers) {
             Map<String, Object> personMap = new HashMap<>();
-            personMap.put("customId", customer.getCustomerid());
+            personMap.put("customerId", customer.getCustomerid());
             personMap.put("companyName", customer.getCompanyname());
             personMap.put("payableAmount", customer.getPayableamount());
             personMap.put("contactPersonName", customer.getContactpersonname());
@@ -552,7 +558,6 @@ public class PeopleServiceImpl implements PeopleService {
 
         r.data("customList", PeopleList);
 
-        System.out.println("客户列表"+ PeopleList);
 
         return r;
     }
@@ -573,6 +578,8 @@ public class PeopleServiceImpl implements PeopleService {
                 personMap.put("transferStation", user.getTransitstation());
                 personMap.put("userName", user.getId());
                 personMap.put("warehouseId", user.getWarehouseid());
+
+
                 // 添加其他属性到 personMap
 
                 PeopleList.add(personMap);
@@ -582,8 +589,7 @@ public class PeopleServiceImpl implements PeopleService {
         r.data("status_code", true);
         r.data("staffList", PeopleList);
 
-        System.out.println("获取员工所有信息执行完毕");
-        System.out.println("PeopleList"+PeopleList);
+
         return r;
     }
 
@@ -595,7 +601,8 @@ public class PeopleServiceImpl implements PeopleService {
         List<String> PeopleList = new ArrayList<>();
 
         for (User user : userList) {
-            PeopleList.add(user.getName());
+            if(user.getPermission().equals("user"))
+                PeopleList.add(user.getName());
         }
 
         r.data("status_code", true);
@@ -646,5 +653,8 @@ public class PeopleServiceImpl implements PeopleService {
 
         return r;
     }
+
+
+
 
 }
