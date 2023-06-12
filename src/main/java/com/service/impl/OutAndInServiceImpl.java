@@ -1,5 +1,4 @@
 package com.service.impl;
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -12,9 +11,7 @@ import com.vo.param.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -276,6 +273,7 @@ public class OutAndInServiceImpl implements OutAndInService {
             // 插入出库记录
             Outbound outbound = new Outbound();
             outbound.setOrderid(addOutOrderParam.getOrderID());
+            outbound.setOutboundid(Long.parseLong(addOutOrderParam.getOutID()));
             try{
             outbound.setOutboundpersonid(outboundpersonMapper.selectOne(queryWrapper).getOutboundpersonid());}
             catch (Exception e)
@@ -571,7 +569,7 @@ public class OutAndInServiceImpl implements OutAndInService {
         outbound.setManagerid(id);
         UpdateWrapper<Outbound> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("outboundid", outbound.getOutboundid());
-// 更新 outbound 对象
+        // 更新 outbound 对象
         outboundMapper.update(outbound, updateWrapper);
         // 更新包裹信息
         ParcelList[] parcelList = examineOutParam.getParcelList();
@@ -606,7 +604,7 @@ public class OutAndInServiceImpl implements OutAndInService {
             r.setMsg("出库单审核成功");
             r.data("status_code", true);
         }
-        // 删除包裹表，更新货架表
+        // 删除包裹表，删除货架表
        else if (parcelList != null&&"已出库".equals(examineOutParam.getOutStatus())) {
             for (ParcelList parcel : parcelList) {
                 packageMapper.delete(new QueryWrapper<Package>().eq("packageid", parcel.getParcelID()));

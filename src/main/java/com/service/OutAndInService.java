@@ -10,13 +10,14 @@ public interface OutAndInService {
      R showIn( String id);
      R showOut(String id) ;
     R addInOrder(String id,AddInOrderParam addInOrderParam) ;
-
    R   addOutOrder(String id, AddOutOrderParam addOutOrderParam) ;
    R showParcel( String id) ;
     R fetchInPeopleNameList( String id);
-   R fetchOutPeopleNameList( String id) ;
-    R InDelMultitude(String id, Long[] inOrderLIst) ;
-  R OutDelMultitude( String id,Long[]  outOrderLIst);
+    R fetchOutPeopleNameList( String id) ;
+
+    R InDelMultitude(String id, Long[] inOrderList);
+
+    R OutDelMultitude(String id, Long[] outOrderList);
 
     R ExamineIn(String id, ExamineInParam examineInParam);
 
