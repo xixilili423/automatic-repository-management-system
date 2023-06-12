@@ -199,7 +199,7 @@ public class PeopleServiceImpl implements PeopleService {
 
         List<Map<String, Object>> transactionList = new ArrayList<>();
         for (Transactionrecord transaction : transactions) {
-            if (transaction.getTransactionid () == Long.parseLong(params.getCustomId().replaceAll("[^0-9]", ""))) {
+            if (transaction.getCustomerid () == Long.parseLong(params.getCustomId().replaceAll("[^0-9]", ""))) {
                 Map<String, Object> transactionMap = new HashMap<>();
                 transactionMap.put("transactionId", transaction.getTransactionid());
                 transactionMap.put("transactionAmount", transaction.getTransactionamount());
