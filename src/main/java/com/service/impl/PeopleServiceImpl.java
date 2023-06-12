@@ -335,10 +335,11 @@ public class PeopleServiceImpl implements PeopleService {
             LambdaUpdateWrapper<Customer> updateWrapper = new LambdaUpdateWrapper<>();
             updateWrapper.eq(Customer::getCustomerid, customer.getCustomerid())
                     .set(Customer::getPayableamount, payableAmount);
+            customerMapper.update(null, updateWrapper);
 
-            double recordAmount = 0 - Double.parseDouble(params.getbalAccounts());
 
             // 向transactionrecord表中插入记录
+            double recordAmount = 0 - Double.parseDouble(params.getbalAccounts());
             Transactionrecord transaction = new Transactionrecord();
             transaction.setCustomerid(customer.getCustomerid());
             transaction.setUsername(customer.getUsername());
