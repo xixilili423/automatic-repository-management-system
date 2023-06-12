@@ -152,7 +152,7 @@ public class PeopleServiceImpl implements PeopleService {
             queryWrapper.like("companyname", params.getCompanyName());
         }
         if (StringUtils.isNotBlank(params.getCustomId())) {
-            queryWrapper.like("customid", params.getCustomId().replaceAll("[^0-9]", ""));
+            queryWrapper.like("customerid", params.getCustomId().replaceAll("[^0-9]", ""));
         }
         if (StringUtils.isNotBlank(params.getUserName())) {
             queryWrapper.like("username", params.getUserName());
@@ -167,7 +167,7 @@ public class PeopleServiceImpl implements PeopleService {
 
         for (Customer customer : customers) {
             Map<String, Object> personMap = new HashMap<>();
-            personMap.put("customerId", customer.getCustomerid());
+            personMap.put("customId", customer.getCustomerid());
             personMap.put("companyName", customer.getCompanyname());
             personMap.put("payableAmount", customer.getPayableamount());
             personMap.put("contactPersonName", customer.getContactpersonname());
