@@ -746,9 +746,9 @@ public class OutAndInServiceImpl implements OutAndInService {
         }
         r.data("outID", outbound.getOutboundid());
         r.data("orderID", outbound.getOrderid());
-        Warehouseperson warehouseperson = warehousepersonMapper.selectById(outbound.getOutboundpersonid());
-        if (warehouseperson != null) {
-            r.data("outPeopleName", warehouseperson.getName());
+       Outboundperson outboundperson = outboundpersonMapper.selectById(outbound.getOutboundpersonid());
+        if (outboundperson != null) {
+            r.data("outPeopleName",outboundperson.getName());
         }
         r.data("outStatus", outbound.getStatus());
         r.data("outTime", outbound.getOutboundtime().toString());
