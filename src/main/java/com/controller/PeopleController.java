@@ -38,7 +38,7 @@ public class PeopleController {
     @UserLoginToken
     public R checkCustomTransaction(@RequestAttribute(value="id") String id,@RequestBody checkCustomTransactionParam params) {
         System.out.println("查看客户流水信息接口响应");
-        System.out.println("传过来的id：" + params.getCustomerId());
+        System.out.println("传过来的id：" + params.getCustomId());
         return peopleService.checkCustomTransaction(id, params);
     }
 
@@ -58,7 +58,7 @@ public class PeopleController {
     @UserLoginToken
     public R incAccountsPayment(@RequestAttribute(value="id") String id,@RequestBody incAccountsPaymentparam params) {
         System.out.println("增加客户应付款接口响应");
-        System.out.println("id: " + params.getCustomerId());
+        System.out.println("id: " + params.getCustomId());
         return peopleService.incAccountsPayment(id, params);
     }
 
@@ -66,7 +66,7 @@ public class PeopleController {
     @UserLoginToken
     public R balanceAccountsPayment(@RequestAttribute(value="id") String id,@RequestBody balanceAccountsPaymentparam params) {
         System.out.println("客户结款接口响应");
-        System.out.println("id" + params.getCustomerId());
+        System.out.println("id" + params.getCustomId());
         return peopleService.balanceAccountsPayment(id, params);
     }
 

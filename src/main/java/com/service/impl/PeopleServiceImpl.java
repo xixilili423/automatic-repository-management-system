@@ -169,7 +169,7 @@ public class PeopleServiceImpl implements PeopleService {
 
         for (Customer customer : customers) {
             Map<String, Object> personMap = new HashMap<>();
-            personMap.put("customerId", customer.getCustomerid());
+            personMap.put("customId", customer.getCustomerid());
             personMap.put("companyName", customer.getCompanyname());
             personMap.put("payableAmount", customer.getPayableamount());
             personMap.put("contactPersonName", customer.getContactpersonname());
@@ -540,7 +540,7 @@ public class PeopleServiceImpl implements PeopleService {
 
         for (Customer customer : customers) {
             Map<String, Object> personMap = new HashMap<>();
-            personMap.put("customerId", customer.getCustomerid());
+            personMap.put("customId", customer.getCustomerid());
             personMap.put("companyName", customer.getCompanyname());
             personMap.put("payableAmount", customer.getPayableamount());
             personMap.put("contactPersonName", customer.getContactpersonname());
