@@ -28,6 +28,7 @@ public class UserController {
     @PostMapping("login")
     @PassToken
     public R login(@RequestBody LoginParam loginParam) {
+        System.out.println("登陆请求响应");
         return userService.login(loginParam);
     }
 

@@ -36,7 +36,11 @@ public class PeopleController {
 
     @PostMapping("checkCustomTransaction")
     @UserLoginToken
-    public R checkCustomTransaction(@RequestAttribute(value="id") String id,@RequestBody checkCustomTransactionParam params) {return peopleService.checkCustomTransaction(id, params); }
+    public R checkCustomTransaction(@RequestAttribute(value="id") String id,@RequestBody checkCustomTransactionParam params) {
+        System.out.println("查看客户流水信息接口响应");
+        System.out.println("传过来的id：" + params.getCustomId());
+        return peopleService.checkCustomTransaction(id, params);
+    }
 
     @DeleteMapping("delCustomInformation")
     @UserLoginToken
@@ -52,11 +56,19 @@ public class PeopleController {
 
     @PostMapping("incAccountsPayment")
     @UserLoginToken
-    public R incAccountsPayment(@RequestAttribute(value="id") String id,@RequestBody incAccountsPaymentparam params) {return peopleService.incAccountsPayment(id, params); }
+    public R incAccountsPayment(@RequestAttribute(value="id") String id,@RequestBody incAccountsPaymentparam params) {
+        System.out.println("增加客户应付款接口响应");
+        System.out.println("id: " + params.getCustomId());
+        return peopleService.incAccountsPayment(id, params);
+    }
 
     @PostMapping("balanceAccountsPayment")
     @UserLoginToken
-    public R balanceAccountsPayment(@RequestAttribute(value="id") String id,@RequestBody balanceAccountsPaymentparam params) {return peopleService.balanceAccountsPayment(id, params); }
+    public R balanceAccountsPayment(@RequestAttribute(value="id") String id,@RequestBody balanceAccountsPaymentparam params) {
+        System.out.println("客户结款接口响应");
+        System.out.println("id" + params.getCustomId());
+        return peopleService.balanceAccountsPayment(id, params);
+    }
 
     @PostMapping("checkStaffInformation")
     @UserLoginToken
@@ -64,7 +76,10 @@ public class PeopleController {
 
     @PostMapping("addInBoundPeople")
     @UserLoginToken
-    public R addInBoundPeople(@RequestAttribute(value="id") String id,@RequestBody addInBoundPeopleparam params) {return peopleService.addInBoundPeople(id, params); }
+    public R addInBoundPeople(@RequestAttribute(value="id") String id,@RequestBody addInBoundPeopleparam params) {
+        System.out.println("增加入库人Controller响应");
+        return peopleService.addInBoundPeople(id, params);
+    }
 
     @PostMapping("addFetchOutPeople")
     @UserLoginToken
@@ -80,7 +95,9 @@ public class PeopleController {
 
     @GetMapping("getFetchOutPeopleInformationAll")
     @UserLoginToken
-    public R getFetchOutPeopleInformationAll(@RequestAttribute(value="id") String id) {return peopleService.getFetchOutPeopleInformationAll(id); }
+    public R getFetchOutPeopleInformationAll(@RequestAttribute(value="id") String id) {
+        return peopleService.getFetchOutPeopleInformationAll(id);
+    }
 
     @GetMapping("getStaffInformationAll")
     @UserLoginToken

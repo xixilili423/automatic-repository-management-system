@@ -1,5 +1,4 @@
 package com.service.impl;
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -12,9 +11,7 @@ import com.vo.param.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -88,7 +85,6 @@ public class OutAndInServiceImpl implements OutAndInService {
         return r;
     }
 
-
     @Override
     public R searchOut(String id, SearchOutParam searchOutParam) {
         // 从请求参数中获取查询条件
@@ -132,7 +128,6 @@ public class OutAndInServiceImpl implements OutAndInService {
         r.data("outList", outList);
         return r;
     }
-
 
     @Override
     public R showIn(String id) {
@@ -186,7 +181,6 @@ public class OutAndInServiceImpl implements OutAndInService {
         r.data("outList", outList);
         return r;
     }
-
 
     @Override
     public R addInOrder(String id, AddInOrderParam addInOrderParam) {
@@ -276,6 +270,7 @@ public class OutAndInServiceImpl implements OutAndInService {
             // 插入出库记录
             Outbound outbound = new Outbound();
             outbound.setOrderid(addOutOrderParam.getOrderID());
+            outbound.setOutboundid(Long.parseLong(addOutOrderParam.getOutID()));
             try{
             outbound.setOutboundpersonid(outboundpersonMapper.selectOne(queryWrapper).getOutboundpersonid());}
             catch (Exception e)
@@ -362,6 +357,7 @@ public class OutAndInServiceImpl implements OutAndInService {
 
     @Override
     public R fetchInPeopleNameList(String id) {
+        System.out.println("获取入库人姓名列表开始执行");
         QueryWrapper<Warehouseperson> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", id);
         List<Warehouseperson> warehousepersonList = warehousepersonMapper.selectList(queryWrapper);
@@ -372,6 +368,8 @@ public class OutAndInServiceImpl implements OutAndInService {
         R r = new R();
         r.data("status_code", true);
         r.data("inPeopleNameList", inPeopleNameList);
+        System.out.println("inPeopleNameList" + inPeopleNameList);
+        System.out.println("获取入库人姓名列表执行完毕");
         return r;
     }
 
@@ -540,7 +538,6 @@ public class OutAndInServiceImpl implements OutAndInService {
         return r;
     }
 
-
     @Override
     public R ExamineOut(String id, ExamineOutParam examineOutParam) {
         R r = new R();
@@ -571,7 +568,7 @@ public class OutAndInServiceImpl implements OutAndInService {
         outbound.setManagerid(id);
         UpdateWrapper<Outbound> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("outboundid", outbound.getOutboundid());
-// 更新 outbound 对象
+        // 更新 outbound 对象
         outboundMapper.update(outbound, updateWrapper);
         // 更新包裹信息
         ParcelList[] parcelList = examineOutParam.getParcelList();
@@ -606,7 +603,7 @@ public class OutAndInServiceImpl implements OutAndInService {
             r.setMsg("出库单审核成功");
             r.data("status_code", true);
         }
-        // 删除包裹表，更新货架表
+        // 删除包裹表，删除货架表
        else if (parcelList != null&&"已出库".equals(examineOutParam.getOutStatus())) {
             for (ParcelList parcel : parcelList) {
                 packageMapper.delete(new QueryWrapper<Package>().eq("packageid", parcel.getParcelID()));
@@ -748,9 +745,9 @@ public class OutAndInServiceImpl implements OutAndInService {
         }
         r.data("outID", outbound.getOutboundid());
         r.data("orderID", outbound.getOrderid());
-        Warehouseperson warehouseperson = warehousepersonMapper.selectById(outbound.getOutboundpersonid());
-        if (warehouseperson != null) {
-            r.data("outPeopleName", warehouseperson.getName());
+       Outboundperson outboundperson = outboundpersonMapper.selectById(outbound.getOutboundpersonid());
+        if (outboundperson != null) {
+            r.data("outPeopleName",outboundperson.getName());
         }
         r.data("outStatus", outbound.getStatus());
         r.data("outTime", outbound.getOutboundtime().toString());

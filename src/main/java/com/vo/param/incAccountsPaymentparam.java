@@ -4,7 +4,7 @@ public class incAccountsPaymentparam {
     /**
      * 客户id
      */
-    private String customerId;
+    private String customId;
     /**
      * 增加的应付款项
      */
@@ -14,8 +14,8 @@ public class incAccountsPaymentparam {
      */
     private String notes;
 
-    public String getCustomerId() { return customerId; }
-    public void setCustomerId(String value) { this.customerId = value; }
+    public String getCustomId() { return customId; }
+    public void setCustomId(String value) { this.customId = value; }
 
     public String getIncAccounts() { return incAccounts; }
     public void setIncAccounts(String value) { this.incAccounts = value; }

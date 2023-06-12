@@ -20,16 +20,16 @@ public class OutAndInController {
 
         return outAndInService.searchIn(id,searchInParam);
     }
-  @PostMapping("searchOut")
-  @UserLoginToken
-  public R searchOut(@RequestAttribute(value="id") String id,@RequestBody SearchOutParam searchoutParam) {
+    @PostMapping("searchOut")
+    @UserLoginToken
+    public R searchOut(@RequestAttribute(value="id") String id,@RequestBody SearchOutParam searchoutParam) {
 
 
       return outAndInService.searchOut(id,searchoutParam);
   }
-  @GetMapping("showIn")
-  @UserLoginToken
-  public R showIn(@RequestAttribute(value="id") String id) {
+    @GetMapping("showIn")
+    @UserLoginToken
+    public R showIn(@RequestAttribute(value="id") String id) {
 
 
       return outAndInService.showIn(id);
@@ -65,8 +65,7 @@ public class OutAndInController {
     @GetMapping("fetchInPeopleNameList")
     @UserLoginToken
     public R fetchInPeopleNameList(@RequestAttribute(value="id") String id) {
-
-
+        System.out.println("获取入库人列表接口刷新");
         return outAndInService.fetchInPeopleNameList(id);
     }
     @GetMapping("fetchOutPeopleNameList")
@@ -78,17 +77,17 @@ public class OutAndInController {
     }
     @DeleteMapping("InDelMultitude")
     @UserLoginToken
-    public R InDelMultitude(@RequestAttribute(value="id") String id,@RequestBody Long[] inOrderLIst) {
+    public R InDelMultitude(@RequestAttribute(value="id") String id,@RequestBody Long[] InOrderList) {
 
 
-        return outAndInService.InDelMultitude(id,inOrderLIst);
+        return outAndInService.InDelMultitude(id,InOrderList);
     }
     @DeleteMapping("OutDelMultitude")
     @UserLoginToken
-    public R OutDelMultitude(@RequestAttribute(value="id") String id,@RequestBody Long[] outOrderLIst) {
+    public R OutDelMultitude(@RequestAttribute(value="id") String id,@RequestBody Long[] OutOrderList) {
 
 
-        return outAndInService.OutDelMultitude(id,outOrderLIst);
+        return outAndInService.OutDelMultitude(id,OutOrderList);
     }
     @PutMapping("ExamineIn")
     @UserLoginToken
