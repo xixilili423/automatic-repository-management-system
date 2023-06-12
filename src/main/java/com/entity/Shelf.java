@@ -2,7 +2,6 @@ package com.entity;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.mapper.ShelfMapper;
 
 import javax.persistence.Id;
 import java.util.List;
