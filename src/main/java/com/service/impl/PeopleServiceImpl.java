@@ -584,7 +584,6 @@ public class PeopleServiceImpl implements PeopleService {
                 personMap.put("userName", user.getId());
                 personMap.put("warehouseId", user.getWarehouseid());
 
-
                 // 添加其他属性到 personMap
 
                 PeopleList.add(personMap);
@@ -593,8 +592,7 @@ public class PeopleServiceImpl implements PeopleService {
 
         r.data("status_code", true);
         r.data("staffList", PeopleList);
-
-
+        System.out.println("PeopleList: "+PeopleList);
         return r;
     }
 
