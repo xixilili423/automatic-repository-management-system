@@ -131,10 +131,15 @@ public class ParcelServiceImpl implements ParcelService {
                 queryWrapper2.eq("orderid", ordertable.getOrderid());
                 Inbound inbound = inboundMapper.selectOne(queryWrapper1);
                 Outbound outbound = outboundMapper.selectOne(queryWrapper2);
+                if(outbound== null){
+                    r.data("outTime", "");
+                }else {
+                    r.data("outTime", outbound.getOutboundtime().toString());
+                    r.data("outTime", outbound.getOutboundtime().toString());
+                }
                 r.data("inTime", inbound.getInboundtime().toString());
-                r.data("outTime", outbound.getOutboundtime().toString());
                 r.data("parcelState", inbound.getStatus());
-                r.data("parcelState", outbound.getStatus());
+
             }
         }
         else

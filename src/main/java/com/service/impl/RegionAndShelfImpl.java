@@ -105,7 +105,7 @@ public class RegionAndShelfImpl implements RegionAndShelfService {
 
             shelfMapper.insert(newShelf);
         }
-
+       System.out.println(r);
         return r;
     }
 

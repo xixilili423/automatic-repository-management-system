@@ -27,7 +27,9 @@ public class RegionAndShelfController {
 
     @PostMapping("addShelf")
     @UserLoginToken
-    public R addShelf(@RequestAttribute(value="id") String id,@RequestBody addShelfparam params) { return regionAndShelfService.addShelf(id, params); }
+    public R addShelf(@RequestAttribute(value="id") String id,@RequestBody addShelfparam params) {
+        System.out.println(params);
+        return regionAndShelfService.addShelf(id, params); }
 
     @GetMapping("allShelf")
     @UserLoginToken

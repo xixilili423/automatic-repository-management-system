@@ -105,7 +105,9 @@ public class PeopleController {
 
     @GetMapping("getCustomInformationAll")
     @UserLoginToken
-    public R getCustomInformationAll(@RequestAttribute(value="id") String id) {return peopleService.getCustomInformationAll(id); }
+    public R getCustomInformationAll(@RequestAttribute(value="id") String id) {
+        return peopleService.getCustomInformationAll(id);
+    }
 
     @GetMapping("getStaffNameList")
     @UserLoginToken
